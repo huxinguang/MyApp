@@ -7,6 +7,7 @@
 //
 
 #import "PicsContainerView.h"
+#import <SDWebImage/UIButton+WebCache.h>
 
 @implementation PicsContainerView
 
@@ -15,7 +16,7 @@
         self.type = type;
         NSMutableArray *array = [NSMutableArray new];
         for (int i=0; i<9; i++) {
-            UIButton *imgBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+            UIButton *imgBtn = [UIButton new];
             [self addSubview:imgBtn];
             [array addObject:imgBtn];
         }
@@ -40,9 +41,9 @@
         }
         
         for (int i=0; i<9; i++) {
-            UIImageView *imageView = self.picViews[i];
+            UIButton *imageBtn = self.picViews[i];
             if (i >= self.pics.count) {
-                imageView.hidden = YES;
+                imageBtn.hidden = YES;
             }else{
                 CGPoint origin = CGPointMake(0, 0);
                 switch (self.pics.count) {
@@ -61,7 +62,7 @@
                             width = picSize.width;
                             height = picSize.height;
                         }
-                        imageView.frame = CGRectMake(0, 0, width, height);
+                        imageBtn.frame = CGRectMake(0, 0, width, height);
                     }
                         
                         break;
@@ -76,33 +77,33 @@
                             origin.x = (i % 3) * (picSize.width + kStatusCellPaddingPic);
                             origin.y = (int)(i / 3) * (picSize.height + kStatusCellPaddingPic);
                         }
-                        imageView.frame = (CGRect){.origin = origin, .size = picSize};
+                        imageBtn.frame = (CGRect){.origin = origin, .size = picSize};
                     }
                         break;
                     default:
                     {
                         origin.x = (i % 3) * (picSize.width + kStatusCellPaddingPic);
                         origin.y = (int)(i / 3) * (picSize.height + kStatusCellPaddingPic);
-                        imageView.frame = (CGRect){.origin = origin, .size = picSize};
+                        imageBtn.frame = (CGRect){.origin = origin, .size = picSize};
                     }
                         break;
                 }
                 
-                imageView.hidden = NO;
+                imageBtn.hidden = NO;
                 Media *m = self.pics[i];
                 int width = m.media_width;
                 int height = m.media_height;
-                CGFloat scale = (height / width) / (imageView.height / imageView.width);
+                CGFloat scale = (height / width) / (imageBtn.height / imageBtn.width);
                 if (scale < 0.99 || isnan(scale)) {
-                    // 宽图把左右两边裁掉
-                    imageView.contentMode = UIViewContentModeScaleAspectFill;
+                    // 宽图把左右两边裁掉 (注意： 应该设置imageBtn.imageView.contentMode 而不是imageBtn.contentMode)
+                    imageBtn.imageView.contentMode = UIViewContentModeScaleAspectFill;
                 } else {
-                    // 高图只保留顶部
-                    imageView.contentMode = UIViewContentModeScaleToFill;
+                    // 高图只保留顶部 (注意： 应该设置imageBtn.imageView.contentMode 而不是imageBtn.contentMode)
+                    imageBtn.imageView.contentMode = UIViewContentModeScaleToFill;
                 }
                 //这里后期需要改一下
-                [imageView sd_setImageWithURL:[NSURL URLWithString:m.media_url]];
-                imageView.clipsToBounds = YES;
+                [imageBtn sd_setImageWithURL:[NSURL URLWithString:m.media_url] forState:UIControlStateNormal];
+                imageBtn.imageView.clipsToBounds = YES;
                 
             }
             
