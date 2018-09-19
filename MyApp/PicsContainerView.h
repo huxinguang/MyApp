@@ -9,9 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "Media.h"
 
-#define kStatusCellTopMargin 8                                                                                  // cell 顶部灰色留白
-#define kStatusCellBottomMargin 2                                                                               // cell 底部部灰色留白
-#define kStatusCellPadding 15                                                                                   // cell 内边距
+#define kStatusCellBottomLineHeight 8                                                                           // cell 底部部灰色留白
+#define kStatusCellPaddingLeftRight 15                                                                          // cell 左右内边距
 #define kStatusAvatarViewPaddingTop 10                                                                          // 头像 顶部留白
 #define kStatusAvatarViewSize CGSizeMake(40, 40)                                                                // 头像 size
 #define kStatusNamePaddingLeft 10                                                                               // 名字 左部留白
@@ -35,13 +34,34 @@
 #define kStatusNameFont 14                                                                                      // 名字 字体大小
 #define kStatusTextFont 16                                                                                      // 帖子文本 字体大小
 #define kStatusTopicFont 14                                                                                     // 帖子话题 字体大小
-#define kStatusCommentTextFont 14                                                                               // 帖子评论文本 字体大小
-#define kStatusPicHW (kAppScreenWidth-2*kStatusCellPadding-2*kStatusCellPaddingPic)/3                           // 帖子方形图片格子大小
-#define kStatusCommentPicHW (kAppScreenWidth-2*kStatusCellPadding-2*kStatusCommentBackgroundPadding-2*kStatusCellPaddingPic)/3 // 帖子评论方形图片格子大小
+#define kStatusHotCommentTextFont 14                                                                            // 帖子评论文本 字体大小
+#define kStatusPicHW (kAppScreenWidth-2*kStatusCellPaddingLeftRight-2*kStatusCellPaddingPic)/3                           // 帖子方形图片格子大小
+#define kStatusCommentPicHW (kAppScreenWidth-2*kStatusCellPaddingLeftRight-2*kStatusCommentBackgroundPadding-2*kStatusCellPaddingPic)/3 // 帖子评论方形图片格子大小
+
+#define kCommentCellPaddingLeftRight 15                                                                         // 评论cell 内边距
+#define kCommentAvatarViewMarginTop 15                                                                          // 评论头像 顶部留白
+#define kCommentAvatarViewSize CGSizeMake(36, 36)                                                               // 评论头像 size
+#define kCommentNameMarginLeft 10                                                                               // 评论姓名 左部留白
+#define kCommentNameLabelHeight 21                                                                              // 评论姓名 高度
+#define kCommentTimeLabelHeight 15                                                                              // 评论时间 高度
+#define kCommentNameFont 12                                                                                     // 评论姓名 字体
+#define kCommentTextFont 15                                                                                     // 评论文本 字体
+#define kCommentTimeLabelFont 11                                                                                // 评论时间 字体
+#define kCommentTextMarginTop 10                                                                                // 评论文本 顶部留白
+#define kCommentImageMarginTop 10                                                                               // 评论图片 顶部留白
+#define kReplyBackgroundPadding 12                                                                              // 评论回复背景 内边距
+#define kReplyBackgroundMarginTop 10                                                                            // 评论回复背景 顶部留白
+#define kCommentCellPaddingBottom 10                                                                            // cell 底部留白
+#define kReplyLabelFont 14                                                                                      // 评论回复 字体
+#define kReplyLabelDistance 5                                                                                   // 回复 上下间距
+#define kCommentPicHW (kAppScreenWidth-2*kCommentCellPaddingLeftRight-kCommentAvatarViewSize.width-kCommentNameMarginLeft-2*kStatusCellPaddingPic)/3 //评论方形图片大小
+#define kCommentCellBottomLineHeight CGFloatFromPixel(1)                                                        //评论cell分隔线高度
+
 
 typedef NS_ENUM(NSUInteger, PicsContainerType) {
     PicsContainerTypeStatus,
-    PicsContainerTypeStatusComment
+    PicsContainerTypeStatusHotComment,
+    PicsContainerTypeCommentOrReply
 };
 
 
@@ -51,6 +71,5 @@ typedef NS_ENUM(NSUInteger, PicsContainerType) {
 @property (nonatomic, strong)NSArray <Media *> *pics;
 @property (nonatomic, strong)NSArray <UIButton *> *picViews;
 
-- (instancetype)initWithType:(PicsContainerType)type;
 
 @end

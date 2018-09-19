@@ -8,7 +8,6 @@
 
 #import "StatusDetailViewController.h"
 #import "YYCategories.h"
-#import "Comment.h"
 #import "CommentCell.h"
 #import "ReplyDetailViewController.h"
 
@@ -29,7 +28,10 @@
     self.dataArray = @[];
     [self buildSubviews];
     [self loadData];
+}
 
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
     
 }
 
@@ -51,21 +53,26 @@
     __weak typeof(self) weakSelf = self;
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.requestSerializer.timeoutInterval = 20;
-    NSDictionary *dic = @{@"page":@1,@"page_size":@20,@"status_id":[NSNumber numberWithInteger:self.status_id],@"user_id":@1};
-    NSURLSessionDataTask *task = [manager GET:@"http://127.0.0.1:8080/news/getNewsDetail" parameters:dic progress:^(NSProgress * _Nonnull downloadProgress) {
+    NSDictionary *dic = @{@"page":@1,@"page_size":@20,@"status_id":[NSNumber numberWithInteger:self.sts.status_id],@"user_id":@1};
+    NSURLSessionDataTask *task = [manager GET:@"http://2c66eff1.ngrok.io/status/getStatusComments" parameters:dic progress:^(NSProgress * _Nonnull downloadProgress) {
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if ([responseObject isKindOfClass:[NSDictionary class]]) {
             NSDictionary *response = (NSDictionary *)responseObject;
             if ([[response objectForKey:@"code"] intValue] == 0) {
-                [Comment mj_setupReplacedKeyFromPropertyName:^NSDictionary *{
-                    return @{@"comment_id":@"id"};
+                [Status mj_setupReplacedKeyFromPropertyName:^NSDictionary *{
+                    return @{@"status_id":@"id",
+                             @"user_name":@"name"
+                             };
                 }];
-                [Comment mj_setupObjectClassInArray:^NSDictionary *{
-                    return @{@"latest_replies":[Comment class]};
+                [Status mj_setupObjectClassInArray:^NSDictionary *{
+                    return @{@"medias":[Media class],@"comment_medias":[Media class], @"replies":[Status class]};
+                }];
+                [Media mj_setupReplacedKeyFromPropertyName:^NSDictionary *{
+                    return @{@"media_id":@"id"};
                 }];
                 //当前在主线程，将高度保存在model中，这个过程涉及复杂计算，应该放在子线程
                 dispatch_async(dispatch_get_global_queue(0, 0), ^{
-                    weakSelf.dataArray = [Comment mj_objectArrayWithKeyValuesArray:response[@"data"]];
+                    weakSelf.dataArray = [Status mj_objectArrayWithKeyValuesArray:response[@"data"]];
                     NSLog(@"%@",weakSelf.dataArray);
                     [self calculateCellHeight];
                     //数据处理完毕回到主线程刷新UI
@@ -80,109 +87,122 @@
         NSLog(@"%@",[error localizedDescription]);
     }];
     
-//    [self.indicatorView setAnimatingWithStateOfTask:task];
+    [self.indicatorView setAnimatingWithStateOfTask:task];
     
 }
 
 - (void)calculateCellHeight{
     [self.dataArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        Comment *comment = (Comment *)obj;
-        CGFloat content_width = kAppScreenWidth - 10*2 - 40 - 10;
-        CGFloat nameLabelHeight = [comment.user_name heightForFont:[UIFont systemFontOfSize:15] width:content_width];
-        CGFloat content_height = 0;
-        CGFloat image_height = 0;
-        CGFloat image_width = 0;
+        Status *status = (Status *)obj;
+        
+        //评论文本高度计算
+        CGFloat content_max_width = kAppScreenWidth - 2*kCommentCellPaddingLeftRight - kCommentAvatarViewSize.width - kCommentNameMarginLeft;
+        CGFloat commentTextHeight = status.content.length > 0 ? [status.content heightForFont:[UIFont systemFontOfSize:kCommentTextFont] width:content_max_width] : 0;
+        
+        //评论图片容器高度计算
+        CGFloat commentImageContainerHeight = 0;
+        switch (status.medias.count) {
+            case 0:
+            {
+                commentImageContainerHeight = 0;
+            }
+                break;
+            default:
+            {
+                int lineCount = (int)((status.medias.count - 1)/3) + 1;
+                commentImageContainerHeight = lineCount*kCommentPicHW + (lineCount-1)*kStatusCellPaddingPic;
+            }
+                break;
+        }
+        
+        //回复背景高度计算
         CGFloat reply_bgview_height = 0;
-        CGFloat timeLabelHeight = [comment.create_time heightForFont:[UIFont systemFontOfSize:11] width:content_width];
-        if (comment.content) {
-            content_height = [comment.content heightForFont:[UIFont systemFontOfSize:15] width:content_width];
-        }
-        if (comment.img_url) {
-            if (comment.img_width >= comment.img_height) {
-                image_width = content_width*0.618;
-            }else{
-                image_width = content_width*0.5;
-            }
-            image_height = image_width*comment.img_height/comment.img_width;
-        }
-        if (comment.replies_count > 2) {
-            Comment *reply1 = comment.latest_replies[0];
-            
-            NSMutableAttributedString *reply1_text = nil;
-            if (reply1.img_url) {
-                reply1_text = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@：%@ 查看图片",reply1.user_name,reply1.content]];
-            }else{
-                reply1_text = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@：%@",reply1.user_name,reply1.content]];
-            }
-            
-            Comment *reply2 = comment.latest_replies[1];
-            NSMutableAttributedString *reply2_text = nil;
-            if (reply2.img_url) {
-                reply2_text = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@：%@ 查看图片",reply2.user_name,reply2.content]];
-            }else{
-                reply2_text = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@：%@",reply2.user_name,reply2.content]];
-            }
-            
-            NSMutableAttributedString *reply3_text = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"共%ld条回复 >",comment.replies_count]];
-            
-            reply_bgview_height = 5 +
-            [self heightForYYLabelDisplayedString:reply1_text maxWidth:content_width - 2*5]
-            + 5
-            + [self heightForYYLabelDisplayedString:reply2_text maxWidth:content_width - 2*5]
-            + 5
-            + [self heightForYYLabelDisplayedString:reply3_text maxWidth:content_width - 2*5]
-            + 5;
-            
-        }else if (comment.replies_count == 2){
+        CGFloat reply_label_max_width = content_max_width - 2*kReplyBackgroundPadding;
+        if (status.replies_count > 2) {
+            Status *reply1 = status.replies[0];
 
-            Comment *reply1 = comment.latest_replies[0];
             NSMutableAttributedString *reply1_text = nil;
-            if (reply1.img_url) {
-                reply1_text = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@：%@ 查看图片",reply1.user_name,reply1.content]];
+            if (reply1.medias.count > 0) {
+                reply1_text = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@：[图片]%@",reply1.user_name,reply1.content]];
+            }else{
+                reply1_text = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@：%@",reply1.user_name,reply1.content]];
+            }
+
+            Status *reply2 = status.replies[1];
+            NSMutableAttributedString *reply2_text = nil;
+            if (reply2.medias.count > 0) {
+                reply2_text = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@：[图片]%@",reply2.user_name,reply2.content]];
+            }else{
+                reply2_text = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@：%@",reply2.user_name,reply2.content]];
+            }
+
+            NSMutableAttributedString *reply3_text = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"查看%d条评论",status.replies_count]];
+            
+            reply_bgview_height = kReplyBackgroundPadding
+            + [self heightForYYLabelDisplayedString:reply1_text maxWidth:reply_label_max_width]
+            + kReplyLabelDistance
+            + [self heightForYYLabelDisplayedString:reply2_text maxWidth:reply_label_max_width]
+            + kReplyLabelDistance
+            + [self heightForYYLabelDisplayedString:reply3_text maxWidth:reply_label_max_width]
+            + kReplyBackgroundPadding;
+            
+        }else if (status.replies_count == 2){
+            Status *reply1 = status.replies[0];
+            NSMutableAttributedString *reply1_text = nil;
+            if (reply1.medias.count > 0) {
+                reply1_text = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@：[图片]%@",reply1.user_name,reply1.content]];
             }else{
                 reply1_text = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@：%@",reply1.user_name,reply1.content]];
             }
             
-            Comment *reply2 = comment.latest_replies[1];
+            Status *reply2 = status.replies[1];
             NSMutableAttributedString *reply2_text = nil;
-            if (reply2.img_url) {
-                reply2_text = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@：%@ 查看图片",reply2.user_name,reply2.content]];
+            if (reply2.medias.count > 0) {
+                reply2_text = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@：[图片]%@",reply2.user_name,reply2.content]];
             }else{
                 reply2_text = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@：%@",reply2.user_name,reply2.content]];
             }
             
-            reply_bgview_height = 5 +
-            [self heightForYYLabelDisplayedString:reply1_text maxWidth:content_width - 2*5]
-            + 5
-            + [self heightForYYLabelDisplayedString:reply2_text maxWidth:content_width - 2*5]
-            + 5;
+            reply_bgview_height = kReplyBackgroundPadding
+            + [self heightForYYLabelDisplayedString:reply1_text maxWidth:reply_label_max_width]
+            + kReplyLabelDistance
+            + [self heightForYYLabelDisplayedString:reply2_text maxWidth:reply_label_max_width]
+            + kReplyBackgroundPadding;
             
-        }else if (comment.replies_count == 1){
-            
-            Comment *reply1 = comment.latest_replies[0];
+        }else if (status.replies_count == 1){
+            Status *reply1 = status.replies[0];
             NSMutableAttributedString *reply1_text = nil;
-            if (reply1.img_url) {
-                reply1_text = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@：%@ 查看图片",reply1.user_name,reply1.content]];
+            if (reply1.medias.count > 0) {
+                reply1_text = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@：[图片]%@",reply1.user_name,reply1.content]];
             }else{
                 reply1_text = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@：%@",reply1.user_name,reply1.content]];
             }
-            reply_bgview_height = 5 +
-            [self heightForYYLabelDisplayedString:reply1_text maxWidth:content_width - 2*5]
-            + 5;
+            
+            reply_bgview_height = kReplyBackgroundPadding
+            + [self heightForYYLabelDisplayedString:reply1_text maxWidth:reply_label_max_width]
+            + kReplyBackgroundPadding;
+        
         }else{
             reply_bgview_height = 0;
         }
-        
-        comment.content_height = content_height;
-        comment.image_width = image_width;
-        comment.image_height = image_height;
-        comment.reply_bgview_height = reply_bgview_height;
-        comment.height = 10 + nameLabelHeight + 10 + content_height + (content_height > 0 ? 10 : 0) + image_height + (image_height > 0 ? 10 : 0) + reply_bgview_height + (reply_bgview_height > 0 ? 10 : 0) + timeLabelHeight + 10 + 0.5;
+
+        status.commentTextHeight = commentTextHeight;
+        status.commentImageContainerHeight = commentImageContainerHeight;
+        status.commentBgHeight = reply_bgview_height;
+        status.height = kCommentAvatarViewMarginTop
+        + kCommentAvatarViewSize.height
+        + (status.content.length > 0 ? kCommentTextMarginTop : 0)
+        + commentTextHeight
+        + (status.medias.count > 0 ? kCommentImageMarginTop : 0)
+        + commentImageContainerHeight
+        + (status.replies_count > 0 ? kReplyBackgroundMarginTop : 0)
+        + reply_bgview_height
+        + kCommentCellPaddingBottom;
     }];
 }
 
 - (CGFloat)heightForYYLabelDisplayedString:(NSMutableAttributedString *)attributedString maxWidth:(CGFloat)width{
-    attributedString.yy_font = [UIFont systemFontOfSize:14];
+    attributedString.yy_font = [UIFont systemFontOfSize:kReplyLabelFont];
     CGSize labelSize = CGSizeMake(width, CGFLOAT_MAX);
     YYTextLayout *layout = [YYTextLayout layoutWithContainerSize:labelSize text:attributedString];
     CGFloat labelHeight = layout.textBoundingSize.height;
@@ -202,25 +222,19 @@
     }
     cell.delegate = self;
     
-    Comment *comment = self.dataArray[indexPath.row];
-    [cell fillCellData:comment];
+    Status *status = self.dataArray[indexPath.row];
+    [cell fillCellData:status];
     [cell setNeedsUpdateConstraints];
     [cell updateConstraintsIfNeeded];
-    //    [cell addConstraintForSubViews:comment];
-    
-    //    cell.replyBtn.tag = indexPath.row;
-    //    cell.praiseBtn.tag = indexPath.row;
-    //
-    //    [cell.replyBtn addTarget:self action:@selector(reply:) forControlEvents:UIControlEventTouchUpInside];
-    //    [cell.praiseBtn addTarget:self action:@selector(praise:) forControlEvents:UIControlEventTouchUpInside];
+
     
     return cell;
 
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    Comment *comment = self.dataArray[indexPath.row];
-    return comment.height;
+    Status *status = self.dataArray[indexPath.row];
+    return status.height;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{

@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "RootViewController.h"
+#import "Status.h"
 @interface StatusDetailViewController : RootViewController
-@property (nonatomic, assign) NSInteger status_id;
+@property (nonatomic,strong) Status *sts;
 
 @end

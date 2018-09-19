@@ -22,7 +22,6 @@
 		C944F2AA214615F500159984 /* StatusDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C944F2A0214615F400159984 /* StatusDetailViewController.m */; };
 		C944F2AB214615F500159984 /* ReplyCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C944F2A1214615F400159984 /* ReplyCell.m */; };
 		C944F2AC214615F500159984 /* CommentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C944F2A2214615F500159984 /* CommentCell.m */; };
-		C944F2AD214615F500159984 /* Comment.m in Sources */ = {isa = PBXBuildFile; fileRef = C944F2A3214615F500159984 /* Comment.m */; };
 		C944F2B12146168500159984 /* UIImageView+CornerRadius.m in Sources */ = {isa = PBXBuildFile; fileRef = C944F2B02146168500159984 /* UIImageView+CornerRadius.m */; };
 		C944F2C421461D3B00159984 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = C944F2BF21461D3B00159984 /* MBProgressHUD.m */; };
 		C944F2C521461D3B00159984 /* MBProgressHUD+MJ.m in Sources */ = {isa = PBXBuildFile; fileRef = C944F2C221461D3B00159984 /* MBProgressHUD+MJ.m */; };
@@ -91,6 +90,8 @@
 		C9AA1173214FAB1900050385 /* repost@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9AA1171214FAB1900050385 /* repost@2x.png */; };
 		C9AA1176214FAB7200050385 /* comment@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9AA1174214FAB7200050385 /* comment@2x.png */; };
 		C9AA1177214FAB7200050385 /* comment@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9AA1175214FAB7200050385 /* comment@3x.png */; };
+		C9AA117A2150A85800050385 /* Comment.m in Sources */ = {isa = PBXBuildFile; fileRef = C9AA11792150A85700050385 /* Comment.m */; };
+		C9AA117D2150AAA800050385 /* BaseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C9AA117C2150AAA800050385 /* BaseCell.m */; };
 		C9E5FE8A2147B8BC00B6AC3D /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9E5FE892147B8BC00B6AC3D /* RootViewController.m */; };
 		C9E5FE8D2147BE0100B6AC3D /* CBTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = C9E5FE8C2147BE0100B6AC3D /* CBTitleView.m */; };
 		C9E5FE902147D83A00B6AC3D /* CBBarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C9E5FE8F2147D83A00B6AC3D /* CBBarButton.m */; };
@@ -143,7 +144,6 @@
 		C944F294214615F300159984 /* StatusViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatusViewController.h; sourceTree = "<group>"; };
 		C944F295214615F300159984 /* StatusCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatusCell.h; sourceTree = "<group>"; };
 		C944F296214615F300159984 /* StatusCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatusCell.m; sourceTree = "<group>"; };
-		C944F297214615F300159984 /* Comment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Comment.h; sourceTree = "<group>"; };
 		C944F298214615F400159984 /* ReplyCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReplyCell.h; sourceTree = "<group>"; };
 		C944F299214615F400159984 /* ReplyDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReplyDetailViewController.m; sourceTree = "<group>"; };
 		C944F29A214615F400159984 /* StatusViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatusViewController.m; sourceTree = "<group>"; };
@@ -154,7 +154,6 @@
 		C944F2A0214615F400159984 /* StatusDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatusDetailViewController.m; sourceTree = "<group>"; };
 		C944F2A1214615F400159984 /* ReplyCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReplyCell.m; sourceTree = "<group>"; };
 		C944F2A2214615F500159984 /* CommentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentCell.m; sourceTree = "<group>"; };
-		C944F2A3214615F500159984 /* Comment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Comment.m; sourceTree = "<group>"; };
 		C944F2A4214615F500159984 /* StatusDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatusDetailViewController.h; sourceTree = "<group>"; };
 		C944F2AF2146168500159984 /* UIImageView+CornerRadius.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+CornerRadius.h"; sourceTree = "<group>"; };
 		C944F2B02146168500159984 /* UIImageView+CornerRadius.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+CornerRadius.m"; sourceTree = "<group>"; };
@@ -252,6 +251,10 @@
 		C9AA1171214FAB1900050385 /* repost@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "repost@2x.png"; sourceTree = "<group>"; };
 		C9AA1174214FAB7200050385 /* comment@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "comment@2x.png"; sourceTree = "<group>"; };
 		C9AA1175214FAB7200050385 /* comment@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "comment@3x.png"; sourceTree = "<group>"; };
+		C9AA11782150A85700050385 /* Comment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Comment.h; sourceTree = "<group>"; };
+		C9AA11792150A85700050385 /* Comment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Comment.m; sourceTree = "<group>"; };
+		C9AA117B2150AAA800050385 /* BaseCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseCell.h; sourceTree = "<group>"; };
+		C9AA117C2150AAA800050385 /* BaseCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseCell.m; sourceTree = "<group>"; };
 		C9E5FE882147B8BC00B6AC3D /* RootViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
 		C9E5FE892147B8BC00B6AC3D /* RootViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
 		C9E5FE8B2147BE0100B6AC3D /* CBTitleView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CBTitleView.h; sourceTree = "<group>"; };
@@ -363,10 +366,8 @@
 				C944F2A0214615F400159984 /* StatusDetailViewController.m */,
 				C944F29C214615F400159984 /* ReplyDetailViewController.h */,
 				C944F299214615F400159984 /* ReplyDetailViewController.m */,
-				C944F297214615F300159984 /* Comment.h */,
-				C944F2A3214615F500159984 /* Comment.m */,
-				C944F29E214615F400159984 /* CommentCell.h */,
-				C944F2A2214615F500159984 /* CommentCell.m */,
+				C9AA11782150A85700050385 /* Comment.h */,
+				C9AA11792150A85700050385 /* Comment.m */,
 				C9E5FEA8214A56B300B6AC3D /* User.h */,
 				C9E5FEA9214A56B300B6AC3D /* User.m */,
 				C944F29D214615F400159984 /* Status.h */,
@@ -377,8 +378,12 @@
 				C9AA1153214C98E500050385 /* PicsContainerView.m */,
 				C9AA114F214B9E9200050385 /* HotCommentIcon.h */,
 				C9AA1150214B9E9200050385 /* HotCommentIcon.m */,
+				C9AA117B2150AAA800050385 /* BaseCell.h */,
+				C9AA117C2150AAA800050385 /* BaseCell.m */,
 				C944F295214615F300159984 /* StatusCell.h */,
 				C944F296214615F300159984 /* StatusCell.m */,
+				C944F29E214615F400159984 /* CommentCell.h */,
+				C944F2A2214615F500159984 /* CommentCell.m */,
 				C944F298214615F400159984 /* ReplyCell.h */,
 				C944F2A1214615F400159984 /* ReplyCell.m */,
 				C944F2602146072600159984 /* AppDelegate.h */,
@@ -762,6 +767,7 @@
 				C944F2AC214615F500159984 /* CommentCell.m in Sources */,
 				C944F2C521461D3B00159984 /* MBProgressHUD+MJ.m in Sources */,
 				C944F2FC21464C4900159984 /* CYTabBarController.m in Sources */,
+				C9AA117A2150A85800050385 /* Comment.m in Sources */,
 				C944F30521464D5C00159984 /* TabBarController.m in Sources */,
 				C944F2CA2146201200159984 /* HomeViewController.m in Sources */,
 				C944F2A7214615F500159984 /* StatusViewController.m in Sources */,
@@ -786,7 +792,6 @@
 				C944F3102146596A00159984 /* ChildViewController.m in Sources */,
 				C944F31C214753DA00159984 /* MyCell.m in Sources */,
 				C9E5FE902147D83A00B6AC3D /* CBBarButton.m in Sources */,
-				C944F2AD214615F500159984 /* Comment.m in Sources */,
 				C944F2AA214615F500159984 /* StatusDetailViewController.m in Sources */,
 				C9999D792147A098002B1503 /* CBDataGlobal.swift in Sources */,
 				C944F2F921464C4900159984 /* CYTabBarConfig.m in Sources */,
@@ -802,6 +807,7 @@
 				C944F2A6214615F500159984 /* ReplyDetailViewController.m in Sources */,
 				C9999D8A2147ACA7002B1503 /* UIColor+Ext.swift in Sources */,
 				C9999D7B2147A438002B1503 /* CBUtil.swift in Sources */,
+				C9AA117D2150AAA800050385 /* BaseCell.m in Sources */,
 				C944F2FE21464C4900159984 /* UITabBarItem+BadgeColor.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

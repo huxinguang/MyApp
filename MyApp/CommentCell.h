@@ -7,43 +7,29 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Comment.h"
+#import "BaseCell.h"
+
 
 @protocol CommentCellDelegate <NSObject>
 
-- (void)clickMoreReplyBtnAction:(int)comment_id;
-- (void)clickReplyNameAction:(int)user_id;
+- (void)clickMoreReplyBtnAction:(NSInteger)comment_id;
+- (void)clickReplyNameAction:(NSInteger)user_id;
 
 @end
 
-@interface CommentCell : UITableViewCell
+@interface CommentCell : BaseCell
 
-@property (nonatomic,strong)UIImageView *avatarView;
-@property (nonatomic,strong)UILabel *nameLabel;
-@property (nonatomic,strong)UILabel *contentLabel;
-@property (nonatomic,strong)UILabel *timeLabel;
-@property (nonatomic,strong)FLAnimatedImageView *contentImgView;
-@property (nonatomic,strong)UIButton *replyBtn;
-@property (nonatomic,strong)UIButton *praiseBtn;
-@property (nonatomic,strong)UILabel *praiseCountLabel;
-@property (nonatomic,strong)UIView *replyBgView;
-@property (nonatomic,strong)YYLabel *replayLabel1;
-@property (nonatomic,strong)YYLabel *replayLabel2;
-@property (nonatomic,strong)YYLabel *replayLabel3;
-@property (nonatomic,strong)UIView *thinLine;
+@property (nonatomic,strong)UILabel *timeLabel;     //时间
+@property (nonatomic,strong)UIView *replyBgView;    //回复背景
+@property (nonatomic,strong)YYLabel *replayLabel1;  //回复1
+@property (nonatomic,strong)YYLabel *replayLabel2;  //回复2
+@property (nonatomic,strong)YYLabel *replayLabel3;  //查看xx条回复
 
 @property (nonatomic, strong) MASConstraint *contentImgSizeConstraint;
-@property (nonatomic, strong) MASConstraint *replyBgViewHeightConstraint;
-@property (nonatomic, strong) MASConstraint *replyLabel1BottomConstraint;
-@property (nonatomic, strong) MASConstraint *replyLabel2BottomConstraint;
-@property (nonatomic, strong) MASConstraint *replyLabel3BottomConstraint;
 
-
-@property (nonatomic, strong) Comment *comment;
 @property (nonatomic, weak) id<CommentCellDelegate> delegate;
 
 
-- (void)fillCellData:(Comment *)comment;
 
 
 

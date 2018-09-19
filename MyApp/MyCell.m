@@ -55,24 +55,15 @@
         make.width.mas_equalTo(100);
     }];
     
-    
-    CALayer *line = [CALayer layer];
-    line.size = CGSizeMake(self.width, CGFloatFromPixel(1));
-    line.bottom = self.height;
-    line.backgroundColor = [UIColor colorWithRGB:0xEFF0F7].CGColor;
-    [self.layer addSublayer:line];
-    self.exclusiveTouch = YES;
-    
-    
-//    self.thinLine = [UIView new];
-//    self.thinLine.backgroundColor = [UIColor colorWithRGB:0xEFF0F7];
-//    [self.contentView addSubview:self.thinLine];
-//    [self.thinLine mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.equalTo(self.titleLabel.mas_left);
-//        make.right.equalTo(self.contentView.mas_right);
-//        make.bottom.equalTo(self.contentView.mas_bottom);
-//        make.height.mas_equalTo(0.5);
-//    }];
+    self.thinLine = [UIView new];
+    self.thinLine.backgroundColor = [UIColor colorWithRGB:0xEFF0F7];
+    [self.contentView addSubview:self.thinLine];
+    [self.thinLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.titleLabel.mas_left);
+        make.right.equalTo(self.contentView.mas_right);
+        make.bottom.equalTo(self.contentView.mas_bottom);
+        make.height.mas_equalTo(CGFloatFromPixel(1));
+    }];
     
 }
 

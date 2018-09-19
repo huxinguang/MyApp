@@ -58,20 +58,14 @@
 }
 
 - (void)loadData{
-    //@RequestMapping(value = "/getStatusList", produces = "application/json;charset=UTF-8")
-    //注意服务端的produces不能是text/plain而应是application/json
-    
     __weak typeof(self) weakSelf = self;
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.requestSerializer.timeoutInterval = 20;
-    NSURLSessionDataTask *task = [manager GET:@"http://127.0.0.1:8080/status/getStatusList?user_id=1&page=1&page_size=10" parameters:nil progress:^(NSProgress * _Nonnull downloadProgress) {
+    NSURLSessionDataTask *task = [manager GET:@"http://2c66eff1.ngrok.io/status/getStatusList?user_id=1&page=1&page_size=10" parameters:nil progress:^(NSProgress * _Nonnull downloadProgress) {
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if ([responseObject isKindOfClass:[NSDictionary class]]) {
             NSDictionary *response = (NSDictionary *)responseObject;
             if ([[response objectForKey:@"code"] intValue] == 0) {
-                
-                //打印当前线程，显示当前线程为主线程（<NSThread: 0x1c407f680>{number = 1, name = main}）
-                NSLog(@"处理数据前，当前线程为=========%@",[NSThread currentThread]);
                 [Status mj_setupReplacedKeyFromPropertyName:^NSDictionary *{
                     return @{@"status_id":@"id",
                              @"user_name":@"name"
@@ -84,16 +78,11 @@
                     return @{@"media_id":@"id"};
                 }];
                 dispatch_async(dispatch_get_global_queue(0, 0), ^{
-                    NSLog(@"处理数据中，当前线程为=========%@",[NSThread currentThread]);
                     weakSelf.dataArray = [Status mj_objectArrayWithKeyValuesArray:response[@"data"]];
-//                    NSLog(@"%@",weakSelf.dataArray);
-                    /*==================================================================================
-                                    将高度保存在model中，这个过程涉及复杂计算，应该放在子线程
-                     ==================================================================================*/
                     [weakSelf.dataArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                         Status *status = (Status *)obj;
                         //帖子文本高度计算
-                        CGFloat textHeight = status.content.length > 0 ? [status.content heightForFont:[UIFont systemFontOfSize:kStatusTextFont] width:kAppScreenWidth - 2*kStatusCellPadding] : 0;
+                        CGFloat textHeight = status.content.length > 0 ? [status.content heightForFont:[UIFont systemFontOfSize:kStatusTextFont] width:kAppScreenWidth - 2*kStatusCellPaddingLeftRight] : 0;
                         
                         //帖子图片容器高度计算
                         CGFloat imageContainerHeight = 0;
@@ -107,9 +96,9 @@
                             {
                                 CGFloat width = 0;
                                 if (status.medias[0].media_width > status.medias[0].media_height) {
-                                    width = kAppScreenWidth - 2*kStatusCellPadding;
+                                    width = kAppScreenWidth - 2*kStatusCellPaddingLeftRight;
                                 }else{
-                                    width = (kAppScreenWidth - 2*kStatusCellPadding)*0.667;
+                                    width = (kAppScreenWidth - 2*kStatusCellPaddingLeftRight)*0.667;
                                 }
                                 imageContainerHeight = width*status.medias[0].media_height/status.medias[0].media_width;
                             }
@@ -127,7 +116,7 @@
                                 break;
                         }
                         //神评文本高度计算
-                        CGFloat commentTextHeight = status.comment_content.length > 0 ? [status.comment_content heightForFont:[UIFont systemFontOfSize:kStatusCommentTextFont] width:kAppScreenWidth - 2*kStatusCellPadding - 2*kStatusCommentBackgroundPadding] : 0;
+                        CGFloat commentTextHeight = status.comment_content.length > 0 ? [status.comment_content heightForFont:[UIFont systemFontOfSize:kStatusHotCommentTextFont] width:kAppScreenWidth - 2*kStatusCellPaddingLeftRight - 2*kStatusCommentBackgroundPadding] : 0;
                         
                         //神评图片容器高度计算
                         CGFloat commentImageContainerHeight = 0;
@@ -166,8 +155,7 @@
                         status.commentImageContainerHeight = commentImageContainerHeight;
                         status.commentBgHeight = commentBgHeight;
                         
-                        CGFloat height = kStatusCellTopMargin
-                        + kStatusAvatarViewPaddingTop
+                        CGFloat height = kStatusAvatarViewPaddingTop
                         + kStatusAvatarViewSize.height
                         + (status.content ? kStatusTextPaddingTop: 0)
                         + (status.content ? textHeight : 0)
@@ -180,14 +168,13 @@
                         + kStatusToolbarButtonPaddingTop
                         + kStatusToolbarButtonItemHeight
                         + kStatusToolbarButtonPaddingBottom
-                        + kStatusCellBottomMargin;
+                        + kStatusCellBottomLineHeight;
                         
                         status.height = height;
                     }];
                     
                     //数据处理完毕回到主线程刷新UI
                     dispatch_async(dispatch_get_main_queue(), ^{
-//                        NSLog(@"处理数据后，当前线程为=========%@",[NSThread currentThread]);
                         [weakSelf.statusTableView reloadData];
                         [weakSelf.statusTableView.mj_header endRefreshing];
                     });
@@ -200,7 +187,7 @@
         [weakSelf.statusTableView.mj_header endRefreshing];
     }];
     
-//    [self.indicatorView setAnimatingWithStateOfTask:task];
+    [self.indicatorView setAnimatingWithStateOfTask:task];
     
 }
 
@@ -216,17 +203,16 @@
     }
     Status *status = self.dataArray[indexPath.row];
     [cell fillCellData:status];
-    
     [cell setNeedsUpdateConstraints];
     [cell updateConstraintsIfNeeded];
     
-//    cell.shareBtn.tag = indexPath.row;
-//    cell.commentBtn.tag = indexPath.row;
-//    cell.likeBtn.tag = indexPath.row;
-//
-//    [cell.shareBtn addTarget:self action:@selector(share:) forControlEvents:UIControlEventTouchUpInside];
-//    [cell.commentBtn addTarget:self action:@selector(comment:) forControlEvents:UIControlEventTouchUpInside];
-//    [cell.likeBtn addTarget:self action:@selector(praise:) forControlEvents:UIControlEventTouchUpInside];
+    cell.shareBtn.tag = indexPath.row;
+    cell.commentBtn.tag = indexPath.row;
+    cell.likeBtn.tag = indexPath.row;
+
+    [cell.shareBtn addTarget:self action:@selector(share:) forControlEvents:UIControlEventTouchUpInside];
+    [cell.commentBtn addTarget:self action:@selector(comment:) forControlEvents:UIControlEventTouchUpInside];
+    [cell.likeBtn addTarget:self action:@selector(praise:) forControlEvents:UIControlEventTouchUpInside];
     
     return cell;
     
@@ -249,12 +235,9 @@
 }
 
 - (void)comment:(UIButton *)btn{
-    Status *status = self.dataArray[btn.tag];
-    StatusDetailViewController *cvc = [[StatusDetailViewController alloc]init];
-    cvc.status_id = status.status_id;
-    [self.navigationController pushViewController:cvc animated:YES];
-    
-    
+    StatusDetailViewController *vc = [[StatusDetailViewController alloc]init];
+    vc.sts = self.dataArray[btn.tag];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)praise:(UIButton *)btn{

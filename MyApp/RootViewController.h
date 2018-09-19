@@ -12,6 +12,7 @@
 #import "CBBarButton.h"
 #import "CBTitleView.h"
 #import "CBDefaultPageView.h"
+#import "UIKit+AFNetworking.h"
 
 
 @interface RootViewController : UIViewController

@@ -7,7 +7,6 @@
 //
 
 #import "StatusCell.h"
-#import "UIImageView+CornerRadius.h"
 #import "HotCommentIcon.h"
 
 @implementation StatusCell
@@ -23,54 +22,23 @@
 
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
-        self.selectionStyle = UITableViewCellSelectionStyleNone;
-        self.contentView.backgroundColor = [UIColor whiteColor];
         [self buildSubviews];
     }
     return self;
 }
 
 - (void)buildSubviews{
-    UIView *topLine = [[UIView alloc]init];
-    topLine.backgroundColor = [UIColor colorWithRGB:0xEEEEEE];
-    [self.contentView addSubview:topLine];
-    [topLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.contentView.mas_top);
-        make.left.equalTo(self.contentView.mas_left);
-        make.right.equalTo(self.contentView.mas_right);
-        make.height.mas_equalTo(kStatusCellTopMargin);
-    }];
+    self.nameLabel.font = [UIFont systemFontOfSize:kStatusNameFont];
+    self.nameLabel.textColor = [UIColor orangeColor];
     
-    _avatarView = [[UIImageView alloc]initWithRoundingRectImageView];
-    [self.contentView addSubview:_avatarView];
-    [_avatarView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.contentView.mas_top).with.offset(kStatusCellTopMargin + kStatusAvatarViewPaddingTop);
-        make.left.equalTo(self.contentView.mas_left).with.offset(kStatusCellPadding);
-        make.size.mas_equalTo(kStatusAvatarViewSize);
-    }];
-    
-    _nameLabel = [UILabel new];
-    _nameLabel.font = [UIFont systemFontOfSize:kStatusNameFont];
-    _nameLabel.textColor = [UIColor orangeColor];
-    [self.contentView addSubview:_nameLabel];
-    [_nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self.avatarView.mas_centerY);
-        make.left.equalTo(self.avatarView.mas_right).with.offset(kStatusNamePaddingLeft);
-        make.right.equalTo(self.contentView.mas_right).with.offset(-50);
-    }];
-    
-    _contentLabel = [UILabel new];
-    _contentLabel.font = [UIFont systemFontOfSize:kStatusTextFont];
-    _contentLabel.numberOfLines = 0;
-    [self.contentView addSubview:_contentLabel];
-    
+    self.contentLabel.font = [UIFont systemFontOfSize:kStatusTextFont];
+
     _topicLabel = [UILabel new];
     _topicLabel.font = [UIFont systemFontOfSize:kStatusTopicFont];
     _topicLabel.textColor = kAppThemeColor;
     [self.contentView addSubview:_topicLabel];
 
-    _picsContainer = [[PicsContainerView alloc]initWithType:PicsContainerTypeStatus];
-    [self.contentView addSubview:_picsContainer];
+    self.picsContainer.type = PicsContainerTypeStatus;
     
     _commentBgView = [UIView new];
     _commentBgView.backgroundColor = [UIColor colorWithRGB:0xF5F5F7];
@@ -93,22 +61,23 @@
     _commentLikeBtn.transform = CGAffineTransformMakeRotation(-M_PI_2);
     [self.contentView addSubview:_commentLikeBtn];
     
-    _commentLikeCountLabel = [UILabel new];
-    _commentLikeCountLabel.font = [UIFont systemFontOfSize:13];
-    _commentLikeCountLabel.textColor = kAppThemeColor;
-    _commentLikeCountLabel.textAlignment = NSTextAlignmentCenter;
-    [self.contentView addSubview:_commentLikeCountLabel];
+    _commentPopularityLabel = [UILabel new];
+    _commentPopularityLabel.font = [UIFont systemFontOfSize:13];
+    _commentPopularityLabel.textColor = kAppThemeColor;
+    _commentPopularityLabel.textAlignment = NSTextAlignmentCenter;
+    [self.contentView addSubview:_commentPopularityLabel];
     
     _commentDislikeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [_commentDislikeBtn setImage:[UIImage imageNamed:@"comment_dislike"] forState:UIControlStateNormal];
     [self.contentView addSubview:_commentDislikeBtn];
     
     _commentTextLabel = [UILabel new];
-    _commentTextLabel.font = [UIFont systemFontOfSize:kStatusCommentTextFont];
+    _commentTextLabel.font = [UIFont systemFontOfSize:kStatusHotCommentTextFont];
     _commentTextLabel.numberOfLines = 0;
     [self.contentView addSubview:_commentTextLabel];
     
-    _commentPicsContainer = [[PicsContainerView alloc]initWithType:PicsContainerTypeStatusComment];
+    _commentPicsContainer = [[PicsContainerView alloc]init];
+    _commentPicsContainer.type = PicsContainerTypeStatusHotComment;
     [self.contentView addSubview:_commentPicsContainer];
     
     _shareBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -119,14 +88,10 @@
     [_commentBtn setImage:[UIImage imageNamed:@"comment"] forState:UIControlStateNormal];
     [self.contentView addSubview:_commentBtn];
 
-    _likeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_likeBtn setImage:[UIImage imageNamed:@"dislike"] forState:UIControlStateNormal];
-    _likeBtn.transform = CGAffineTransformMakeRotation(-M_PI);
-    [self.contentView addSubview:_likeBtn];
+    [self.likeBtn setImage:[UIImage imageNamed:@"dislike"] forState:UIControlStateNormal];
+    self.likeBtn.transform = CGAffineTransformMakeRotation(-M_PI);
     
-    _dislikeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_dislikeBtn setImage:[UIImage imageNamed:@"dislike"] forState:UIControlStateNormal];
-    [self.contentView addSubview:_dislikeBtn];
+    [self.dislikeBtn setImage:[UIImage imageNamed:@"dislike"] forState:UIControlStateNormal];
     
     _shareLabel = [UILabel new];
     _shareLabel.font = [UIFont systemFontOfSize:13];
@@ -137,22 +102,11 @@
     _commentLabel.font = [UIFont systemFontOfSize:13];
     _commentLabel.textColor = [UIColor lightGrayColor];
     [self.contentView addSubview:_commentLabel];
-    
-    _likeLabel = [UILabel new];
-    _likeLabel.font = [UIFont systemFontOfSize:13];
-    _likeLabel.textColor = [UIColor lightGrayColor];
-    [self.contentView addSubview:_likeLabel];
-    
-    UIView *bottomLine = [[UIView alloc]init];
-    bottomLine.backgroundColor = [UIColor colorWithRGB:0xEEEEEE];
-    [self.contentView addSubview:bottomLine];
-    [bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.contentView.mas_bottom);
-        make.left.equalTo(self.contentView.mas_left);
-        make.right.equalTo(self.contentView.mas_right);
-        make.height.mas_equalTo(kStatusCellBottomMargin);
-    }];
-    
+
+    self.popularityLabel.font = [UIFont systemFontOfSize:13];
+    self.popularityLabel.textColor = [UIColor lightGrayColor];
+
+    self.bottomLine.backgroundColor = [UIColor colorWithRGB:0xEEEEEE];
 
 }
 
@@ -179,31 +133,42 @@
 }
 
 - (void)updateConstraints{
+    [self.avatarView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.contentView.mas_top).with.offset(kStatusAvatarViewPaddingTop);
+        make.left.equalTo(self.contentView.mas_left).with.offset(kStatusCellPaddingLeftRight);
+        make.size.mas_equalTo(kStatusAvatarViewSize);
+    }];
+    
+    [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.avatarView.mas_centerY);
+        make.left.equalTo(self.avatarView.mas_right).with.offset(kStatusNamePaddingLeft);
+        make.right.equalTo(self.contentView.mas_right).with.offset(-50);
+    }];
     
     [self.contentLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.avatarView.mas_bottom).with.offset(kStatusTextPaddingTop);
-        make.left.equalTo(self.contentView.mas_left).with.offset(kStatusCellPadding);
-        make.right.equalTo(self.contentView.mas_right).with.offset(-kStatusCellPadding);
+        make.left.equalTo(self.contentView.mas_left).with.offset(kStatusCellPaddingLeftRight);
+        make.right.equalTo(self.contentView.mas_right).with.offset(-kStatusCellPaddingLeftRight);
     }];
     
     [self.topicLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.contentLabel.mas_bottom).with.offset(kStatusTopicPaddingTop);
-        make.left.equalTo(self.contentView.mas_left).with.offset(kStatusCellPadding);
-        make.right.equalTo(self.contentView.mas_right).with.offset(-kStatusCellPadding);
+        make.left.equalTo(self.contentView.mas_left).with.offset(kStatusCellPaddingLeftRight);
+        make.right.equalTo(self.contentView.mas_right).with.offset(-kStatusCellPaddingLeftRight);
         make.height.mas_equalTo(kStatusTopicLabelHeight);
     }];
     
     [self.picsContainer mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.topicLabel.mas_bottom).with.offset(kStatusImagePaddingTop);
-        make.left.equalTo(self.contentView.mas_left).with.offset(kStatusCellPadding);
-        make.right.equalTo(self.contentView.mas_right).with.offset(-kStatusCellPadding);
+        make.left.equalTo(self.contentView.mas_left).with.offset(kStatusCellPaddingLeftRight);
+        make.right.equalTo(self.contentView.mas_right).with.offset(-kStatusCellPaddingLeftRight);
         make.height.mas_equalTo(self.sts.imageContainerHeight);
     }];
     
     [self.commentBgView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.picsContainer.mas_bottom).with.offset(kStatusCommentBackgroundPaddingTop);
-        make.left.equalTo(self.contentView.mas_left).with.offset(kStatusCellPadding);
-        make.right.equalTo(self.contentView.mas_right).with.offset(-kStatusCellPadding);
+        make.left.equalTo(self.contentView.mas_left).with.offset(kStatusCellPaddingLeftRight);
+        make.right.equalTo(self.contentView.mas_right).with.offset(-kStatusCellPaddingLeftRight);
         make.height.mas_equalTo(self.sts.commentBgHeight);
     }];
     
@@ -227,26 +192,33 @@
     }];
     
     [self.shareBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.contentView.mas_bottom).with.offset(-(kStatusToolbarButtonPaddingBottom + kStatusCellBottomMargin));
+        make.bottom.equalTo(self.contentView.mas_bottom).with.offset(-(kStatusToolbarButtonPaddingBottom + kStatusCellBottomLineHeight));
         make.left.equalTo(self.contentView.mas_left).with.offset(kStatusToolbarMargin);
         make.size.mas_equalTo(CGSizeMake(kStatusToolbarButtonItemWidth, kStatusToolbarButtonItemHeight));
     }];
     
     [self.commentBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.contentView.mas_bottom).with.offset(-(kStatusToolbarButtonPaddingBottom + kStatusCellBottomMargin));
+        make.bottom.equalTo(self.contentView.mas_bottom).with.offset(-(kStatusToolbarButtonPaddingBottom + kStatusCellBottomLineHeight));
         make.left.equalTo(self.shareBtn.mas_right).with.offset(kStatusToolbarButtonDistance);
         make.size.mas_equalTo(CGSizeMake(kStatusToolbarButtonItemWidth, kStatusToolbarButtonItemHeight));
     }];
     
     [self.likeBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.contentView.mas_bottom).with.offset(-(kStatusToolbarButtonPaddingBottom + kStatusCellBottomMargin));
+        make.bottom.equalTo(self.contentView.mas_bottom).with.offset(-(kStatusToolbarButtonPaddingBottom + kStatusCellBottomLineHeight));
         make.left.equalTo(self.commentBtn.mas_right).with.offset(kStatusToolbarButtonDistance);
         make.size.mas_equalTo(CGSizeMake(kStatusToolbarButtonItemWidth, kStatusToolbarButtonItemHeight));
     }];
     [self.dislikeBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.contentView.mas_bottom).with.offset(-(kStatusToolbarButtonPaddingBottom + kStatusCellBottomMargin));
+        make.bottom.equalTo(self.contentView.mas_bottom).with.offset(-(kStatusToolbarButtonPaddingBottom + kStatusCellBottomLineHeight));
         make.left.equalTo(self.likeBtn.mas_right).with.offset(kStatusToolbarButtonDistance);
         make.size.mas_equalTo(CGSizeMake(kStatusToolbarButtonItemWidth, kStatusToolbarButtonItemHeight));
+    }];
+    
+    [self.bottomLine mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(self.contentView.mas_bottom);
+        make.left.equalTo(self.contentView.mas_left);
+        make.right.equalTo(self.contentView.mas_right);
+        make.height.mas_equalTo(kStatusCellBottomLineHeight);
     }];
     
     [super updateConstraints];

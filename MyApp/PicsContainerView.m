@@ -11,9 +11,10 @@
 
 @implementation PicsContainerView
 
-- (instancetype)initWithType:(PicsContainerType)type{
-    if (self = [super init]) {
-        self.type = type;
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
         NSMutableArray *array = [NSMutableArray new];
         for (int i=0; i<9; i++) {
             UIButton *imgBtn = [UIButton new];
@@ -25,7 +26,6 @@
     return self;
 }
 
-
 - (void)setPics:(NSArray<Media *> *)pics{
     _pics = pics;
     [self setNeedsLayout];
@@ -36,8 +36,10 @@
         CGSize picSize = CGSizeZero;
         if (self.type == PicsContainerTypeStatus) {
             picSize = CGSizeMake(kStatusPicHW, kStatusPicHW);
-        }else{
+        }else if(self.type == PicsContainerTypeStatusHotComment) {
             picSize = CGSizeMake(kStatusCommentPicHW, kStatusCommentPicHW);
+        }else{
+            picSize = CGSizeMake(kCommentPicHW, kCommentPicHW);
         }
         
         for (int i=0; i<9; i++) {
@@ -53,9 +55,9 @@
                         CGFloat height = 0;
                         if (self.type == PicsContainerTypeStatus) {
                             if (self.pics[0].media_width > self.pics[0].media_height) {
-                                width = kAppScreenWidth - 2*kStatusCellPadding;
+                                width = kAppScreenWidth - 2*kStatusCellPaddingLeftRight;
                             }else{
-                                width = (kAppScreenWidth - 2*kStatusCellPadding)*0.667;
+                                width = (kAppScreenWidth - 2*kStatusCellPaddingLeftRight)*0.667;
                             }
                             height = width*self.pics[0].media_height/self.pics[0].media_width;
                         }else{
