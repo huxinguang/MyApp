@@ -8,7 +8,6 @@
 
 #import "ReplyDetailViewController.h"
 #import "YYCategories.h"
-#import "Comment.h"
 #import "CommentCell.h"
 #import "ReplyCell.h"
 
@@ -17,7 +16,6 @@
 @property (nonatomic, strong) UIActivityIndicatorView *indicatorView;
 @property (nonatomic, strong) NSArray *dataArray;
 @property (nonatomic, strong) UITableView *replyTableView;
-@property (nonatomic, strong) Comment *comment_detail;
 
 @end
 
@@ -49,31 +47,50 @@
     
 }
 
+- (UIView *)tableHeaderView{
+    //选择在这里copy而不是直接用copy修饰Controller的sts属性，是为了评论详情数据更新时，同步数据到上级页面
+    Status *sts = [self.sts copy];
+    CommentCell *cell = [[CommentCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+    cell.frame = CGRectMake(0, 0, kAppScreenWidth, self.sts.height - self.sts.commentBgHeight);
+    /*由于strong修饰的Status类型的sts属性和上级页面里传过来的model之间的关系是两个指针指向同一个对象，
+     这里改了sts，也会改变上级页面model,解决办法是让Status遵循NSCopying协议，使其具备拷贝功能*/
+    sts.replies_count = 0;
+    sts.replies = @[];
+    [cell fillCellData:sts];
+    [cell setNeedsUpdateConstraints];
+    [cell updateConstraintsIfNeeded];
+    return cell;
+}
+
 - (void)loadData{
     __weak typeof(self) weakSelf = self;
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.requestSerializer.timeoutInterval = 20;
-    NSDictionary *dic = @{@"page":@1,@"page_size":@20,@"comment_id":[NSNumber numberWithInteger:self.comment_id],@"user_id":@1};
-    NSURLSessionDataTask *task = [manager GET:@"http://127.0.0.1:8080/news/getCommentDetailAndReplies" parameters:dic progress:^(NSProgress * _Nonnull downloadProgress) {
+    NSDictionary *dic = @{@"page":@1,@"page_size":@20,@"comment_id":[NSNumber numberWithInteger:self.sts.status_id],@"user_id":@1};
+    NSURLSessionDataTask *task = [manager GET:@"http://127.0.0.1:8080/status/getCommentReplies" parameters:dic progress:^(NSProgress * _Nonnull downloadProgress) {
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if ([responseObject isKindOfClass:[NSDictionary class]]) {
             NSDictionary *response = (NSDictionary *)responseObject;
             if ([[response objectForKey:@"code"] intValue] == 0) {
-                [Comment mj_setupReplacedKeyFromPropertyName:^NSDictionary *{
-                    return @{@"comment_id":@"id"};
+                [Status mj_setupReplacedKeyFromPropertyName:^NSDictionary *{
+                    return @{@"status_id":@"id",
+                             @"user_name":@"name"
+                             };
                 }];
-                [Comment mj_setupObjectClassInArray:^NSDictionary *{
-                    return @{@"latest_replies":[Comment class]};
+                [Status mj_setupObjectClassInArray:^NSDictionary *{
+                    return @{@"medias":[Media class], @"replies":[Status class]};
+                }];
+                [Media mj_setupReplacedKeyFromPropertyName:^NSDictionary *{
+                    return @{@"media_id":@"id"};
                 }];
                 //当前在主线程，将高度保存在model中，这个过程涉及复杂计算，应该放在子线程
                 dispatch_async(dispatch_get_global_queue(0, 0), ^{
                     NSDictionary *dic = response[@"data"];
-                    self.comment_detail = [Comment mj_objectWithKeyValues:dic[@"detail"]];
-                    self.dataArray = [Comment mj_objectArrayWithKeyValuesArray:dic[@"replies"]];
-                    
+                    self.dataArray = [Status mj_objectArrayWithKeyValuesArray:dic[@"replies"]];
                     [self calculateCellHeight];
                     //数据处理完毕回到主线程刷新UI
                     dispatch_async(dispatch_get_main_queue(), ^{
+                        weakSelf.replyTableView.tableHeaderView = [weakSelf tableHeaderView];
                         [weakSelf.replyTableView reloadData];
                     });
                 });
@@ -84,52 +101,47 @@
         NSLog(@"%@",[error localizedDescription]);
     }];
     
-//    [self.indicatorView setAnimatingWithStateOfTask:task];
+    [self.indicatorView setAnimatingWithStateOfTask:task];
     
 }
 
 - (void)calculateCellHeight{
     [self.dataArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        Comment *comment = (Comment *)obj;
-        CGFloat content_width = kAppScreenWidth - 15 - 32 - 10 - 20;
-        CGFloat nameLabelHeight = [comment.user_name heightForFont:[UIFont systemFontOfSize:13] width:content_width];
-        CGFloat timeLabelHeight = [comment.create_time heightForFont:[UIFont systemFontOfSize:11] width:content_width];
-        CGFloat content_height = 0;
-        CGFloat image_height = 0;
-        CGFloat image_width = 0;
-        if (comment.content) {
-            NSString *str = nil;
-            if (comment.reply_user_name) {
-                str = [NSString stringWithFormat:@"回复@%@：%@",comment.reply_user_name,comment.content];
-            }else{
-                str = comment.content;
+        Status *status = (Status *)obj;
+        
+        //评论文本高度计算
+        CGFloat content_max_width = kAppScreenWidth - 2*kCommentCellPaddingLeftRight - kCommentAvatarViewSize.width - kCommentNameMarginLeft;
+        NSMutableAttributedString *str = [[NSMutableAttributedString alloc]initWithString:status.content];
+        CGFloat commentTextHeight = status.content.length > 0 ? [self heightForYYLabelDisplayedString:str font:[UIFont systemFontOfSize:kCommentTextFont] maxWidth:content_max_width] : 0;
+        
+        //评论图片容器高度计算
+        CGFloat commentImageContainerHeight = 0;
+        switch (status.medias.count) {
+            case 0:
+            {
+                commentImageContainerHeight = 0;
             }
-            NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc]initWithString:str];
-            content_height = [self heightForYYLabelDisplayedString:attributedString maxWidth:content_width];
-        }
-        if (comment.img_url) {
-            if (comment.img_width >= comment.img_height) {
-                image_width = content_width*0.618;
-            }else{
-                image_width = content_width*0.5;
+                break;
+            default:
+            {
+                int lineCount = (int)((status.medias.count - 1)/3) + 1;
+                commentImageContainerHeight = lineCount*kCommentPicHW + (lineCount-1)*kStatusCellPaddingPic;
             }
-            image_height = image_width*comment.img_height/comment.img_width;
+                break;
         }
         
-        comment.content_height = content_height;
-        comment.image_width = image_width;
-        comment.image_height = image_height;
-        comment.height = 10 + nameLabelHeight + 5 + timeLabelHeight + 8 + content_height + (content_height > 0 ? 8 : 0) + image_height + (image_height > 0 ? 10 : 0) + 0.5;
+        status.commentTextHeight = commentTextHeight;
+        status.commentImageContainerHeight = commentImageContainerHeight;
+        status.height = kCommentAvatarViewMarginTop
+        + kCommentAvatarViewSize.height
+        + (status.content.length > 0 ? kCommentTextMarginTop : 0)
+        + commentTextHeight
+        + (status.medias.count > 0 ? kCommentImageMarginTop : 0)
+        + commentImageContainerHeight
+        + kCommentCellPaddingBottom;
     }];
 }
 
-- (CGFloat)heightForYYLabelDisplayedString:(NSMutableAttributedString *)attributedString maxWidth:(CGFloat)width{
-    attributedString.yy_font = [UIFont systemFontOfSize:14];
-    CGSize labelSize = CGSizeMake(width, CGFLOAT_MAX);
-    YYTextLayout *layout = [YYTextLayout layoutWithContainerSize:labelSize text:attributedString];
-    CGFloat labelHeight = layout.textBoundingSize.height;
-    return labelHeight;
-}
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return self.dataArray.count;
@@ -142,21 +154,16 @@
         cell = [[ReplyCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     }
     
-    Comment *comment = self.dataArray[indexPath.row];
-    [cell fillCellData:comment];
+    Status *sts = self.dataArray[indexPath.row];
+    [cell fillCellData:sts];
     [cell setNeedsUpdateConstraints];
     [cell updateConstraintsIfNeeded];
-
-
-    //    cell.praiseBtn.tag = indexPath.row;
-    //    [cell.praiseBtn addTarget:self action:@selector(praise:) forControlEvents:UIControlEventTouchUpInside];
     
     return cell;
-    
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    Comment *comment = self.dataArray[indexPath.row];
+    Status *comment = self.dataArray[indexPath.row];
     return comment.height;
 }
 

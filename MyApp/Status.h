@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "Media.h"
 
-@interface Status : NSObject
+@interface Status : NSObject<NSCopying>
 @property (nonatomic,assign)NSInteger status_id;                //帖子、评论、评论回复 的id
 @property (nonatomic,copy)NSString *user_name;
 @property (nonatomic,copy)NSString *head_url;

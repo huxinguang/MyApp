@@ -27,8 +27,9 @@
         self.nameLabel = [UILabel new];
         [self.contentView addSubview:self.nameLabel];
         
-        self.contentLabel = [UILabel new];
+        self.contentLabel = [YYLabel new];
         self.contentLabel.numberOfLines = 0;
+        self.contentLabel.lineBreakMode = NSLineBreakByCharWrapping;
         [self.contentView addSubview:self.contentLabel];
         
         self.picsContainer = [[PicsContainerView alloc]init];

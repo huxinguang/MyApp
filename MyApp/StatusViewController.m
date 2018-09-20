@@ -24,6 +24,12 @@
 
 @implementation StatusViewController
 
+- (void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    //在拉取详情页数据时， 如果帖子神评发生变化时，将
+//    [self.statusTableView reloadData];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     _dataArray = @[];
@@ -61,7 +67,7 @@
     __weak typeof(self) weakSelf = self;
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.requestSerializer.timeoutInterval = 20;
-    NSURLSessionDataTask *task = [manager GET:@"http://2c66eff1.ngrok.io/status/getStatusList?user_id=1&page=1&page_size=10" parameters:nil progress:^(NSProgress * _Nonnull downloadProgress) {
+    NSURLSessionDataTask *task = [manager GET:@"http://127.0.0.1:8080/status/getStatusList?user_id=1&page=1&page_size=10" parameters:nil progress:^(NSProgress * _Nonnull downloadProgress) {
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if ([responseObject isKindOfClass:[NSDictionary class]]) {
             NSDictionary *response = (NSDictionary *)responseObject;
@@ -79,100 +85,7 @@
                 }];
                 dispatch_async(dispatch_get_global_queue(0, 0), ^{
                     weakSelf.dataArray = [Status mj_objectArrayWithKeyValuesArray:response[@"data"]];
-                    [weakSelf.dataArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                        Status *status = (Status *)obj;
-                        //帖子文本高度计算
-                        CGFloat textHeight = status.content.length > 0 ? [status.content heightForFont:[UIFont systemFontOfSize:kStatusTextFont] width:kAppScreenWidth - 2*kStatusCellPaddingLeftRight] : 0;
-                        
-                        //帖子图片容器高度计算
-                        CGFloat imageContainerHeight = 0;
-                        switch (status.medias.count) {
-                            case 0:
-                            {
-                                imageContainerHeight = 0;
-                            }
-                                break;
-                            case 1:
-                            {
-                                CGFloat width = 0;
-                                if (status.medias[0].media_width > status.medias[0].media_height) {
-                                    width = kAppScreenWidth - 2*kStatusCellPaddingLeftRight;
-                                }else{
-                                    width = (kAppScreenWidth - 2*kStatusCellPaddingLeftRight)*0.667;
-                                }
-                                imageContainerHeight = width*status.medias[0].media_height/status.medias[0].media_width;
-                            }
-                                break;
-                            case 4:
-                            {
-                                imageContainerHeight = 2*kStatusPicHW + kStatusCellPaddingPic;
-                            }
-                                break;
-                            default:
-                            {
-                                int lineCount = (int)((status.medias.count - 1)/3) + 1;
-                                imageContainerHeight = lineCount*kStatusPicHW + (lineCount-1)*kStatusCellPaddingPic;
-                            }
-                                break;
-                        }
-                        //神评文本高度计算
-                        CGFloat commentTextHeight = status.comment_content.length > 0 ? [status.comment_content heightForFont:[UIFont systemFontOfSize:kStatusHotCommentTextFont] width:kAppScreenWidth - 2*kStatusCellPaddingLeftRight - 2*kStatusCommentBackgroundPadding] : 0;
-                        
-                        //神评图片容器高度计算
-                        CGFloat commentImageContainerHeight = 0;
-                        switch (status.comment_medias.count) {
-                            case 0:
-                            {
-                                commentImageContainerHeight = 0;
-                            }
-                                break;
-                            default:
-                            {
-                                int lineCount = (int)((status.medias.count - 1)/3) + 1;
-                                commentImageContainerHeight = lineCount*kStatusCommentPicHW + (lineCount-1)*kStatusCellPaddingPic;
-                            }
-                                break;
-                        }
-                        
-                        //神评背景总高度计算
-                        CGFloat commentBgHeight = 0;
-                        BOOL has_comment = (status.comment_content.length != 0) || (status.comment_medias.count != 0);
-                        if (!has_comment) {
-                            commentBgHeight = 0;
-                        }else{
-                            commentBgHeight = kStatusCommentBackgroundPadding
-                            + kStatusCommentHotIconHeight
-                            + (status.comment_content.length > 0 ? kStatusCommentTextPaddingTop : 0)
-                            + commentTextHeight
-                            + (status.comment_medias.count > 0 ? kStatusCommentImagePaddingTop : 0)
-                            + commentImageContainerHeight
-                            + kStatusCommentBackgroundPadding;
-                        }
-                        
-                        status.textHeight = textHeight;
-                        status.imageContainerHeight = imageContainerHeight;
-                        status.commentTextHeight = commentTextHeight;
-                        status.commentImageContainerHeight = commentImageContainerHeight;
-                        status.commentBgHeight = commentBgHeight;
-                        
-                        CGFloat height = kStatusAvatarViewPaddingTop
-                        + kStatusAvatarViewSize.height
-                        + (status.content ? kStatusTextPaddingTop: 0)
-                        + (status.content ? textHeight : 0)
-                        + kStatusTopicPaddingTop
-                        + kStatusTopicLabelHeight
-                        + (status.medias.count > 0 ? kStatusImagePaddingTop : 0)
-                        + imageContainerHeight
-                        + (has_comment == YES ? kStatusCommentBackgroundPaddingTop : 0)
-                        + commentBgHeight
-                        + kStatusToolbarButtonPaddingTop
-                        + kStatusToolbarButtonItemHeight
-                        + kStatusToolbarButtonPaddingBottom
-                        + kStatusCellBottomLineHeight;
-                        
-                        status.height = height;
-                    }];
-                    
+                    [weakSelf calculateCellHeight];
                     //数据处理完毕回到主线程刷新UI
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [weakSelf.statusTableView reloadData];
@@ -189,6 +102,102 @@
     
     [self.indicatorView setAnimatingWithStateOfTask:task];
     
+}
+
+- (void)calculateCellHeight{
+    [self.dataArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        Status *status = (Status *)obj;
+        //帖子文本高度计算
+        NSMutableAttributedString *str = [[NSMutableAttributedString alloc]initWithString:status.content];
+        CGFloat textHeight = status.content.length > 0 ? [self heightForYYLabelDisplayedString:str font:[UIFont systemFontOfSize:kStatusTextFont] maxWidth:kAppScreenWidth - 2*kStatusCellPaddingLeftRight] : 0;
+        //帖子图片容器高度计算
+        CGFloat imageContainerHeight = 0;
+        switch (status.medias.count) {
+            case 0:
+            {
+                imageContainerHeight = 0;
+            }
+                break;
+            case 1:
+            {
+                CGFloat width = 0;
+                if (status.medias[0].media_width > status.medias[0].media_height) {
+                    width = kAppScreenWidth - 2*kStatusCellPaddingLeftRight;
+                }else{
+                    width = (kAppScreenWidth - 2*kStatusCellPaddingLeftRight)*0.667;
+                }
+                imageContainerHeight = width*status.medias[0].media_height/status.medias[0].media_width;
+            }
+                break;
+            case 4:
+            {
+                imageContainerHeight = 2*kStatusPicHW + kStatusCellPaddingPic;
+            }
+                break;
+            default:
+            {
+                int lineCount = (int)((status.medias.count - 1)/3) + 1;
+                imageContainerHeight = lineCount*kStatusPicHW + (lineCount-1)*kStatusCellPaddingPic;
+            }
+                break;
+        }
+        //神评文本高度计算
+        CGFloat commentTextHeight = status.comment_content.length > 0 ? [status.comment_content heightForFont:[UIFont systemFontOfSize:kStatusHotCommentTextFont] width:kAppScreenWidth - 2*kStatusCellPaddingLeftRight - 2*kStatusCommentBackgroundPadding] : 0;
+        
+        //神评图片容器高度计算
+        CGFloat commentImageContainerHeight = 0;
+        switch (status.comment_medias.count) {
+            case 0:
+            {
+                commentImageContainerHeight = 0;
+            }
+                break;
+            default:
+            {
+                int lineCount = (int)((status.medias.count - 1)/3) + 1;
+                commentImageContainerHeight = lineCount*kStatusCommentPicHW + (lineCount-1)*kStatusCellPaddingPic;
+            }
+                break;
+        }
+        
+        //神评背景总高度计算
+        CGFloat commentBgHeight = 0;
+        BOOL has_comment = (status.comment_content.length != 0) || (status.comment_medias.count != 0);
+        if (!has_comment) {
+            commentBgHeight = 0;
+        }else{
+            commentBgHeight = kStatusCommentBackgroundPadding
+            + kStatusCommentHotIconHeight
+            + (status.comment_content.length > 0 ? kStatusCommentTextPaddingTop : 0)
+            + commentTextHeight
+            + (status.comment_medias.count > 0 ? kStatusCommentImagePaddingTop : 0)
+            + commentImageContainerHeight
+            + kStatusCommentBackgroundPadding;
+        }
+        
+        status.textHeight = textHeight;
+        status.imageContainerHeight = imageContainerHeight;
+        status.commentTextHeight = commentTextHeight;
+        status.commentImageContainerHeight = commentImageContainerHeight;
+        status.commentBgHeight = commentBgHeight;
+        
+        CGFloat height = kStatusAvatarViewPaddingTop
+        + kStatusAvatarViewSize.height
+        + (status.content ? kStatusTextPaddingTop: 0)
+        + (status.content ? textHeight : 0)
+        + kStatusTopicPaddingTop
+        + kStatusTopicLabelHeight
+        + (status.medias.count > 0 ? kStatusImagePaddingTop : 0)
+        + imageContainerHeight
+        + (has_comment == YES ? kStatusCommentBackgroundPaddingTop : 0)
+        + commentBgHeight
+        + kStatusToolbarButtonPaddingTop
+        + kStatusToolbarButtonItemHeight
+        + kStatusToolbarButtonPaddingBottom
+        + kStatusCellBottomLineHeight;
+        
+        status.height = height;
+    }];
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{

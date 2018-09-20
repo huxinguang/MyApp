@@ -8,6 +8,7 @@
 
 #import "PersonalViewController.h"
 #import "MyCell.h"
+#import "ResumeViewController.h"
 
 @interface PersonalViewController ()<UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic, strong)UITableView *myTableView;
@@ -70,6 +71,11 @@
     return cell;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    ResumeViewController *vc = [[ResumeViewController alloc]init];
+    [self.navigationController pushViewController:vc animated:YES];
+}
 
 
 - (void)didReceiveMemoryWarning {

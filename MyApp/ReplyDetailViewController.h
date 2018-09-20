@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "RootViewController.h"
+#import "Status.h"
 
 @interface ReplyDetailViewController : RootViewController
-@property (nonatomic, assign) NSInteger comment_id;
+@property (nonatomic, strong) Status *sts;
 @end

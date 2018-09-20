@@ -24,6 +24,8 @@
     self.nameLabel.textColor = [UIColor orangeColor];
     
     self.contentLabel.font = [UIFont systemFontOfSize:kCommentTextFont];
+    self.contentLabel.preferredMaxLayoutWidth = kAppScreenWidth - 2*kCommentCellPaddingLeftRight - kCommentAvatarViewSize.width - kCommentNameMarginLeft;
+    
     self.picsContainer.type = PicsContainerTypeCommentOrReply;
     
     _timeLabel = [UILabel new];
@@ -109,7 +111,7 @@
         reply2_text.yy_font = [UIFont systemFontOfSize:kReplyLabelFont];
         [reply2_text yy_setColor:[UIColor colorWithRGB:0x666666] range:NSMakeRange(reply2.user_name.length, reply2_text.length-reply2.user_name.length)];
         [reply2_text yy_setTextHighlightRange:NSMakeRange(0, reply2.user_name.length) color:kAppThemeColor backgroundColor:[UIColor clearColor] tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
-            NSLog(@"+++++++++++reply1_username");
+            NSLog(@"+++++++++++reply2_username");
         }];
         
         self.replayLabel2.attributedText = reply2_text;
@@ -121,7 +123,7 @@
         [reply3_text yy_setTextHighlightRange:NSMakeRange(0, reply3_text.length) color:kAppThemeColor backgroundColor:[UIColor clearColor] tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
             NSLog(@"+++++++++++reply3");
             if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(clickMoreReplyBtnAction:)]) {
-                [weakSelf.delegate clickMoreReplyBtnAction:status.status_id];
+                [weakSelf.delegate clickMoreReplyBtnAction:status];
             }
         }];
         self.replayLabel3.attributedText = reply3_text;
@@ -155,7 +157,7 @@
         reply2_text.yy_font = [UIFont systemFontOfSize:kReplyLabelFont];
         [reply2_text yy_setColor:[UIColor colorWithRGB:0x666666] range:NSMakeRange(reply2.user_name.length, reply2_text.length-reply2.user_name.length)];
         [reply2_text yy_setTextHighlightRange:NSMakeRange(0, reply2.user_name.length) color:kAppThemeColor backgroundColor:[UIColor clearColor] tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
-            NSLog(@"+++++++++++reply1_username");
+            NSLog(@"+++++++++++reply2_username");
         }];
         
         self.replayLabel2.attributedText = reply2_text;

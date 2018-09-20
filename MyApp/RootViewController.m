@@ -66,6 +66,16 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
+
+
+- (CGFloat)heightForYYLabelDisplayedString:(NSMutableAttributedString *)attributedString font:(UIFont *)font maxWidth:(CGFloat)width{
+    attributedString.yy_font = font;
+    CGSize labelSize = CGSizeMake(width, CGFLOAT_MAX);
+    YYTextLayout *layout = [YYTextLayout layoutWithContainerSize:labelSize text:attributedString];
+    CGFloat labelHeight = layout.textBoundingSize.height;
+    return labelHeight;
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.

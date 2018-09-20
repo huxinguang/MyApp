@@ -32,6 +32,7 @@
     self.nameLabel.textColor = [UIColor orangeColor];
     
     self.contentLabel.font = [UIFont systemFontOfSize:kStatusTextFont];
+    self.contentLabel.preferredMaxLayoutWidth = kAppScreenWidth - 2*kStatusCellPaddingLeftRight;
 
     _topicLabel = [UILabel new];
     _topicLabel.font = [UIFont systemFontOfSize:kStatusTopicFont];

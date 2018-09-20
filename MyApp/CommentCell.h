@@ -12,7 +12,7 @@
 
 @protocol CommentCellDelegate <NSObject>
 
-- (void)clickMoreReplyBtnAction:(NSInteger)comment_id;
+- (void)clickMoreReplyBtnAction:(Status *)status;
 - (void)clickReplyNameAction:(NSInteger)user_id;
 
 @end
@@ -24,8 +24,6 @@
 @property (nonatomic,strong)YYLabel *replayLabel1;  //回复1
 @property (nonatomic,strong)YYLabel *replayLabel2;  //回复2
 @property (nonatomic,strong)YYLabel *replayLabel3;  //查看xx条回复
-
-@property (nonatomic, strong) MASConstraint *contentImgSizeConstraint;
 
 @property (nonatomic, weak) id<CommentCellDelegate> delegate;
 

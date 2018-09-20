@@ -8,7 +8,6 @@
 
 #import "HomeViewController.h"
 #import "FSScrollContentView.h"
-#import "ChildViewController.h"
 #import "StatusViewController.h"
 
 @interface HomeViewController ()<FSPageContentViewDelegate,FSSegmentTitleViewDelegate>

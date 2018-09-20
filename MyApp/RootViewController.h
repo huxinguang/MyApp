@@ -32,6 +32,8 @@
 
 - (void)onLeftBarButtonClick;
 
+- (CGFloat)heightForYYLabelDisplayedString:(NSMutableAttributedString *)attributedString font:(UIFont *)font maxWidth:(CGFloat)width;
+
 
 
 @end

@@ -10,6 +10,7 @@
 #import "YYCategories.h"
 #import "CommentCell.h"
 #import "ReplyDetailViewController.h"
+#import "StatusCell.h"
 
 @interface StatusDetailViewController ()<UITableViewDelegate,UITableViewDataSource,CommentCellDelegate>
 
@@ -49,12 +50,29 @@
     
 }
 
+- (UIView *)tableHeaderView{
+    //选择在这里copy而不是直接用copy修饰Controller的sts属性，是为了神评数据更新时，同步数据到上级页面
+    Status *sts = [self.sts copy];
+    StatusCell *cell = [[StatusCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+    cell.frame = CGRectMake(0, 0, kAppScreenWidth, self.sts.height - self.sts.commentBgHeight);
+    /*由于strong修饰的Status类型的sts属性和上级页面里传过来的model之间的关系是两个指针指向同一个对象，
+     这里改了sts，也会改变上级页面model,解决办法是让Status遵循NSCopying协议，使其具备拷贝功能*/
+    sts.comment_content = @"";
+    sts.comment_medias = @[];
+    [cell fillCellData:sts];
+    [cell setNeedsUpdateConstraints];
+    [cell updateConstraintsIfNeeded];
+    return cell;
+}
+
+
+
 - (void)loadData{
     __weak typeof(self) weakSelf = self;
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.requestSerializer.timeoutInterval = 20;
     NSDictionary *dic = @{@"page":@1,@"page_size":@20,@"status_id":[NSNumber numberWithInteger:self.sts.status_id],@"user_id":@1};
-    NSURLSessionDataTask *task = [manager GET:@"http://2c66eff1.ngrok.io/status/getStatusComments" parameters:dic progress:^(NSProgress * _Nonnull downloadProgress) {
+    NSURLSessionDataTask *task = [manager GET:@"http://127.0.0.1:8080/status/getStatusComments" parameters:dic progress:^(NSProgress * _Nonnull downloadProgress) {
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if ([responseObject isKindOfClass:[NSDictionary class]]) {
             NSDictionary *response = (NSDictionary *)responseObject;
@@ -77,6 +95,7 @@
                     [self calculateCellHeight];
                     //数据处理完毕回到主线程刷新UI
                     dispatch_async(dispatch_get_main_queue(), ^{
+                        weakSelf.commentTableView.tableHeaderView = [weakSelf tableHeaderView];
                         [weakSelf.commentTableView reloadData];
                     });
                 });
@@ -97,7 +116,8 @@
         
         //评论文本高度计算
         CGFloat content_max_width = kAppScreenWidth - 2*kCommentCellPaddingLeftRight - kCommentAvatarViewSize.width - kCommentNameMarginLeft;
-        CGFloat commentTextHeight = status.content.length > 0 ? [status.content heightForFont:[UIFont systemFontOfSize:kCommentTextFont] width:content_max_width] : 0;
+        NSMutableAttributedString *str = [[NSMutableAttributedString alloc]initWithString:status.content];
+        CGFloat commentTextHeight = status.content.length > 0 ? [self heightForYYLabelDisplayedString:str font:[UIFont systemFontOfSize:kCommentTextFont] maxWidth:content_max_width] : 0;
         
         //评论图片容器高度计算
         CGFloat commentImageContainerHeight = 0;
@@ -139,11 +159,11 @@
             NSMutableAttributedString *reply3_text = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"查看%d条评论",status.replies_count]];
             
             reply_bgview_height = kReplyBackgroundPadding
-            + [self heightForYYLabelDisplayedString:reply1_text maxWidth:reply_label_max_width]
+            + [self heightForYYLabelDisplayedString:reply1_text font:[UIFont systemFontOfSize:kReplyLabelFont] maxWidth:reply_label_max_width]
             + kReplyLabelDistance
-            + [self heightForYYLabelDisplayedString:reply2_text maxWidth:reply_label_max_width]
+            + [self heightForYYLabelDisplayedString:reply2_text font:[UIFont systemFontOfSize:kReplyLabelFont] maxWidth:reply_label_max_width]
             + kReplyLabelDistance
-            + [self heightForYYLabelDisplayedString:reply3_text maxWidth:reply_label_max_width]
+            + [self heightForYYLabelDisplayedString:reply3_text font:[UIFont systemFontOfSize:kReplyLabelFont] maxWidth:reply_label_max_width]
             + kReplyBackgroundPadding;
             
         }else if (status.replies_count == 2){
@@ -164,9 +184,9 @@
             }
             
             reply_bgview_height = kReplyBackgroundPadding
-            + [self heightForYYLabelDisplayedString:reply1_text maxWidth:reply_label_max_width]
+            + [self heightForYYLabelDisplayedString:reply1_text font:[UIFont systemFontOfSize:kReplyLabelFont] maxWidth:reply_label_max_width]
             + kReplyLabelDistance
-            + [self heightForYYLabelDisplayedString:reply2_text maxWidth:reply_label_max_width]
+            + [self heightForYYLabelDisplayedString:reply2_text font:[UIFont systemFontOfSize:kReplyLabelFont] maxWidth:reply_label_max_width]
             + kReplyBackgroundPadding;
             
         }else if (status.replies_count == 1){
@@ -179,7 +199,7 @@
             }
             
             reply_bgview_height = kReplyBackgroundPadding
-            + [self heightForYYLabelDisplayedString:reply1_text maxWidth:reply_label_max_width]
+            + [self heightForYYLabelDisplayedString:reply1_text font:[UIFont systemFontOfSize:kReplyLabelFont] maxWidth:reply_label_max_width]
             + kReplyBackgroundPadding;
         
         }else{
@@ -201,13 +221,6 @@
     }];
 }
 
-- (CGFloat)heightForYYLabelDisplayedString:(NSMutableAttributedString *)attributedString maxWidth:(CGFloat)width{
-    attributedString.yy_font = [UIFont systemFontOfSize:kReplyLabelFont];
-    CGSize labelSize = CGSizeMake(width, CGFLOAT_MAX);
-    YYTextLayout *layout = [YYTextLayout layoutWithContainerSize:labelSize text:attributedString];
-    CGFloat labelHeight = layout.textBoundingSize.height;
-    return labelHeight;
-}
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return self.dataArray.count;
@@ -239,6 +252,9 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     //    [tableView deselectRowAtIndexPath:indexPath animated:NO];
+    ReplyDetailViewController *vc = [[ReplyDetailViewController alloc]init];
+    vc.sts = self.dataArray[indexPath.row];;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 
@@ -256,9 +272,9 @@
 
 #pragma mark - CommentCellDelegate
 
--(void)clickMoreReplyBtnAction:(int)comment_id{
+- (void)clickMoreReplyBtnAction:(Status *)status{
     ReplyDetailViewController *vc = [[ReplyDetailViewController alloc]init];
-    vc.comment_id = comment_id;
+    vc.sts = status;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
