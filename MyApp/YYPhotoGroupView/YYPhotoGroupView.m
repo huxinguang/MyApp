@@ -6,7 +6,6 @@
 //
 
 #import "YYPhotoGroupView.h"
-//#import "YYKit.h"
 
 #define kPadding 20
 #define kHiColor [UIColor colorWithRGBHex:0x2dd6b8]

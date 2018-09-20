@@ -10,6 +10,7 @@
 #import "CommentCell.h"
 #import "ReplyDetailViewController.h"
 #import "StatusCell.h"
+#import "YYPhotoGroupView.h"
 
 @interface StatusDetailViewController ()<UITableViewDelegate,UITableViewDataSource,CommentCellDelegate>
 
@@ -20,6 +21,10 @@
 @end
 
 @implementation StatusDetailViewController
+
+-(void)dealloc{
+    NSLog(@"=========");
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -238,8 +243,13 @@
     [cell fillCellData:status];
     [cell setNeedsUpdateConstraints];
     [cell updateConstraintsIfNeeded];
-
     
+    for (int i=0; i<cell.picsContainer.picViews.count; i++) {
+        UIButton *btn = cell.picsContainer.picViews[i];
+        btn.paramDic = @{@"cell":cell,@"pic_index":[NSNumber numberWithInt:i]};
+        [btn addTarget:self action:@selector(clickImage:) forControlEvents:UIControlEventTouchUpInside];
+    }
+
     return cell;
 
 }
@@ -267,6 +277,28 @@
 - (void)praise:(UIButton *)btn{
     
     
+}
+
+- (void)clickImage:(UIButton *)btn{
+    CommentCell *cell = btn.paramDic[@"cell"];
+    int index = [btn.paramDic[@"pic_index"] intValue];
+    NSMutableArray *items = [NSMutableArray new];
+    NSArray<Media *> *medias = cell.picsContainer.pics;
+    UIView *fromView = nil;
+    for (int i=0; i<medias.count; i++) {
+        UIButton *btnItem = cell.picsContainer.picViews[i];
+        Media *m = medias[i];
+        YYPhotoGroupItem *item = [YYPhotoGroupItem new];
+        item.thumbView = btnItem.imageView;
+        item.largeImageURL = [NSURL URLWithString:m.media_url];
+        item.largeImageSize = CGSizeMake(m.media_width, m.media_height);
+        [items addObject:item];
+        if (i == index) {
+            fromView = btnItem.imageView;
+        }
+    }
+    YYPhotoGroupView *v = [[YYPhotoGroupView alloc] initWithGroupItems:items];
+    [v presentFromImageView:fromView toContainer:self.navigationController.view animated:YES completion:nil];
 }
 
 #pragma mark - CommentCellDelegate
