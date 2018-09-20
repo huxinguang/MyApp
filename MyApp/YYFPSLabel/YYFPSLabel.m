@@ -7,8 +7,6 @@
 //
 
 #import "YYFPSLabel.h"
-#import "YYWeakProxy.h"
-//#import "YYKit.h"
 
 #define kSize CGSizeMake(55, 20)
 
@@ -72,10 +70,10 @@
     UIColor *color = [UIColor colorWithHue:0.27 * (progress - 0.2) saturation:1 brightness:0.9 alpha:1];
     
     NSMutableAttributedString *text = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%d FPS",(int)round(fps)]];
-//    [text setColor:color range:NSMakeRange(0, text.length - 3)];
-//    [text setColor:[UIColor whiteColor] range:NSMakeRange(text.length - 3, 3)];
-//    text.font = _font;
-//    [text setFont:_subFont range:NSMakeRange(text.length - 4, 1)];
+    [text setColor:color range:NSMakeRange(0, text.length - 3)];
+    [text setColor:[UIColor whiteColor] range:NSMakeRange(text.length - 3, 3)];
+    text.font = _font;
+    [text setFont:_subFont range:NSMakeRange(text.length - 4, 1)];
     
     self.attributedText = text;
 }

@@ -69,7 +69,7 @@
 
 
 - (CGFloat)heightForYYLabelDisplayedString:(NSMutableAttributedString *)attributedString font:(UIFont *)font maxWidth:(CGFloat)width{
-    attributedString.yy_font = font;
+    attributedString.font = font;
     CGSize labelSize = CGSizeMake(width, CGFLOAT_MAX);
     YYTextLayout *layout = [YYTextLayout layoutWithContainerSize:labelSize text:attributedString];
     CGFloat labelHeight = layout.textBoundingSize.height;

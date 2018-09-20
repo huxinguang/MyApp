@@ -91,9 +91,9 @@
             reply1_text = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@：%@",reply1.user_name,reply1.content]];
         }
 
-        reply1_text.yy_font = [UIFont systemFontOfSize:kReplyLabelFont];
-        [reply1_text yy_setColor:[UIColor colorWithRGB:0x666666] range:NSMakeRange(reply1.user_name.length, reply1_text.length-reply1.user_name.length)];
-        [reply1_text yy_setTextHighlightRange:NSMakeRange(0, reply1.user_name.length) color:kAppThemeColor backgroundColor:[UIColor clearColor] tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
+        reply1_text.font = [UIFont systemFontOfSize:kReplyLabelFont];
+        [reply1_text setColor:[UIColor colorWithRGB:0x666666] range:NSMakeRange(reply1.user_name.length, reply1_text.length-reply1.user_name.length)];
+        [reply1_text setTextHighlightRange:NSMakeRange(0, reply1.user_name.length) color:kAppThemeColor backgroundColor:[UIColor clearColor] tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
             NSLog(@"+++++++++++reply1_username");
         }];
 
@@ -108,9 +108,9 @@
             reply2_text = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@：%@",reply2.user_name,reply2.content]];
         }
         
-        reply2_text.yy_font = [UIFont systemFontOfSize:kReplyLabelFont];
-        [reply2_text yy_setColor:[UIColor colorWithRGB:0x666666] range:NSMakeRange(reply2.user_name.length, reply2_text.length-reply2.user_name.length)];
-        [reply2_text yy_setTextHighlightRange:NSMakeRange(0, reply2.user_name.length) color:kAppThemeColor backgroundColor:[UIColor clearColor] tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
+        reply2_text.font = [UIFont systemFontOfSize:kReplyLabelFont];
+        [reply2_text setColor:[UIColor colorWithRGB:0x666666] range:NSMakeRange(reply2.user_name.length, reply2_text.length-reply2.user_name.length)];
+        [reply2_text setTextHighlightRange:NSMakeRange(0, reply2.user_name.length) color:kAppThemeColor backgroundColor:[UIColor clearColor] tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
             NSLog(@"+++++++++++reply2_username");
         }];
         
@@ -118,9 +118,9 @@
 
 
         NSMutableAttributedString *reply3_text = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"查看%d条评论",status.replies_count]];
-        reply3_text.yy_font = [UIFont systemFontOfSize:kReplyLabelFont];
+        reply3_text.font = [UIFont systemFontOfSize:kReplyLabelFont];
         __weak typeof(self) weakSelf = self;
-        [reply3_text yy_setTextHighlightRange:NSMakeRange(0, reply3_text.length) color:kAppThemeColor backgroundColor:[UIColor clearColor] tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
+        [reply3_text setTextHighlightRange:NSMakeRange(0, reply3_text.length) color:kAppThemeColor backgroundColor:[UIColor clearColor] tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
             NSLog(@"+++++++++++reply3");
             if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(clickMoreReplyBtnAction:)]) {
                 [weakSelf.delegate clickMoreReplyBtnAction:status];
@@ -137,9 +137,9 @@
             reply1_text = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@：%@",reply1.user_name,reply1.content]];
         }
         
-        reply1_text.yy_font = [UIFont systemFontOfSize:kReplyLabelFont];
-        [reply1_text yy_setColor:[UIColor colorWithRGB:0x666666] range:NSMakeRange(reply1.user_name.length, reply1_text.length-reply1.user_name.length)];
-        [reply1_text yy_setTextHighlightRange:NSMakeRange(0, reply1.user_name.length) color:kAppThemeColor backgroundColor:[UIColor clearColor] tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
+        reply1_text.font = [UIFont systemFontOfSize:kReplyLabelFont];
+        [reply1_text setColor:[UIColor colorWithRGB:0x666666] range:NSMakeRange(reply1.user_name.length, reply1_text.length-reply1.user_name.length)];
+        [reply1_text setTextHighlightRange:NSMakeRange(0, reply1.user_name.length) color:kAppThemeColor backgroundColor:[UIColor clearColor] tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
             NSLog(@"+++++++++++reply1_username");
         }];
         
@@ -154,9 +154,9 @@
             reply2_text = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@：%@",reply2.user_name,reply2.content]];
         }
         
-        reply2_text.yy_font = [UIFont systemFontOfSize:kReplyLabelFont];
-        [reply2_text yy_setColor:[UIColor colorWithRGB:0x666666] range:NSMakeRange(reply2.user_name.length, reply2_text.length-reply2.user_name.length)];
-        [reply2_text yy_setTextHighlightRange:NSMakeRange(0, reply2.user_name.length) color:kAppThemeColor backgroundColor:[UIColor clearColor] tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
+        reply2_text.font = [UIFont systemFontOfSize:kReplyLabelFont];
+        [reply2_text setColor:[UIColor colorWithRGB:0x666666] range:NSMakeRange(reply2.user_name.length, reply2_text.length-reply2.user_name.length)];
+        [reply2_text setTextHighlightRange:NSMakeRange(0, reply2.user_name.length) color:kAppThemeColor backgroundColor:[UIColor clearColor] tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
             NSLog(@"+++++++++++reply2_username");
         }];
         
@@ -171,9 +171,9 @@
             reply1_text = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"%@：%@",reply1.user_name,reply1.content]];
         }
         
-        reply1_text.yy_font = [UIFont systemFontOfSize:kReplyLabelFont];
-        [reply1_text yy_setColor:[UIColor colorWithRGB:0x666666] range:NSMakeRange(reply1.user_name.length, reply1_text.length-reply1.user_name.length)];
-        [reply1_text yy_setTextHighlightRange:NSMakeRange(0, reply1.user_name.length) color:kAppThemeColor backgroundColor:[UIColor clearColor] tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
+        reply1_text.font = [UIFont systemFontOfSize:kReplyLabelFont];
+        [reply1_text setColor:[UIColor colorWithRGB:0x666666] range:NSMakeRange(reply1.user_name.length, reply1_text.length-reply1.user_name.length)];
+        [reply1_text setTextHighlightRange:NSMakeRange(0, reply1.user_name.length) color:kAppThemeColor backgroundColor:[UIColor clearColor] tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
             NSLog(@"+++++++++++reply1_username");
         }];
         

@@ -18,11 +18,10 @@
 #import <UIKit/UIKit.h>
 #import "MJExtension.h"
 #import "Masonry.h"
-#import "YYText.h"
-#import "YYCategories.h"
 #import "MJRefresh.h"
 #import "MBProgressHUD.h"
 #import "Macro.h"
+#import <YYKit/YYKit.h>
 
 
 

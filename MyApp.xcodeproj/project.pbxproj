@@ -63,6 +63,7 @@
 		C944F33B21476EE400159984 /* mine_accessory@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C944F33921476EE400159984 /* mine_accessory@3x.png */; };
 		C944F33C21476EE400159984 /* mine_accessory@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C944F33A21476EE400159984 /* mine_accessory@2x.png */; };
 		C98B26442153332200845F73 /* comment@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C98B26432153332200845F73 /* comment@2x.png */; };
+		C98B26482153359200845F73 /* YYPhotoGroupView.m in Sources */ = {isa = PBXBuildFile; fileRef = C98B26472153359200845F73 /* YYPhotoGroupView.m */; };
 		C9999D772147A047002B1503 /* CBNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9999D762147A047002B1503 /* CBNavigationController.swift */; };
 		C9999D792147A098002B1503 /* CBDataGlobal.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9999D782147A098002B1503 /* CBDataGlobal.swift */; };
 		C9999D7B2147A438002B1503 /* CBUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9999D7A2147A438002B1503 /* CBUtil.swift */; };
@@ -81,7 +82,6 @@
 		C9AA1158214CC67D00050385 /* timeline_image_longimage@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9AA1156214CC67D00050385 /* timeline_image_longimage@3x.png */; };
 		C9AA115B214CC69500050385 /* timeline_image_gif@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9AA1159214CC69500050385 /* timeline_image_gif@2x.png */; };
 		C9AA115C214CC69500050385 /* timeline_image_gif@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9AA115A214CC69500050385 /* timeline_image_gif@3x.png */; };
-		C9AA1162214F9D2600050385 /* YYWeakProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = C9AA115E214F9D2600050385 /* YYWeakProxy.m */; };
 		C9AA1163214F9D2600050385 /* YYFPSLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = C9AA1160214F9D2600050385 /* YYFPSLabel.m */; };
 		C9AA116E214FAA8F00050385 /* dislike@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9AA116C214FAA8F00050385 /* dislike@3x.png */; };
 		C9AA116F214FAA8F00050385 /* dislike@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9AA116D214FAA8F00050385 /* dislike@2x.png */; };
@@ -215,6 +215,8 @@
 		C944F33921476EE400159984 /* mine_accessory@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mine_accessory@3x.png"; sourceTree = "<group>"; };
 		C944F33A21476EE400159984 /* mine_accessory@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mine_accessory@2x.png"; sourceTree = "<group>"; };
 		C98B26432153332200845F73 /* comment@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "comment@2x.png"; sourceTree = "<group>"; };
+		C98B26462153359200845F73 /* YYPhotoGroupView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYPhotoGroupView.h; sourceTree = "<group>"; };
+		C98B26472153359200845F73 /* YYPhotoGroupView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYPhotoGroupView.m; sourceTree = "<group>"; };
 		C9999D752147A046002B1503 /* MyApp-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MyApp-Bridging-Header.h"; sourceTree = "<group>"; };
 		C9999D762147A047002B1503 /* CBNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CBNavigationController.swift; sourceTree = "<group>"; };
 		C9999D782147A098002B1503 /* CBDataGlobal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CBDataGlobal.swift; sourceTree = "<group>"; };
@@ -238,10 +240,8 @@
 		C9AA1156214CC67D00050385 /* timeline_image_longimage@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "timeline_image_longimage@3x.png"; sourceTree = "<group>"; };
 		C9AA1159214CC69500050385 /* timeline_image_gif@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "timeline_image_gif@2x.png"; sourceTree = "<group>"; };
 		C9AA115A214CC69500050385 /* timeline_image_gif@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "timeline_image_gif@3x.png"; sourceTree = "<group>"; };
-		C9AA115E214F9D2600050385 /* YYWeakProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYWeakProxy.m; sourceTree = "<group>"; };
 		C9AA115F214F9D2600050385 /* YYFPSLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYFPSLabel.h; sourceTree = "<group>"; };
 		C9AA1160214F9D2600050385 /* YYFPSLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYFPSLabel.m; sourceTree = "<group>"; };
-		C9AA1161214F9D2600050385 /* YYWeakProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYWeakProxy.h; sourceTree = "<group>"; };
 		C9AA116C214FAA8F00050385 /* dislike@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dislike@3x.png"; sourceTree = "<group>"; };
 		C9AA116D214FAA8F00050385 /* dislike@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dislike@2x.png"; sourceTree = "<group>"; };
 		C9AA1170214FAB1800050385 /* repost@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "repost@3x.png"; sourceTree = "<group>"; };
@@ -328,6 +328,7 @@
 		C944F25F2146072600159984 /* MyApp */ = {
 			isa = PBXGroup;
 			children = (
+				C98B26452153358500845F73 /* YYPhotoGroupView */,
 				C9AA11812153326400050385 /* images */,
 				C9AA115D214F9D2600050385 /* YYFPSLabel */,
 				C944F3062146592700159984 /* FSScrollContentViewLib */,
@@ -490,13 +491,20 @@
 			name = "Recovered References";
 			sourceTree = "<group>";
 		};
+		C98B26452153358500845F73 /* YYPhotoGroupView */ = {
+			isa = PBXGroup;
+			children = (
+				C98B26462153359200845F73 /* YYPhotoGroupView.h */,
+				C98B26472153359200845F73 /* YYPhotoGroupView.m */,
+			);
+			path = YYPhotoGroupView;
+			sourceTree = "<group>";
+		};
 		C9AA115D214F9D2600050385 /* YYFPSLabel */ = {
 			isa = PBXGroup;
 			children = (
-				C9AA115E214F9D2600050385 /* YYWeakProxy.m */,
 				C9AA115F214F9D2600050385 /* YYFPSLabel.h */,
 				C9AA1160214F9D2600050385 /* YYFPSLabel.m */,
-				C9AA1161214F9D2600050385 /* YYWeakProxy.h */,
 			);
 			path = YYFPSLabel;
 			sourceTree = "<group>";
@@ -796,7 +804,6 @@
 				C9E5FE8D2147BE0100B6AC3D /* CBTitleView.m in Sources */,
 				C944F2FD21464C4900159984 /* UINavigationController+hidesBottomBarWhenPushed.m in Sources */,
 				C9999D772147A047002B1503 /* CBNavigationController.swift in Sources */,
-				C9AA1162214F9D2600050385 /* YYWeakProxy.m in Sources */,
 				C944F2FB21464C4900159984 /* CYButton.m in Sources */,
 				C944F31C214753DA00159984 /* MyCell.m in Sources */,
 				C9E5FE902147D83A00B6AC3D /* CBBarButton.m in Sources */,
@@ -813,6 +820,7 @@
 				C944F30C2146592700159984 /* FSSegmentTitleView.m in Sources */,
 				C944F2AB214615F500159984 /* ReplyCell.m in Sources */,
 				C944F2A6214615F500159984 /* ReplyDetailViewController.m in Sources */,
+				C98B26482153359200845F73 /* YYPhotoGroupView.m in Sources */,
 				C9999D8A2147ACA7002B1503 /* UIColor+Ext.swift in Sources */,
 				C9999D7B2147A438002B1503 /* CBUtil.swift in Sources */,
 				C9AA117D2150AAA800050385 /* BaseCell.m in Sources */,
@@ -991,7 +999,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = U7JKYT7J7K;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = /Users/huxinguang/Desktop/MyApp/MyApp/PrefixHeader.pch;
+				GCC_PREFIX_HEADER = /Users/huxinguang/Desktop/youme/MyApp/MyApp/PrefixHeader.pch;
 				INFOPLIST_FILE = MyApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1017,7 +1025,7 @@
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = U7JKYT7J7K;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = /Users/huxinguang/Desktop/MyApp/MyApp/PrefixHeader.pch;
+				GCC_PREFIX_HEADER = /Users/huxinguang/Desktop/youme/MyApp/MyApp/PrefixHeader.pch;
 				INFOPLIST_FILE = MyApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = (
