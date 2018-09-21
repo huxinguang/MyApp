@@ -247,6 +247,9 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     //    [tableView deselectRowAtIndexPath:indexPath animated:NO];
+    StatusDetailViewController *vc = [[StatusDetailViewController alloc]init];
+    vc.sts = self.dataArray[indexPath.row];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 

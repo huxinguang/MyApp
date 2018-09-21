@@ -7,11 +7,7 @@ pod 'FMDB', '~> 2.7.2'
 pod 'FMDBMigrationManager', '~> 1.4.1'
 pod 'Masonry', '~> 1.1.0'
 pod 'FLEX', '~> 2.0', :configurations => ['Debug']
-#pod 'YYCategories'
-#pod 'YYText'
 pod 'MJRefresh'
 pod 'FLAnimatedImage', '~> 1.0'
-#pod 'YYImage'
-#pod 'YYWebImage'
 pod 'YYKit'
 end
