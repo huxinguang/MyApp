@@ -65,6 +65,38 @@
 		C98B26442153332200845F73 /* comment@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C98B26432153332200845F73 /* comment@2x.png */; };
 		C98B26482153359200845F73 /* YYPhotoGroupView.m in Sources */ = {isa = PBXBuildFile; fileRef = C98B26472153359200845F73 /* YYPhotoGroupView.m */; };
 		C98B264C2153504800845F73 /* UIButton+PassValue.m in Sources */ = {isa = PBXBuildFile; fileRef = C98B264B2153504800845F73 /* UIButton+PassValue.m */; };
+		C98B267121548FD000845F73 /* TZAlbumCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C98B264F21548FD000845F73 /* TZAlbumCell.xib */; };
+		C98B267221548FD000845F73 /* TZAssetCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C98B265221548FD000845F73 /* TZAssetCell.m */; };
+		C98B267321548FD000845F73 /* TZAssetCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C98B265321548FD000845F73 /* TZAssetCell.xib */; };
+		C98B267421548FD000845F73 /* TZVideoPlayerController.m in Sources */ = {isa = PBXBuildFile; fileRef = C98B265421548FD000845F73 /* TZVideoPlayerController.m */; };
+		C98B267521548FD000845F73 /* photo_sel_photoPickerVc@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C98B265621548FD000845F73 /* photo_sel_photoPickerVc@2x.png */; };
+		C98B267621548FD000845F73 /* MMVideoPreviewPlayHL@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C98B265721548FD000845F73 /* MMVideoPreviewPlayHL@2x.png */; };
+		C98B267721548FD000845F73 /* photo_sel_previewVc@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C98B265821548FD000845F73 /* photo_sel_previewVc@2x.png */; };
+		C98B267821548FD000845F73 /* MMVideoPreviewPlay@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C98B265921548FD000845F73 /* MMVideoPreviewPlay@2x.png */; };
+		C98B267921548FD000845F73 /* preview_original_def@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C98B265A21548FD000845F73 /* preview_original_def@2x.png */; };
+		C98B267A21548FD000845F73 /* photo_def_previewVc@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C98B265B21548FD000845F73 /* photo_def_previewVc@2x.png */; };
+		C98B267B21548FD000845F73 /* photo_original_sel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C98B265C21548FD000845F73 /* photo_original_sel@2x.png */; };
+		C98B267C21548FD000845F73 /* photo_def_photoPickerVc@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C98B265D21548FD000845F73 /* photo_def_photoPickerVc@2x.png */; };
+		C98B267D21548FD000845F73 /* TableViewArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C98B265E21548FD000845F73 /* TableViewArrow@2x.png */; };
+		C98B267E21548FD000845F73 /* preview_number_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C98B265F21548FD000845F73 /* preview_number_icon@2x.png */; };
+		C98B267F21548FD000845F73 /* picker_navi_back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C98B266021548FD000845F73 /* picker_navi_back@2x.png */; };
+		C98B268021548FD000845F73 /* photo_original_def@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C98B266121548FD000845F73 /* photo_original_def@2x.png */; };
+		C98B268121548FD000845F73 /* photo_number_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C98B266221548FD000845F73 /* photo_number_icon@2x.png */; };
+		C98B268221548FD000845F73 /* VideoSendIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C98B266321548FD000845F73 /* VideoSendIcon@2x.png */; };
+		C98B268321548FD000845F73 /* TZAssetModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C98B266421548FD000845F73 /* TZAssetModel.m */; };
+		C98B268421548FD000845F73 /* UIView+Layout.m in Sources */ = {isa = PBXBuildFile; fileRef = C98B266621548FD000845F73 /* UIView+Layout.m */; };
+		C98B268521548FD000845F73 /* TZPhotoPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C98B266721548FD000845F73 /* TZPhotoPreviewController.m */; };
+		C98B268621548FD000845F73 /* TZImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C98B266921548FD000845F73 /* TZImageManager.m */; };
+		C98B268721548FD000845F73 /* TZPhotoPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = C98B266A21548FD000845F73 /* TZPhotoPickerController.m */; };
+		C98B268821548FD000845F73 /* TZPhotoPreviewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C98B266B21548FD000845F73 /* TZPhotoPreviewCell.m */; };
+		C98B268921548FD000845F73 /* TZImagePickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = C98B267021548FD000845F73 /* TZImagePickerController.m */; };
+		C98B268C215494C000845F73 /* InputToolBar.m in Sources */ = {isa = PBXBuildFile; fileRef = C98B268B215494C000845F73 /* InputToolBar.m */; };
+		C98B26962154B78400845F73 /* UITextView+XGPlaceholder.m in Sources */ = {isa = PBXBuildFile; fileRef = C98B26952154B78400845F73 /* UITextView+XGPlaceholder.m */; };
+		C98B26992154EB6300845F73 /* input_micphone@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C98B26972154EB6200845F73 /* input_micphone@3x.png */; };
+		C98B269A2154EB6300845F73 /* input_micphone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C98B26982154EB6200845F73 /* input_micphone@2x.png */; };
+		C98B269D2154EBCE00845F73 /* input_image@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C98B269B2154EBCD00845F73 /* input_image@2x.png */; };
+		C98B269E2154EBCE00845F73 /* input_image@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C98B269C2154EBCD00845F73 /* input_image@3x.png */; };
+		C98B26A12159C30800845F73 /* InputTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = C98B26A02159C30800845F73 /* InputTextView.m */; };
 		C9999D772147A047002B1503 /* CBNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9999D762147A047002B1503 /* CBNavigationController.swift */; };
 		C9999D792147A098002B1503 /* CBDataGlobal.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9999D782147A098002B1503 /* CBDataGlobal.swift */; };
 		C9999D7B2147A438002B1503 /* CBUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9999D7A2147A438002B1503 /* CBUtil.swift */; };
@@ -220,6 +252,50 @@
 		C98B26472153359200845F73 /* YYPhotoGroupView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYPhotoGroupView.m; sourceTree = "<group>"; };
 		C98B264A2153504800845F73 /* UIButton+PassValue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIButton+PassValue.h"; sourceTree = "<group>"; };
 		C98B264B2153504800845F73 /* UIButton+PassValue.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIButton+PassValue.m"; sourceTree = "<group>"; };
+		C98B264E21548FD000845F73 /* TZPhotoPreviewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TZPhotoPreviewCell.h; sourceTree = "<group>"; };
+		C98B264F21548FD000845F73 /* TZAlbumCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TZAlbumCell.xib; sourceTree = "<group>"; };
+		C98B265021548FD000845F73 /* TZPhotoPickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TZPhotoPickerController.h; sourceTree = "<group>"; };
+		C98B265121548FD000845F73 /* TZImageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TZImageManager.h; sourceTree = "<group>"; };
+		C98B265221548FD000845F73 /* TZAssetCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TZAssetCell.m; sourceTree = "<group>"; };
+		C98B265321548FD000845F73 /* TZAssetCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TZAssetCell.xib; sourceTree = "<group>"; };
+		C98B265421548FD000845F73 /* TZVideoPlayerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TZVideoPlayerController.m; sourceTree = "<group>"; };
+		C98B265621548FD000845F73 /* photo_sel_photoPickerVc@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "photo_sel_photoPickerVc@2x.png"; sourceTree = "<group>"; };
+		C98B265721548FD000845F73 /* MMVideoPreviewPlayHL@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MMVideoPreviewPlayHL@2x.png"; sourceTree = "<group>"; };
+		C98B265821548FD000845F73 /* photo_sel_previewVc@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "photo_sel_previewVc@2x.png"; sourceTree = "<group>"; };
+		C98B265921548FD000845F73 /* MMVideoPreviewPlay@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MMVideoPreviewPlay@2x.png"; sourceTree = "<group>"; };
+		C98B265A21548FD000845F73 /* preview_original_def@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "preview_original_def@2x.png"; sourceTree = "<group>"; };
+		C98B265B21548FD000845F73 /* photo_def_previewVc@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "photo_def_previewVc@2x.png"; sourceTree = "<group>"; };
+		C98B265C21548FD000845F73 /* photo_original_sel@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "photo_original_sel@2x.png"; sourceTree = "<group>"; };
+		C98B265D21548FD000845F73 /* photo_def_photoPickerVc@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "photo_def_photoPickerVc@2x.png"; sourceTree = "<group>"; };
+		C98B265E21548FD000845F73 /* TableViewArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "TableViewArrow@2x.png"; sourceTree = "<group>"; };
+		C98B265F21548FD000845F73 /* preview_number_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "preview_number_icon@2x.png"; sourceTree = "<group>"; };
+		C98B266021548FD000845F73 /* picker_navi_back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "picker_navi_back@2x.png"; sourceTree = "<group>"; };
+		C98B266121548FD000845F73 /* photo_original_def@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "photo_original_def@2x.png"; sourceTree = "<group>"; };
+		C98B266221548FD000845F73 /* photo_number_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "photo_number_icon@2x.png"; sourceTree = "<group>"; };
+		C98B266321548FD000845F73 /* VideoSendIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "VideoSendIcon@2x.png"; sourceTree = "<group>"; };
+		C98B266421548FD000845F73 /* TZAssetModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TZAssetModel.m; sourceTree = "<group>"; };
+		C98B266521548FD000845F73 /* TZImagePickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TZImagePickerController.h; sourceTree = "<group>"; };
+		C98B266621548FD000845F73 /* UIView+Layout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Layout.m"; sourceTree = "<group>"; };
+		C98B266721548FD000845F73 /* TZPhotoPreviewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TZPhotoPreviewController.m; sourceTree = "<group>"; };
+		C98B266821548FD000845F73 /* TZAssetCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TZAssetCell.h; sourceTree = "<group>"; };
+		C98B266921548FD000845F73 /* TZImageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TZImageManager.m; sourceTree = "<group>"; };
+		C98B266A21548FD000845F73 /* TZPhotoPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TZPhotoPickerController.m; sourceTree = "<group>"; };
+		C98B266B21548FD000845F73 /* TZPhotoPreviewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TZPhotoPreviewCell.m; sourceTree = "<group>"; };
+		C98B266C21548FD000845F73 /* TZAssetModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TZAssetModel.h; sourceTree = "<group>"; };
+		C98B266D21548FD000845F73 /* TZVideoPlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TZVideoPlayerController.h; sourceTree = "<group>"; };
+		C98B266E21548FD000845F73 /* TZPhotoPreviewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TZPhotoPreviewController.h; sourceTree = "<group>"; };
+		C98B266F21548FD000845F73 /* UIView+Layout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Layout.h"; sourceTree = "<group>"; };
+		C98B267021548FD000845F73 /* TZImagePickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TZImagePickerController.m; sourceTree = "<group>"; };
+		C98B268A215494C000845F73 /* InputToolBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InputToolBar.h; sourceTree = "<group>"; };
+		C98B268B215494C000845F73 /* InputToolBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InputToolBar.m; sourceTree = "<group>"; };
+		C98B26942154B78400845F73 /* UITextView+XGPlaceholder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UITextView+XGPlaceholder.h"; sourceTree = "<group>"; };
+		C98B26952154B78400845F73 /* UITextView+XGPlaceholder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UITextView+XGPlaceholder.m"; sourceTree = "<group>"; };
+		C98B26972154EB6200845F73 /* input_micphone@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "input_micphone@3x.png"; sourceTree = "<group>"; };
+		C98B26982154EB6200845F73 /* input_micphone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "input_micphone@2x.png"; sourceTree = "<group>"; };
+		C98B269B2154EBCD00845F73 /* input_image@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "input_image@2x.png"; sourceTree = "<group>"; };
+		C98B269C2154EBCD00845F73 /* input_image@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "input_image@3x.png"; sourceTree = "<group>"; };
+		C98B269F2159C30800845F73 /* InputTextView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InputTextView.h; sourceTree = "<group>"; };
+		C98B26A02159C30800845F73 /* InputTextView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InputTextView.m; sourceTree = "<group>"; };
 		C9999D752147A046002B1503 /* MyApp-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MyApp-Bridging-Header.h"; sourceTree = "<group>"; };
 		C9999D762147A047002B1503 /* CBNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CBNavigationController.swift; sourceTree = "<group>"; };
 		C9999D782147A098002B1503 /* CBDataGlobal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CBDataGlobal.swift; sourceTree = "<group>"; };
@@ -331,6 +407,8 @@
 		C944F25F2146072600159984 /* MyApp */ = {
 			isa = PBXGroup;
 			children = (
+				C98B268D2154B54400845F73 /* UITextView+XGPlaceholder */,
+				C98B264D21548FD000845F73 /* ImagePickerController */,
 				C98B264921534FDB00845F73 /* UIButton+PassValue */,
 				C98B26452153358500845F73 /* YYPhotoGroupView */,
 				C9AA11812153326400050385 /* images */,
@@ -339,7 +417,7 @@
 				C944F2E521464C4900159984 /* CYTabBar */,
 				C944F2E221464C4900159984 /* PublishAnimate */,
 				C944F2BE21461D3B00159984 /* MBProgressHUD */,
-				C944F2AE2146168500159984 /* ZYCornerRadius */,
+				C944F2AE2146168500159984 /* UIImageView+CornerRadius */,
 				C9999D7A2147A438002B1503 /* CBUtil.swift */,
 				C9999D782147A098002B1503 /* CBDataGlobal.swift */,
 				C9999D762147A047002B1503 /* CBNavigationController.swift */,
@@ -387,6 +465,10 @@
 				C944F2A2214615F500159984 /* CommentCell.m */,
 				C944F298214615F400159984 /* ReplyCell.h */,
 				C944F2A1214615F400159984 /* ReplyCell.m */,
+				C98B268A215494C000845F73 /* InputToolBar.h */,
+				C98B268B215494C000845F73 /* InputToolBar.m */,
+				C98B269F2159C30800845F73 /* InputTextView.h */,
+				C98B26A02159C30800845F73 /* InputTextView.m */,
 				C944F2602146072600159984 /* AppDelegate.h */,
 				C944F2612146072600159984 /* AppDelegate.m */,
 				C944F2632146072600159984 /* ViewController.h */,
@@ -421,13 +503,13 @@
 			path = MyAppUITests;
 			sourceTree = "<group>";
 		};
-		C944F2AE2146168500159984 /* ZYCornerRadius */ = {
+		C944F2AE2146168500159984 /* UIImageView+CornerRadius */ = {
 			isa = PBXGroup;
 			children = (
 				C944F2AF2146168500159984 /* UIImageView+CornerRadius.h */,
 				C944F2B02146168500159984 /* UIImageView+CornerRadius.m */,
 			);
-			path = ZYCornerRadius;
+			path = "UIImageView+CornerRadius";
 			sourceTree = "<group>";
 		};
 		C944F2BE21461D3B00159984 /* MBProgressHUD */ = {
@@ -513,6 +595,64 @@
 			path = "UIButton+PassValue";
 			sourceTree = "<group>";
 		};
+		C98B264D21548FD000845F73 /* ImagePickerController */ = {
+			isa = PBXGroup;
+			children = (
+				C98B265521548FD000845F73 /* PickerImage */,
+				C98B266821548FD000845F73 /* TZAssetCell.h */,
+				C98B265221548FD000845F73 /* TZAssetCell.m */,
+				C98B265321548FD000845F73 /* TZAssetCell.xib */,
+				C98B264F21548FD000845F73 /* TZAlbumCell.xib */,
+				C98B266F21548FD000845F73 /* UIView+Layout.h */,
+				C98B266621548FD000845F73 /* UIView+Layout.m */,
+				C98B265121548FD000845F73 /* TZImageManager.h */,
+				C98B266921548FD000845F73 /* TZImageManager.m */,
+				C98B264E21548FD000845F73 /* TZPhotoPreviewCell.h */,
+				C98B266B21548FD000845F73 /* TZPhotoPreviewCell.m */,
+				C98B266C21548FD000845F73 /* TZAssetModel.h */,
+				C98B266421548FD000845F73 /* TZAssetModel.m */,
+				C98B266D21548FD000845F73 /* TZVideoPlayerController.h */,
+				C98B265421548FD000845F73 /* TZVideoPlayerController.m */,
+				C98B265021548FD000845F73 /* TZPhotoPickerController.h */,
+				C98B266A21548FD000845F73 /* TZPhotoPickerController.m */,
+				C98B266521548FD000845F73 /* TZImagePickerController.h */,
+				C98B267021548FD000845F73 /* TZImagePickerController.m */,
+				C98B266E21548FD000845F73 /* TZPhotoPreviewController.h */,
+				C98B266721548FD000845F73 /* TZPhotoPreviewController.m */,
+			);
+			path = ImagePickerController;
+			sourceTree = "<group>";
+		};
+		C98B265521548FD000845F73 /* PickerImage */ = {
+			isa = PBXGroup;
+			children = (
+				C98B265621548FD000845F73 /* photo_sel_photoPickerVc@2x.png */,
+				C98B265721548FD000845F73 /* MMVideoPreviewPlayHL@2x.png */,
+				C98B265821548FD000845F73 /* photo_sel_previewVc@2x.png */,
+				C98B265921548FD000845F73 /* MMVideoPreviewPlay@2x.png */,
+				C98B265A21548FD000845F73 /* preview_original_def@2x.png */,
+				C98B265B21548FD000845F73 /* photo_def_previewVc@2x.png */,
+				C98B265C21548FD000845F73 /* photo_original_sel@2x.png */,
+				C98B265D21548FD000845F73 /* photo_def_photoPickerVc@2x.png */,
+				C98B265E21548FD000845F73 /* TableViewArrow@2x.png */,
+				C98B265F21548FD000845F73 /* preview_number_icon@2x.png */,
+				C98B266021548FD000845F73 /* picker_navi_back@2x.png */,
+				C98B266121548FD000845F73 /* photo_original_def@2x.png */,
+				C98B266221548FD000845F73 /* photo_number_icon@2x.png */,
+				C98B266321548FD000845F73 /* VideoSendIcon@2x.png */,
+			);
+			path = PickerImage;
+			sourceTree = "<group>";
+		};
+		C98B268D2154B54400845F73 /* UITextView+XGPlaceholder */ = {
+			isa = PBXGroup;
+			children = (
+				C98B26942154B78400845F73 /* UITextView+XGPlaceholder.h */,
+				C98B26952154B78400845F73 /* UITextView+XGPlaceholder.m */,
+			);
+			path = "UITextView+XGPlaceholder";
+			sourceTree = "<group>";
+		};
 		C9AA115D214F9D2600050385 /* YYFPSLabel */ = {
 			isa = PBXGroup;
 			children = (
@@ -525,6 +665,10 @@
 		C9AA11812153326400050385 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				C98B269B2154EBCD00845F73 /* input_image@2x.png */,
+				C98B269C2154EBCD00845F73 /* input_image@3x.png */,
+				C98B26982154EB6200845F73 /* input_micphone@2x.png */,
+				C98B26972154EB6200845F73 /* input_micphone@3x.png */,
 				C944F30121464CAF00159984 /* release@2x.png */,
 				C944F2DB2146385A00159984 /* home_normal@2x.png */,
 				C944F2DD2146385B00159984 /* me_normal@2x.png */,
@@ -690,22 +834,35 @@
 				C944F33421476A5300159984 /* mine_status@2x.png in Resources */,
 				C944F30221464CAF00159984 /* release@2x.png in Resources */,
 				C944F31F2147638200159984 /* mine_comment@2x.png in Resources */,
+				C98B269D2154EBCE00845F73 /* input_image@2x.png in Resources */,
 				C9AA115B214CC69500050385 /* timeline_image_gif@2x.png in Resources */,
 				C9AA114E214B9D2C00050385 /* rank_comment@2x.png in Resources */,
 				C944F32C214767E000159984 /* mine_collect@2x.png in Resources */,
 				C9AA1157214CC67D00050385 /* timeline_image_longimage@2x.png in Resources */,
+				C98B267E21548FD000845F73 /* preview_number_icon@2x.png in Resources */,
+				C98B268021548FD000845F73 /* photo_original_def@2x.png in Resources */,
 				C9AA1145214B915700050385 /* comment_dislike@2x.png in Resources */,
 				C9AA114A214B98EC00050385 /* hot_comment@3x.png in Resources */,
 				C9AA116E214FAA8F00050385 /* dislike@3x.png in Resources */,
 				C944F2E02146385B00159984 /* home_selected@2x.png in Resources */,
+				C98B267D21548FD000845F73 /* TableViewArrow@2x.png in Resources */,
 				C944F31721465D7000159984 /* location@2x.png in Resources */,
+				C98B269E2154EBCE00845F73 /* input_image@3x.png in Resources */,
+				C98B267321548FD000845F73 /* TZAssetCell.xib in Resources */,
+				C98B267621548FD000845F73 /* MMVideoPreviewPlayHL@2x.png in Resources */,
 				C9E5FE962148BB4A00B6AC3D /* navi_back@3x.png in Resources */,
 				C944F327214766DD00159984 /* mine_praise@2x.png in Resources */,
 				C944F2DF2146385B00159984 /* home_normal@2x.png in Resources */,
 				C944F2DE2146385B00159984 /* me_selected@2x.png in Resources */,
+				C98B267921548FD000845F73 /* preview_original_def@2x.png in Resources */,
+				C98B267F21548FD000845F73 /* picker_navi_back@2x.png in Resources */,
 				C9E5FE9B2148DE4500B6AC3D /* navi_search@3x.png in Resources */,
+				C98B267521548FD000845F73 /* photo_sel_photoPickerVc@2x.png in Resources */,
+				C98B267B21548FD000845F73 /* photo_original_sel@2x.png in Resources */,
 				C944F26D2146072700159984 /* LaunchScreen.storyboard in Resources */,
+				C98B267821548FD000845F73 /* MMVideoPreviewPlay@2x.png in Resources */,
 				C944F3302147699000159984 /* mine_share@2x.png in Resources */,
+				C98B267721548FD000845F73 /* photo_sel_previewVc@2x.png in Resources */,
 				C944F30021464C4900159984 /* CYTabBar.bundle in Resources */,
 				C9AA1158214CC67D00050385 /* timeline_image_longimage@3x.png in Resources */,
 				C944F2C621461D3B00159984 /* MBProgressHUD.bundle in Resources */,
@@ -713,6 +870,7 @@
 				C944F26A2146072700159984 /* Assets.xcassets in Resources */,
 				C9AA1146214B915700050385 /* comment_dislike@3x.png in Resources */,
 				C944F328214766DD00159984 /* mine_praise@3x.png in Resources */,
+				C98B267121548FD000845F73 /* TZAlbumCell.xib in Resources */,
 				C9AA114D214B9D2C00050385 /* rank_comment@3x.png in Resources */,
 				C9AA1173214FAB1900050385 /* repost@2x.png in Resources */,
 				C9E5FE9A2148DE4500B6AC3D /* navi_search@2x.png in Resources */,
@@ -720,7 +878,11 @@
 				C944F2682146072600159984 /* Main.storyboard in Resources */,
 				C944F3202147638200159984 /* mine_comment@3x.png in Resources */,
 				C9AA116F214FAA8F00050385 /* dislike@2x.png in Resources */,
+				C98B267C21548FD000845F73 /* photo_def_photoPickerVc@2x.png in Resources */,
 				C9AA1177214FAB7200050385 /* comment@3x.png in Resources */,
+				C98B268121548FD000845F73 /* photo_number_icon@2x.png in Resources */,
+				C98B267A21548FD000845F73 /* photo_def_previewVc@2x.png in Resources */,
+				C98B26992154EB6300845F73 /* input_micphone@3x.png in Resources */,
 				C9999D7D2147A8B3002B1503 /* navigationShadowBg@2x.png in Resources */,
 				C944F2E12146385B00159984 /* me_normal@2x.png in Resources */,
 				C944F323214765F200159984 /* mine_history@2x.png in Resources */,
@@ -731,6 +893,8 @@
 				C944F33B21476EE400159984 /* mine_accessory@3x.png in Resources */,
 				C98B26442153332200845F73 /* comment@2x.png in Resources */,
 				C9E5FE972148BB4A00B6AC3D /* navi_back@2x.png in Resources */,
+				C98B268221548FD000845F73 /* VideoSendIcon@2x.png in Resources */,
+				C98B269A2154EB6300845F73 /* input_micphone@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -798,17 +962,21 @@
 				C9AA11802151FAF400050385 /* ResumeViewController.m in Sources */,
 				C944F2C521461D3B00159984 /* MBProgressHUD+MJ.m in Sources */,
 				C944F2FC21464C4900159984 /* CYTabBarController.m in Sources */,
+				C98B268621548FD000845F73 /* TZImageManager.m in Sources */,
 				C944F30521464D5C00159984 /* TabBarController.m in Sources */,
 				C944F2CA2146201200159984 /* HomeViewController.m in Sources */,
 				C944F2A7214615F500159984 /* StatusViewController.m in Sources */,
 				C9E5FE8A2147B8BC00B6AC3D /* RootViewController.m in Sources */,
 				C9E5FEAA214A56B300B6AC3D /* User.m in Sources */,
+				C98B268721548FD000845F73 /* TZPhotoPickerController.m in Sources */,
 				C944F2FA21464C4900159984 /* CYTabBar.m in Sources */,
 				C944F2B12146168500159984 /* UIImageView+CornerRadius.m in Sources */,
+				C98B268421548FD000845F73 /* UIView+Layout.m in Sources */,
 				C944F2652146072600159984 /* ViewController.m in Sources */,
 				C944F2F821464C4900159984 /* CYCenterButton.m in Sources */,
 				C9999D862147AC26002B1503 /* CBDefaultPageView.m in Sources */,
 				C944F2702146072700159984 /* main.m in Sources */,
+				C98B26962154B78400845F73 /* UITextView+XGPlaceholder.m in Sources */,
 				C9AA1163214F9D2600050385 /* YYFPSLabel.m in Sources */,
 				C944F2622146072600159984 /* AppDelegate.m in Sources */,
 				C944F2A5214615F500159984 /* StatusCell.m in Sources */,
@@ -816,7 +984,11 @@
 				C9AA1151214B9E9200050385 /* HotCommentIcon.m in Sources */,
 				C9E5FE8D2147BE0100B6AC3D /* CBTitleView.m in Sources */,
 				C944F2FD21464C4900159984 /* UINavigationController+hidesBottomBarWhenPushed.m in Sources */,
+				C98B268921548FD000845F73 /* TZImagePickerController.m in Sources */,
 				C9999D772147A047002B1503 /* CBNavigationController.swift in Sources */,
+				C98B267421548FD000845F73 /* TZVideoPlayerController.m in Sources */,
+				C98B268321548FD000845F73 /* TZAssetModel.m in Sources */,
+				C98B268821548FD000845F73 /* TZPhotoPreviewCell.m in Sources */,
 				C944F2FB21464C4900159984 /* CYButton.m in Sources */,
 				C944F31C214753DA00159984 /* MyCell.m in Sources */,
 				C98B264C2153504800845F73 /* UIButton+PassValue.m in Sources */,
@@ -824,6 +996,7 @@
 				C944F2AA214615F500159984 /* StatusDetailViewController.m in Sources */,
 				C9999D792147A098002B1503 /* CBDataGlobal.swift in Sources */,
 				C944F2F921464C4900159984 /* CYTabBarConfig.m in Sources */,
+				C98B268521548FD000845F73 /* TZPhotoPreviewController.m in Sources */,
 				C944F2CD2146202D00159984 /* PersonalViewController.m in Sources */,
 				C944F2C421461D3B00159984 /* MBProgressHUD.m in Sources */,
 				C944F2FF21464C4900159984 /* CYBadgeView.m in Sources */,
@@ -832,10 +1005,13 @@
 				C9E5FE9E21492FE900B6AC3D /* Media.m in Sources */,
 				C944F2A9214615F500159984 /* Status.m in Sources */,
 				C944F30C2146592700159984 /* FSSegmentTitleView.m in Sources */,
+				C98B26A12159C30800845F73 /* InputTextView.m in Sources */,
 				C944F2AB214615F500159984 /* ReplyCell.m in Sources */,
 				C944F2A6214615F500159984 /* ReplyDetailViewController.m in Sources */,
+				C98B267221548FD000845F73 /* TZAssetCell.m in Sources */,
 				C98B26482153359200845F73 /* YYPhotoGroupView.m in Sources */,
 				C9999D8A2147ACA7002B1503 /* UIColor+Ext.swift in Sources */,
+				C98B268C215494C000845F73 /* InputToolBar.m in Sources */,
 				C9999D7B2147A438002B1503 /* CBUtil.swift in Sources */,
 				C9AA117D2150AAA800050385 /* BaseCell.m in Sources */,
 				C944F2FE21464C4900159984 /* UITabBarItem+BadgeColor.m in Sources */,

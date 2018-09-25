@@ -11,12 +11,15 @@
 #import "ReplyDetailViewController.h"
 #import "StatusCell.h"
 #import "YYPhotoGroupView.h"
+#import "InputToolBar.h"
+#import "TZImagePickerController.h"
 
-@interface StatusDetailViewController ()<UITableViewDelegate,UITableViewDataSource,CommentCellDelegate>
+@interface StatusDetailViewController ()<UITableViewDelegate,UITableViewDataSource,CommentCellDelegate,UITextViewDelegate>
 
 @property (nonatomic, strong) UIActivityIndicatorView *indicatorView;
 @property (nonatomic, strong) NSArray *dataArray;
 @property (nonatomic, strong) UITableView *commentTableView;
+@property (nonatomic, strong) InputToolBar *inputToolbar;
 
 @end
 
@@ -41,11 +44,23 @@
 }
 
 - (void)buildSubviews{
-    self.commentTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, kAppStatusBarAndNavigationBarHeight, kAppScreenWidth, kAppScreenHeight - kAppStatusBarAndNavigationBarHeight) style:UITableViewStylePlain];
+    self.commentTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, kAppStatusBarAndNavigationBarHeight, kAppScreenWidth, kAppScreenHeight - kAppStatusBarAndNavigationBarHeight - kInputBarOriginalHeight) style:UITableViewStylePlain];
     self.commentTableView.delegate = self;
     self.commentTableView.dataSource = self;
     self.commentTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:self.commentTableView];
+    
+    self.inputToolbar = [[InputToolBar alloc]init];
+    [self.view addSubview:self.inputToolbar];
+    [self.inputToolbar mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(self.view.mas_bottom);
+        make.left.equalTo(self.view.mas_left);
+        make.right.equalTo(self.view.mas_right);
+        make.height.mas_equalTo(kInputBarOriginalHeight);
+    }];
+    self.inputToolbar.inputView.delegate = self;
+    [self.inputToolbar.imgEntryBtn addTarget:self action:@selector(onImgEntryBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    
     
     self.indicatorView  = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     self.indicatorView.center = self.view.center;
@@ -231,7 +246,6 @@
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-    
     static NSString *cellIdentifier = @"CellIdentifier";
     CommentCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if (!cell) {
@@ -301,6 +315,16 @@
     [v presentFromImageView:fromView toContainer:self.navigationController.view animated:YES completion:nil];
 }
 
+- (void)onImgEntryBtnClick{
+    TZImagePickerController *imagePickerVc = [[TZImagePickerController alloc] initWithMaxImagesCount:9 delegate:self];
+    // 你可以通过block或者代理，来得到用户选择的照片.
+    [imagePickerVc setDidFinishPickingPhotosHandle:^(NSArray<UIImage *> *photos, NSArray *assets) {
+        
+    }];
+    [self presentViewController:imagePickerVc animated:YES completion:nil];
+    
+}
+
 #pragma mark - CommentCellDelegate
 
 - (void)clickMoreReplyBtnAction:(Status *)status{
@@ -308,6 +332,18 @@
     vc.sts = status;
     [self.navigationController pushViewController:vc animated:YES];
 }
+
+#pragma mark - UITextViewDelegate
+
+- (void)textViewDidChange:(UITextView *)textView{
+    CGFloat fixedWidth = textView.frame.size.width;
+    CGSize newSize = [textView sizeThatFits:CGSizeMake(fixedWidth, MAXFLOAT)];
+    CGFloat textViewHeight = fmaxf(newSize.height, kTextViewOriginalHeight);
+    self.inputToolbar.inputToolBarHeight = textViewHeight + kTextViewMaginTopBottom*2;
+    [self.inputToolbar setNeedsUpdateConstraints];
+    [self.inputToolbar updateConstraintsIfNeeded];
+}
+
 
 /*
 #pragma mark - Navigation

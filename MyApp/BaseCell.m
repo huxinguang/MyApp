@@ -51,9 +51,7 @@
     return self;
 }
 
-- (void)fillCellData:(Status *)status{
-    
-}
+- (void)fillCellData:(Status *)status{}
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];

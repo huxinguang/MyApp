@@ -1,9 +1,9 @@
 //
 //  UIImageView+CornerRadius.m
-//  MyPractise
+//  MyApp
 //
-//  Created by lzy on 16/3/1.
-//  Copyright © 2016年 lzy. All rights reserved.
+//  Created by huxinguang on 2018/9/21.
+//  Copyright © 2018年 huxinguang. All rights reserved.
 //
 
 #import "UIImageView+CornerRadius.h"
@@ -13,12 +13,12 @@ const char kProcessedImage;
 
 @interface UIImageView ()
 
-@property (assign, nonatomic) CGFloat zyRadius;
+@property (assign, nonatomic) CGFloat xgRadius;
 @property (assign, nonatomic) UIRectCorner roundingCorners;
-@property (assign, nonatomic) CGFloat zyBorderWidth;
-@property (strong, nonatomic) UIColor *zyBorderColor;
-@property (assign, nonatomic) BOOL zyHadAddObserver;
-@property (assign, nonatomic) BOOL zyIsRounding;
+@property (assign, nonatomic) CGFloat xgBorderWidth;
+@property (strong, nonatomic) UIColor *xgBorderColor;
+@property (assign, nonatomic) BOOL xgHadAddObserver;
+@property (assign, nonatomic) BOOL xgIsRounding;
 
 @end
 
@@ -30,7 +30,7 @@ const char kProcessedImage;
 - (instancetype)initWithRoundingRectImageView {
     self = [super init];
     if (self) {
-        [self zy_cornerRadiusRoundingRect];
+        [self xg_cornerRadiusRoundingRect];
     }
     return self;
 }
@@ -41,7 +41,7 @@ const char kProcessedImage;
 - (instancetype)initWithCornerRadiusAdvance:(CGFloat)cornerRadius rectCornerType:(UIRectCorner)rectCornerType {
     self = [super init];
     if (self) {
-        [self zy_cornerRadiusAdvance:cornerRadius rectCornerType:rectCornerType];
+        [self xg_cornerRadiusAdvance:cornerRadius rectCornerType:rectCornerType];
     }
     return self;
 }
@@ -49,16 +49,16 @@ const char kProcessedImage;
 /**
  * @brief attach border for UIImageView with width & color
  */
-- (void)zy_attachBorderWidth:(CGFloat)width color:(UIColor *)color {
-    self.zyBorderWidth = width;
-    self.zyBorderColor = color;
+- (void)xg_attachBorderWidth:(CGFloat)width color:(UIColor *)color {
+    self.xgBorderWidth = width;
+    self.xgBorderColor = color;
 }
 
 #pragma mark - Kernel
 /**
  * @brief clip the cornerRadius with image, UIImageView must be setFrame before, no off-screen-rendered
  */
-- (void)zy_cornerRadiusWithImage:(UIImage *)image cornerRadius:(CGFloat)cornerRadius rectCornerType:(UIRectCorner)rectCornerType {
+- (void)xg_cornerRadiusWithImage:(UIImage *)image cornerRadius:(CGFloat)cornerRadius rectCornerType:(UIRectCorner)rectCornerType {
     CGSize size = self.bounds.size;
     CGFloat scale = [UIScreen mainScreen].scale;
     CGSize cornerRadii = CGSizeMake(cornerRadius, cornerRadius);
@@ -83,7 +83,7 @@ const char kProcessedImage;
 /**
  * @brief clip the cornerRadius with image, draw the backgroundColor you want, UIImageView must be setFrame before, no off-screen-rendered, no Color Blended layers
  */
-- (void)zy_cornerRadiusWithImage:(UIImage *)image cornerRadius:(CGFloat)cornerRadius rectCornerType:(UIRectCorner)rectCornerType backgroundColor:(UIColor *)backgroundColor {
+- (void)xg_cornerRadiusWithImage:(UIImage *)image cornerRadius:(CGFloat)cornerRadius rectCornerType:(UIRectCorner)rectCornerType backgroundColor:(UIColor *)backgroundColor {
     CGSize size = self.bounds.size;
     CGFloat scale = [UIScreen mainScreen].scale;
     CGSize cornerRadii = CGSizeMake(cornerRadius, cornerRadius);
@@ -111,14 +111,14 @@ const char kProcessedImage;
 /**
  * @brief set cornerRadius for UIImageView, no off-screen-rendered
  */
-- (void)zy_cornerRadiusAdvance:(CGFloat)cornerRadius rectCornerType:(UIRectCorner)rectCornerType {
-    self.zyRadius = cornerRadius;
+- (void)xg_cornerRadiusAdvance:(CGFloat)cornerRadius rectCornerType:(UIRectCorner)rectCornerType {
+    self.xgRadius = cornerRadius;
     self.roundingCorners = rectCornerType;
-    self.zyIsRounding = NO;
-    if (!self.zyHadAddObserver) {
+    self.xgIsRounding = NO;
+    if (!self.xgHadAddObserver) {
         [[self class] swizzleDealloc];
         [self addObserver:self forKeyPath:@"image" options:NSKeyValueObservingOptionNew context:nil];
-        self.zyHadAddObserver = YES;
+        self.xgHadAddObserver = YES;
     }
     //Xcode 8 xib 删除了控件的Frame信息，需要主动创造
     [self layoutIfNeeded];
@@ -127,12 +127,12 @@ const char kProcessedImage;
 /**
  * @brief become Rounding UIImageView, no off-screen-rendered
  */
-- (void)zy_cornerRadiusRoundingRect {
-    self.zyIsRounding = YES;
-    if (!self.zyHadAddObserver) {
+- (void)xg_cornerRadiusRoundingRect {
+    self.xgIsRounding = YES;
+    if (!self.xgHadAddObserver) {
         [[self class] swizzleDealloc];
         [self addObserver:self forKeyPath:@"image" options:NSKeyValueObservingOptionNew context:nil];
-        self.zyHadAddObserver = YES;
+        self.xgHadAddObserver = YES;
     }
     //Xcode 8 xib 删除了控件的Frame信息，需要主动创造
     [self layoutIfNeeded];
@@ -140,18 +140,18 @@ const char kProcessedImage;
 
 #pragma mark - Private
 - (void)drawBorder:(UIBezierPath *)path {
-    if (0 != self.zyBorderWidth && nil != self.zyBorderColor) {
-        [path setLineWidth:2 * self.zyBorderWidth];
-        [self.zyBorderColor setStroke];
+    if (0 != self.xgBorderWidth && nil != self.xgBorderColor) {
+        [path setLineWidth:2 * self.xgBorderWidth];
+        [self.xgBorderColor setStroke];
         [path stroke];
     }
 }
 
-- (void)zy_dealloc {
-    if (self.zyHadAddObserver) {
+- (void)xg_dealloc {
+    if (self.xgHadAddObserver) {
         [self removeObserver:self forKeyPath:@"image"];
     }
-    [self zy_dealloc];
+    [self xg_dealloc];
 }
 
 - (void)validateFrame {
@@ -169,23 +169,23 @@ const char kProcessedImage;
 + (void)swizzleDealloc {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self swizzleMethod:NSSelectorFromString(@"dealloc") anotherMethod:@selector(zy_dealloc)];
+        [self swizzleMethod:NSSelectorFromString(@"dealloc") anotherMethod:@selector(xg_dealloc)];
     });
 }
 
 + (void)swizzleLayoutSubviews {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [self swizzleMethod:@selector(layoutSubviews) anotherMethod:@selector(zy_LayoutSubviews)];
+        [self swizzleMethod:@selector(layoutSubviews) anotherMethod:@selector(xg_layoutSubviews)];
     });
 }
 
-- (void)zy_LayoutSubviews {
-    [self zy_LayoutSubviews];
-    if (self.zyIsRounding) {
-        [self zy_cornerRadiusWithImage:self.image cornerRadius:self.frame.size.width/2 rectCornerType:UIRectCornerAllCorners];
-    } else if (0 != self.zyRadius && 0 != self.roundingCorners && nil != self.image) {
-        [self zy_cornerRadiusWithImage:self.image cornerRadius:self.zyRadius rectCornerType:self.roundingCorners];
+- (void)xg_layoutSubviews {
+    [self xg_layoutSubviews];
+    if (self.xgIsRounding) {
+        [self xg_cornerRadiusWithImage:self.image cornerRadius:self.frame.size.width/2 rectCornerType:UIRectCornerAllCorners];
+    } else if (0 != self.xgRadius && 0 != self.roundingCorners && nil != self.image) {
+        [self xg_cornerRadiusWithImage:self.image cornerRadius:self.xgRadius rectCornerType:self.roundingCorners];
     }
 }
 
@@ -199,45 +199,45 @@ const char kProcessedImage;
             return;
         }
         [self validateFrame];
-        if (self.zyIsRounding) {
-            [self zy_cornerRadiusWithImage:newImage cornerRadius:self.frame.size.width/2 rectCornerType:UIRectCornerAllCorners];
-        } else if (0 != self.zyRadius && 0 != self.roundingCorners && nil != self.image) {
-            [self zy_cornerRadiusWithImage:newImage cornerRadius:self.zyRadius rectCornerType:self.roundingCorners];
+        if (self.xgIsRounding) {
+            [self xg_cornerRadiusWithImage:newImage cornerRadius:self.frame.size.width/2 rectCornerType:UIRectCornerAllCorners];
+        } else if (0 != self.xgRadius && 0 != self.roundingCorners && nil != self.image) {
+            [self xg_cornerRadiusWithImage:newImage cornerRadius:self.xgRadius rectCornerType:self.roundingCorners];
         }
     }
 }
 
 #pragma mark property
-- (CGFloat)zyBorderWidth {
+- (CGFloat)xgBorderWidth {
     return [objc_getAssociatedObject(self, _cmd) floatValue];
 }
 
-- (void)setZyBorderWidth:(CGFloat)zyBorderWidth {
-    objc_setAssociatedObject(self, @selector(zyBorderWidth), @(zyBorderWidth), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setXgBorderWidth:(CGFloat)xgBorderWidth {
+    objc_setAssociatedObject(self, @selector(xgBorderWidth), @(xgBorderWidth), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (UIColor *)zyBorderColor {
+- (UIColor *)xgBorderColor {
     return objc_getAssociatedObject(self, _cmd);
 }
 
-- (void)setZyBorderColor:(UIColor *)zyBorderColor {
-    objc_setAssociatedObject(self, @selector(zyBorderColor), zyBorderColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setXgBorderColor:(UIColor *)xgBorderColor {
+    objc_setAssociatedObject(self, @selector(xgBorderColor), xgBorderColor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (BOOL)zyHadAddObserver {
+- (BOOL)xgHadAddObserver {
     return [objc_getAssociatedObject(self, _cmd) boolValue];
 }
 
-- (void)setZyHadAddObserver:(BOOL)zyHadAddObserver {
-    objc_setAssociatedObject(self, @selector(zyHadAddObserver), @(zyHadAddObserver), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setXgHadAddObserver:(BOOL)xgHadAddObserver {
+    objc_setAssociatedObject(self, @selector(xgHadAddObserver), @(xgHadAddObserver), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (BOOL)zyIsRounding {
+- (BOOL)xgIsRounding {
     return [objc_getAssociatedObject(self, _cmd) boolValue];
 }
 
-- (void)setZyIsRounding:(BOOL)zyIsRounding {
-    objc_setAssociatedObject(self, @selector(zyIsRounding), @(zyIsRounding), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setXgIsRounding:(BOOL)xgIsRounding {
+    objc_setAssociatedObject(self, @selector(xgIsRounding), @(xgIsRounding), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (UIRectCorner)roundingCorners {
@@ -248,12 +248,12 @@ const char kProcessedImage;
     objc_setAssociatedObject(self, @selector(roundingCorners), @(roundingCorners), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-- (CGFloat)zyRadius {
+- (CGFloat)xgRadius {
     return [objc_getAssociatedObject(self, _cmd) floatValue];
 }
 
-- (void)setZyRadius:(CGFloat)zyRadius {
-    objc_setAssociatedObject(self, @selector(zyRadius), @(zyRadius), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (void)setXgRadius:(CGFloat)xgRadius {
+    objc_setAssociatedObject(self, @selector(xgRadius), @(xgRadius), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 
@@ -266,5 +266,5 @@ const char kProcessedImage;
 
 
 
-//ZYCornerRadius is available under the MIT license.
-//Please visit https://github.com/liuzhiyi1992/ZYCornerRadius for details.
+//xgCornerRadius is available under the MIT license.
+//Please visit https://github.com/liuzhiyi1992/xgCornerRadius for details.
