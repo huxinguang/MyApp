@@ -30,12 +30,3 @@ typedef enum : NSUInteger {
 
 @end
 
-
-@class PHFetchResult;
-@interface TZAlbumModel : NSObject
-
-@property (nonatomic, strong) NSString *name;        //相册名称
-@property (nonatomic, assign) NSInteger count;       //相册照片数量
-@property (nonatomic, strong) id result;             //PHFetchResult<PHAsset> 或 ALAssetsGroup<ALAsset>
-
-@end

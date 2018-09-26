@@ -11,6 +11,7 @@
 #import "UIView+Layout.h"
 #import "TZImageManager.h"
 
+
 @interface TZAssetCell ()
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;       // The photo / 照片
 @property (weak, nonatomic) IBOutlet UIImageView *selectImageView;
@@ -66,28 +67,3 @@
 
 @end
 
-@interface TZAlbumCell ()
-@property (weak, nonatomic) IBOutlet UIImageView *posterImageView;
-@property (weak, nonatomic) IBOutlet UILabel *titleLable;
-@end
-
-@implementation TZAlbumCell
-
-- (void)awakeFromNib {
-    self.posterImageView.clipsToBounds = YES;
-}
-
-- (void)setModel:(TZAlbumModel *)model {
-    _model = model;
-    
-    NSMutableAttributedString *nameString = [[NSMutableAttributedString alloc] initWithString:model.name attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:16],NSForegroundColorAttributeName:[UIColor blackColor]}];
-    NSAttributedString *countString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"  (%zd)",model.count] attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:16],NSForegroundColorAttributeName:[UIColor lightGrayColor]}];
-    [nameString appendAttributedString:countString];
-    self.titleLable.attributedText = nameString;
-    [[TZImageManager manager] getPostImageWithAlbumModel:model completion:^(UIImage *postImage) {
-        self.posterImageView.image = postImage;
-    }];
-}
-
-
-@end

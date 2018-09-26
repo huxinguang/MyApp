@@ -10,6 +10,7 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <Photos/Photos.h>
 #import "TZAssetModel.h"
+#import "TZAlbumModel.h"
 
 @interface TZImageManager ()
 @property (nonatomic, strong) ALAssetsLibrary *assetLibrary;

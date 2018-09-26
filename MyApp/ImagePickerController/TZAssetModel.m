@@ -27,8 +27,3 @@
 @end
 
 
-
-@implementation TZAlbumModel
-
-
-@end

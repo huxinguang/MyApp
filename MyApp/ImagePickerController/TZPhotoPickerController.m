@@ -12,14 +12,19 @@
 #import "TZImageManager.h"
 #import "CBTitleView.h"
 #import "CBBarButton.h"
+#import "AlbumCell.h"
 
 @interface TZPhotoPickerController ()<UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic, strong)UICollectionView *collectionView;
-@property (nonatomic, strong)NSMutableArray *photoArr;
+@property (nonatomic, strong)NSMutableArray<TZAssetModel *> *photoArr;
 @property (nonatomic, strong)NSMutableArray *selectedPhotoArr;
 @property (nonatomic, strong)UIButton *bottomConfirmBtn;
 @property (nonatomic, strong)UITableView *albumTableView;
-@property (nonatomic, strong)NSMutableArray *albumArr;
+@property (nonatomic, strong)UIView *containerView;
+@property (nonatomic, strong)NSMutableArray<TZAlbumModel *> *albumArr;
+@property (nonatomic, strong)UIControl *maskView;
+@property (nonatomic, strong)TitleViewButton *titleBtn;
+@property (nonatomic, assign)CGFloat containerViewHeight;
 @end
 
 @implementation TZPhotoPickerController
@@ -33,6 +38,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
+    [self configMaskView];
+    
     __weak typeof(self) weakSelf = self;
     [[TZImageManager manager] getAssetsFromFetchResult:self.model.result allowPickingVideo:YES completion:^(NSArray<TZAssetModel *> *models) {
         weakSelf.photoArr = [NSMutableArray arrayWithArray:models];
@@ -48,6 +55,14 @@
     
 }
 
+- (void)configMaskView{
+    self.maskView = [UIControl new];
+    self.maskView.frame = CGRectMake(0, 0, self.view.width, self.view.height);
+    self.maskView.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:self.maskView];
+    [self.maskView addTarget:self action:@selector(onClickMaskView) forControlEvents:UIControlEventTouchUpInside];
+}
+
 - (void)configLeftBarButtonItem{
     CBBarButtonConfiguration *config = [[CBBarButtonConfiguration alloc]init];
     config.type = CBBarButtonTypeImage;
@@ -58,15 +73,15 @@
 }
 
 - (void)configTitleView{
-    TitleViewButton *titleBtn = [TitleViewButton buttonWithType:UIButtonTypeCustom];
-    [titleBtn setImage:[UIImage imageNamed:@"picker_arrow"] forState:UIControlStateNormal];
-    [titleBtn setTitle:@"相机胶卷" forState:UIControlStateNormal];
-    [titleBtn setTitleColor:kAppThemeColor forState:UIControlStateNormal];
-    titleBtn.titleLabel.font = [UIFont systemFontOfSize:15];
-    titleBtn.bounds = CGRectMake(0, 0, 70, 44);
-    titleBtn.selected = NO;
-    [titleBtn addTarget:self action:@selector(onTitleBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-    self.navigationItem.titleView = titleBtn;
+    self.titleBtn = [TitleViewButton buttonWithType:UIButtonTypeCustom];
+    [self.titleBtn setImage:[UIImage imageNamed:@"picker_arrow"] forState:UIControlStateNormal];
+    [self.titleBtn setTitle:@"相机胶卷" forState:UIControlStateNormal];
+    [self.titleBtn setTitleColor:kAppThemeColor forState:UIControlStateNormal];
+    self.titleBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+    self.titleBtn.bounds = CGRectMake(0, 0, 70, 44);
+    self.titleBtn.selected = NO;
+    [self.titleBtn addTarget:self action:@selector(onTitleBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.titleView = self.titleBtn;
 }
 
 - (void)configRightBarButtonItem{
@@ -83,7 +98,7 @@
     layout.itemSize = CGSizeMake(itemWH, itemWH);
     layout.minimumInteritemSpacing = kItemMargin;
     layout.minimumLineSpacing = kItemMargin;
-    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, self.view.height - kBottomConfirmBtnHeight) collectionViewLayout:layout];
+    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, kAppScreenWidth, kAppScreenHeight-kAppStatusBarAndNavigationBarHeight-kBottomConfirmBtnHeight) collectionViewLayout:layout];
     self.collectionView.backgroundColor = [UIColor whiteColor];
     self.collectionView.dataSource = self;
     self.collectionView.delegate = self;
@@ -93,14 +108,24 @@
 }
 
 - (void)configAlbumTableView{
-    self.albumTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, -kAlbumTableViewHeight, kAppScreenWidth, kAlbumTableViewHeight) style:UITableViewStylePlain];
-    self.albumTableView.backgroundColor = [UIColor redColor];
+    CGFloat height = kAlbumTableViewMarginTopBottom*2 + kAlbumTableViewRowHeight*self.albumArr.count;
+    self.containerViewHeight = height > kContainerViewMaxHeight ? kContainerViewMaxHeight : height;
+    
+    self.containerView = [UIView new];
+    self.containerView.backgroundColor = [UIColor whiteColor];
+    self.containerView.frame = CGRectMake(0, -self.containerViewHeight, kAppScreenWidth, self.containerViewHeight);
+    [self.view addSubview:self.containerView];
+    
+    CGFloat albumTableViewHeight = self.containerViewHeight - 2*kAlbumTableViewMarginTopBottom;
+    self.albumTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, kAlbumTableViewMarginTopBottom, kAppScreenWidth, albumTableViewHeight) style:UITableViewStylePlain];
     self.albumTableView.delegate = self;
     self.albumTableView.dataSource = self;
-    self.albumTableView.rowHeight = 60;
-    [self.view addSubview:self.albumTableView];
-    
+    self.albumTableView.rowHeight = kAlbumTableViewRowHeight;
+    self.albumTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [self.containerView addSubview:self.albumTableView];
 }
+
+
 
 - (void)configBottomConfirmBtn {
     self.bottomConfirmBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -113,10 +138,6 @@
     [self.bottomConfirmBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
     self.bottomConfirmBtn.enabled = NO;
     [self.view addSubview:self.bottomConfirmBtn];
-}
-
-- (void)cancel {
-    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)onConfirmBtnClick {
@@ -137,21 +158,33 @@
 
 - (void)onTitleBtnClick:(TitleViewButton *)btn{
     btn.selected = !btn.selected;
+    if (btn.selected) {
+        [self.view insertSubview:self.maskView belowSubview:self.containerView];
+    }
     [UIView animateWithDuration:0.35 animations:^{
         if (btn.selected) {
             CGAffineTransform transform = CGAffineTransformMakeRotation(M_PI);
             btn.imageView.transform = transform;
-            CGRect frame = self.albumTableView.frame;
-            frame.origin.y += kAlbumTableViewHeight;
-            self.albumTableView.frame = frame;
+            CGRect frame = self.containerView.frame;
+            frame.origin.y += self.containerViewHeight;
+            self.containerView.frame = frame;
+            self.maskView.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.2];
         }else{
             btn.imageView.transform = CGAffineTransformIdentity;
-            CGRect frame = self.albumTableView.frame;
-            frame.origin.y -= kAlbumTableViewHeight;
-            self.albumTableView.frame = frame;
+            CGRect frame = self.containerView.frame;
+            frame.origin.y -= self.containerViewHeight;
+            self.containerView.frame = frame;
+            self.maskView.backgroundColor = [UIColor clearColor];
         }
     } completion:^(BOOL finished) {
+        if (!btn.selected) {
+            [self.view insertSubview:self.maskView belowSubview:self.collectionView];
+        }
     }];
+}
+
+- (void)onClickMaskView{
+    [self onTitleBtnClick:self.titleBtn];
 }
 
 #pragma mark - UICollectionViewDataSource && Delegate
@@ -197,16 +230,22 @@
 #pragma mark - UITableViewDelegate,UITableViewDataSource
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 10;
+    return self.albumArr.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     static NSString *cellIdentifier = @"CellIdentifier";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    AlbumCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if (!cell) {
-        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+        cell = [[[NSBundle mainBundle]loadNibNamed:@"AlbumCell" owner:self options:nil] lastObject];
     }
+    cell.model = self.albumArr[indexPath.row];
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    
 }
 
 
