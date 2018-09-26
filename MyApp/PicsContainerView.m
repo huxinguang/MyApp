@@ -18,6 +18,7 @@
         NSMutableArray *array = [NSMutableArray new];
         for (int i=0; i<9; i++) {
             UIButton *imgBtn = [UIButton new];
+            imgBtn.backgroundColor = [UIColor colorWithRGB:0xF0F0F2];
             [self addSubview:imgBtn];
             [array addObject:imgBtn];
         }

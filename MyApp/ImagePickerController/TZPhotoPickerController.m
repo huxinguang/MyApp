@@ -7,32 +7,23 @@
 //
 
 #import "TZPhotoPickerController.h"
-#import "TZImagePickerController.h"
-#import "TZPhotoPreviewController.h"
 #import "TZAssetCell.h"
 #import "TZAssetModel.h"
-#import "UIView+Layout.h"
 #import "TZImageManager.h"
-#import "TZVideoPlayerController.h"
+#import "CBTitleView.h"
+#import "CBBarButton.h"
 
-@interface TZPhotoPickerController ()<UICollectionViewDataSource,UICollectionViewDelegate> {
-    UICollectionView *_collectionView;
-    NSMutableArray *_photoArr;
-    
-    UIButton *_previewButton;
-    UIButton *_okButton;
-    UIImageView *_numberImageView;
-    UILabel *_numberLable;
-    UIButton *_originalPhotoButton;
-    UILabel *_originalPhotoLable;
-    
-    BOOL _isSelectOriginalPhoto;
-    BOOL _shouldScrollToBottom;
-}
-@property (nonatomic, strong) NSMutableArray *selectedPhotoArr;
+@interface TZPhotoPickerController ()<UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDelegate,UITableViewDataSource>
+@property (nonatomic, strong)UICollectionView *collectionView;
+@property (nonatomic, strong)NSMutableArray *photoArr;
+@property (nonatomic, strong)NSMutableArray *selectedPhotoArr;
+@property (nonatomic, strong)UIButton *bottomConfirmBtn;
+@property (nonatomic, strong)UITableView *albumTableView;
+@property (nonatomic, strong)NSMutableArray *albumArr;
 @end
 
 @implementation TZPhotoPickerController
+
 
 - (NSMutableArray *)selectedPhotoArr {
     if (_selectedPhotoArr == nil) _selectedPhotoArr = [NSMutableArray array];
@@ -41,181 +32,126 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    _shouldScrollToBottom = YES;
     self.view.backgroundColor = [UIColor whiteColor];
-    self.navigationItem.title = _model.name;
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(cancel)];
-    TZImagePickerController *imagePickerVc = (TZImagePickerController *)self.navigationController;
-    [[TZImageManager manager] getAssetsFromFetchResult:_model.result allowPickingVideo:imagePickerVc.allowPickingVideo completion:^(NSArray<TZAssetModel *> *models) {
-        _photoArr = [NSMutableArray arrayWithArray:models];
-        [self configCollectionView];
-        [self configBottomToolBar];
+    __weak typeof(self) weakSelf = self;
+    [[TZImageManager manager] getAssetsFromFetchResult:self.model.result allowPickingVideo:YES completion:^(NSArray<TZAssetModel *> *models) {
+        weakSelf.photoArr = [NSMutableArray arrayWithArray:models];
+        [weakSelf configCollectionView];
+        [weakSelf configBottomConfirmBtn];
     }];
+    
+    [[TZImageManager manager] getAllAlbums:YES completion:^(NSArray<TZAlbumModel *> *models) {
+        weakSelf.albumArr = [NSMutableArray arrayWithArray:models];
+        [weakSelf configAlbumTableView];
+    }];
+    
+    
+}
+
+- (void)configLeftBarButtonItem{
+    CBBarButtonConfiguration *config = [[CBBarButtonConfiguration alloc]init];
+    config.type = CBBarButtonTypeImage;
+    config.normalImageName = @"picker_cancel";
+    CBBarButton *leftBarButton = [[CBBarButton alloc]initWithConfiguration:config];
+    [leftBarButton addTarget:self action:@selector(onLeftBarButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:leftBarButton];
+}
+
+- (void)configTitleView{
+    TitleViewButton *titleBtn = [TitleViewButton buttonWithType:UIButtonTypeCustom];
+    [titleBtn setImage:[UIImage imageNamed:@"picker_arrow"] forState:UIControlStateNormal];
+    [titleBtn setTitle:@"相机胶卷" forState:UIControlStateNormal];
+    [titleBtn setTitleColor:kAppThemeColor forState:UIControlStateNormal];
+    titleBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+    titleBtn.bounds = CGRectMake(0, 0, 70, 44);
+    titleBtn.selected = NO;
+    [titleBtn addTarget:self action:@selector(onTitleBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.titleView = titleBtn;
+}
+
+- (void)configRightBarButtonItem{
+    
+}
+
+- (void)onLeftBarButtonClick{
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)configCollectionView {
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-    CGFloat margin = 4;
-    CGFloat itemWH = (self.view.width - 2 * margin - 4) / 4 - margin;
+    CGFloat itemWH = (self.view.width - (kItemsAtEachLine-1)*kItemMargin)/kItemsAtEachLine;
     layout.itemSize = CGSizeMake(itemWH, itemWH);
-    layout.minimumInteritemSpacing = margin;
-    layout.minimumLineSpacing = margin;
-    CGFloat top = margin + 44;
-    if (iOS7Later) top += 20;
-    _collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(margin, top, self.view.width - 2 * margin, self.view.height - 50 - top) collectionViewLayout:layout];
-    _collectionView.backgroundColor = [UIColor whiteColor];
-    _collectionView.dataSource = self;
-    _collectionView.delegate = self;
-    _collectionView.alwaysBounceHorizontal = NO;
-    if (iOS7Later) _collectionView.contentInset = UIEdgeInsetsMake(0, 0, 0, 2);
-    _collectionView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 0, -2);
-    _collectionView.contentSize = CGSizeMake(self.view.width, ((_model.count + 3) / 4) * self.view.width);
-    [self.view addSubview:_collectionView];
-    [_collectionView registerNib:[UINib nibWithNibName:@"TZAssetCell" bundle:nil] forCellWithReuseIdentifier:@"TZAssetCell"];
+    layout.minimumInteritemSpacing = kItemMargin;
+    layout.minimumLineSpacing = kItemMargin;
+    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, self.view.width, self.view.height - kBottomConfirmBtnHeight) collectionViewLayout:layout];
+    self.collectionView.backgroundColor = [UIColor whiteColor];
+    self.collectionView.dataSource = self;
+    self.collectionView.delegate = self;
+    self.collectionView.alwaysBounceVertical = YES;
+    [self.view addSubview:self.collectionView];
+    [self.collectionView registerNib:[UINib nibWithNibName:@"TZAssetCell" bundle:nil] forCellWithReuseIdentifier:@"TZAssetCell"];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    if (_shouldScrollToBottom && _photoArr.count > 0) {
-        [_collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:(_photoArr.count - 1) inSection:0] atScrollPosition:UICollectionViewScrollPositionBottom animated:NO];
-        _shouldScrollToBottom = NO;
-    }
+- (void)configAlbumTableView{
+    self.albumTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, -kAlbumTableViewHeight, kAppScreenWidth, kAlbumTableViewHeight) style:UITableViewStylePlain];
+    self.albumTableView.backgroundColor = [UIColor redColor];
+    self.albumTableView.delegate = self;
+    self.albumTableView.dataSource = self;
+    self.albumTableView.rowHeight = 60;
+    [self.view addSubview:self.albumTableView];
+    
 }
 
-- (void)configBottomToolBar {
-    UIView *bottomToolBar = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.height - 50, self.view.width, 50)];
-    CGFloat rgb = 253 / 255.0;
-    bottomToolBar.backgroundColor = [UIColor colorWithRed:rgb green:rgb blue:rgb alpha:1.0];
-    
-    _previewButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    _previewButton.frame = CGRectMake(10, 3, 44, 44);
-    [_previewButton addTarget:self action:@selector(previewButtonClick) forControlEvents:UIControlEventTouchUpInside];
-    _previewButton.titleLabel.font = [UIFont systemFontOfSize:16];
-    [_previewButton setTitle:@"预览" forState:UIControlStateNormal];
-    [_previewButton setTitle:@"预览" forState:UIControlStateDisabled];
-    [_previewButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [_previewButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
-    _previewButton.enabled = NO;
-    
-    TZImagePickerController *imagePickerVc = (TZImagePickerController *)self.navigationController;
-    if (imagePickerVc.allowPickingOriginalPhoto) {
-        _originalPhotoButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        _originalPhotoButton.frame = CGRectMake(50, self.view.height - 50, 130, 50);
-        _originalPhotoButton.imageEdgeInsets = UIEdgeInsetsMake(0, -8, 0, 0);
-        _originalPhotoButton.contentEdgeInsets = UIEdgeInsetsMake(0, -45, 0, 0);
-        [_originalPhotoButton addTarget:self action:@selector(originalPhotoButtonClick) forControlEvents:UIControlEventTouchUpInside];
-        _originalPhotoButton.titleLabel.font = [UIFont systemFontOfSize:16];
-        [_originalPhotoButton setTitle:@"原图" forState:UIControlStateNormal];
-        [_originalPhotoButton setTitle:@"原图" forState:UIControlStateSelected];
-        [_originalPhotoButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-        [_originalPhotoButton setTitleColor:[UIColor blackColor] forState:UIControlStateSelected];
-        [_originalPhotoButton setImage:[UIImage imageNamed:@"photo_original_def"] forState:UIControlStateNormal];
-        [_originalPhotoButton setImage:[UIImage imageNamed:@"photo_original_sel"] forState:UIControlStateSelected];
-        _originalPhotoButton.enabled = _selectedPhotoArr.count > 0;
-        
-        _originalPhotoLable = [[UILabel alloc] init];
-        _originalPhotoLable.frame = CGRectMake(70, 0, 60, 50);
-        _originalPhotoLable.textAlignment = NSTextAlignmentLeft;
-        _originalPhotoLable.font = [UIFont systemFontOfSize:16];
-        _originalPhotoLable.textColor = [UIColor blackColor];
-        if (_isSelectOriginalPhoto) [self getSelectedPhotoBytes];
-    }
-    
-    _okButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    _okButton.frame = CGRectMake(self.view.width - 44 - 12, 3, 44, 44);
-    _okButton.titleLabel.font = [UIFont systemFontOfSize:16];
-    [_okButton addTarget:self action:@selector(okButtonClick) forControlEvents:UIControlEventTouchUpInside];
-    [_okButton setTitle:@"确定" forState:UIControlStateNormal];
-    [_okButton setTitle:@"确定" forState:UIControlStateDisabled];
-    [_okButton setTitleColor:kOKButtonTitleColorNormal forState:UIControlStateNormal];
-    [_okButton setTitleColor:kOKButtonTitleColorDisabled forState:UIControlStateDisabled];
-    _okButton.enabled = NO;
-    
-    _numberImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"photo_number_icon"]];
-    _numberImageView.frame = CGRectMake(self.view.width - 56 - 24, 12, 26, 26);
-    _numberImageView.hidden = _selectedPhotoArr.count <= 0;
-    _numberImageView.backgroundColor = [UIColor clearColor];
-    
-    _numberLable = [[UILabel alloc] init];
-    _numberLable.frame = _numberImageView.frame;
-    _numberLable.font = [UIFont systemFontOfSize:16];
-    _numberLable.textColor = [UIColor whiteColor];
-    _numberLable.textAlignment = NSTextAlignmentCenter;
-    _numberLable.text = [NSString stringWithFormat:@"%zd",_selectedPhotoArr.count];
-    _numberLable.hidden = _selectedPhotoArr.count <= 0;
-    _numberLable.backgroundColor = [UIColor clearColor];
-    
-    UIView *divide = [[UIView alloc] init];
-    CGFloat rgb2 = 222 / 255.0;
-    divide.backgroundColor = [UIColor colorWithRed:rgb2 green:rgb2 blue:rgb2 alpha:1.0];
-    divide.frame = CGRectMake(0, 0, self.view.width, 1);
-
-    [bottomToolBar addSubview:divide];
-    [bottomToolBar addSubview:_previewButton];
-    [bottomToolBar addSubview:_okButton];
-    [bottomToolBar addSubview:_numberImageView];
-    [bottomToolBar addSubview:_numberLable];
-    [self.view addSubview:bottomToolBar];
-    [self.view addSubview:_originalPhotoButton];
-    [_originalPhotoButton addSubview:_originalPhotoLable];
+- (void)configBottomConfirmBtn {
+    self.bottomConfirmBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.bottomConfirmBtn.frame = CGRectMake(0, kAppScreenHeight - kBottomConfirmBtnHeight - kAppStatusBarAndNavigationBarHeight, kAppScreenWidth, kBottomConfirmBtnHeight);
+    self.bottomConfirmBtn.backgroundColor = [UIColor whiteColor];
+    self.bottomConfirmBtn.titleLabel.font = [UIFont systemFontOfSize:kBottomConfirmBtnTitleFontSize];
+    [self.bottomConfirmBtn addTarget:self action:@selector(onConfirmBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.bottomConfirmBtn setTitle:@"确定(0/9)" forState:UIControlStateNormal];
+    [self.bottomConfirmBtn setTitleColor:kAppThemeColor forState:UIControlStateNormal];
+    [self.bottomConfirmBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
+    self.bottomConfirmBtn.enabled = NO;
+    [self.view addSubview:self.bottomConfirmBtn];
 }
-
-#pragma mark - Click Event
 
 - (void)cancel {
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
-    TZImagePickerController *imagePickerVc = (TZImagePickerController *)self.navigationController;
-    if ([imagePickerVc.pickerDelegate respondsToSelector:@selector(tzImagePickerControllerDidCancel:)]) {
-        [imagePickerVc.pickerDelegate tzImagePickerControllerDidCancel:imagePickerVc];
-    }
-    if (imagePickerVc.imagePickerControllerDidCancelHandle) {
-        imagePickerVc.imagePickerControllerDidCancelHandle();
-    }
 }
 
-- (void)previewButtonClick {
-    TZPhotoPreviewController *photoPreviewVc = [[TZPhotoPreviewController alloc] init];
-    photoPreviewVc.photoArr = [NSArray arrayWithArray:self.selectedPhotoArr];
-    [self pushPhotoPrevireViewController:photoPreviewVc];
-}
-
-- (void)originalPhotoButtonClick {
-    _originalPhotoButton.selected = !_originalPhotoButton.isSelected;
-    _isSelectOriginalPhoto = _originalPhotoButton.isSelected;
-    _originalPhotoLable.hidden = !_originalPhotoButton.isSelected;
-    if (_isSelectOriginalPhoto) [self getSelectedPhotoBytes];
-}
-
-- (void)okButtonClick {
-    TZImagePickerController *imagePickerVc = (TZImagePickerController *)self.navigationController;
-    [imagePickerVc showProgressHUD];
-    NSMutableArray *photos = [NSMutableArray array];
-    NSMutableArray *assets = [NSMutableArray array];
-    NSMutableArray *infoArr = [NSMutableArray array];
-    
+- (void)onConfirmBtnClick {
+    NSMutableArray *photos = @[].mutableCopy;
+    NSMutableArray *assets = @[].mutableCopy;
+    NSMutableArray *infoArr = @[].mutableCopy;
+    __weak typeof (self) weakSelf = self;
     for (NSInteger i = 0; i < _selectedPhotoArr.count; i++) {
         TZAssetModel *model = _selectedPhotoArr[i];
         [[TZImageManager manager] getPhotoWithAsset:model.asset completion:^(UIImage *photo, NSDictionary *info) {
             if (photo) [photos addObject:photo];
             if (info) [infoArr addObject:info];
-            if (_isSelectOriginalPhoto) [assets addObject:model.asset];
-            if (photos.count < _selectedPhotoArr.count) return;
+            if (photos.count < weakSelf.selectedPhotoArr.count) return;
             
-            if ([imagePickerVc.pickerDelegate respondsToSelector:@selector(tzImagePickerController:didFinishPickingPhotos:sourceAssets:)]) {
-                [imagePickerVc.pickerDelegate tzImagePickerController:imagePickerVc didFinishPickingPhotos:photos sourceAssets:assets];
-            }
-            if ([imagePickerVc.pickerDelegate respondsToSelector:@selector(tzImagePickerController:didFinishPickingPhotos:sourceAssets:infos:)]) {
-                [imagePickerVc.pickerDelegate tzImagePickerController:imagePickerVc didFinishPickingPhotos:photos sourceAssets:assets infos:infoArr];
-            }
-            if (imagePickerVc.didFinishPickingPhotosHandle) {
-                imagePickerVc.didFinishPickingPhotosHandle(photos,assets);
-            }
-            if (imagePickerVc.didFinishPickingPhotosWithInfosHandle) {
-                imagePickerVc.didFinishPickingPhotosWithInfosHandle(photos,assets,infoArr);
-            }
-            [imagePickerVc hideProgressHUD];
         }];
     }
+}
+
+- (void)onTitleBtnClick:(TitleViewButton *)btn{
+    btn.selected = !btn.selected;
+    [UIView animateWithDuration:0.35 animations:^{
+        if (btn.selected) {
+            CGAffineTransform transform = CGAffineTransformMakeRotation(M_PI);
+            btn.imageView.transform = transform;
+            CGRect frame = self.albumTableView.frame;
+            frame.origin.y += kAlbumTableViewHeight;
+            self.albumTableView.frame = frame;
+        }else{
+            btn.imageView.transform = CGAffineTransformIdentity;
+            CGRect frame = self.albumTableView.frame;
+            frame.origin.y -= kAlbumTableViewHeight;
+            self.albumTableView.frame = frame;
+        }
+    } completion:^(BOOL finished) {
+    }];
 }
 
 #pragma mark - UICollectionViewDataSource && Delegate
@@ -230,88 +166,76 @@
     cell.model = model;
     typeof(cell) weakCell = cell;
     cell.didSelectPhotoBlock = ^(BOOL isSelected) {
-        // 1. cancel select / 取消选择
+        // 1. 取消选择
         if (isSelected) {
             weakCell.selectPhotoButton.selected = NO;
             model.isSelected = NO;
             [self.selectedPhotoArr removeObject:model];
-            [self refreshBottomToolBarStatus];
+            [self refreshBottomConfirmBtn];
         } else {
-            // 2. select:check if over the maxImagesCount / 选择照片,检查是否超过了最大个数的限制
-            TZImagePickerController *imagePickerVc = (TZImagePickerController *)self.navigationController;
-            if (self.selectedPhotoArr.count < imagePickerVc.maxImagesCount) {
+            // 2. 选择照片,检查是否超过了最大个数的限制
+            
+            if (self.selectedPhotoArr.count < 9) {
                 weakCell.selectPhotoButton.selected = YES;
                 model.isSelected = YES;
                 [self.selectedPhotoArr addObject:model];
-                [self refreshBottomToolBarStatus];
+                [self refreshBottomConfirmBtn];
             } else {
-                [imagePickerVc showAlertWithTitle:[NSString stringWithFormat:@"你最多只能选择%zd张照片",imagePickerVc.maxImagesCount]];
+//                [NSString stringWithFormat:@"最多选择%zd张照片",9];
             }
         }
-        [UIView showOscillatoryAnimationWithLayer:_numberImageView.layer type:TZOscillatoryAnimationToSmaller];
     };
     return cell;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     TZAssetModel *model = _photoArr[indexPath.row];
-    if (model.type == TZAssetModelMediaTypeVideo) {
-        if (_selectedPhotoArr.count > 0) {
-            TZImagePickerController *imagePickerVc = (TZImagePickerController *)self.navigationController;
-            [imagePickerVc showAlertWithTitle:@"选择照片时不能选择视频"];
-        } else {
-            TZVideoPlayerController *videoPlayerVc = [[TZVideoPlayerController alloc] init];
-            videoPlayerVc.model = model;
-            [self.navigationController pushViewController:videoPlayerVc animated:YES];
-        }
-    } else {
-        TZPhotoPreviewController *photoPreviewVc = [[TZPhotoPreviewController alloc] init];
-        photoPreviewVc.photoArr = _photoArr;
-        photoPreviewVc.currentIndex = indexPath.row;
-        [self pushPhotoPrevireViewController:photoPreviewVc];
+   
+}
+
+
+#pragma mark - UITableViewDelegate,UITableViewDataSource
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return 10;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    static NSString *cellIdentifier = @"CellIdentifier";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    if (!cell) {
+        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     }
+    return cell;
 }
 
-#pragma mark - Private Method
 
-- (void)refreshBottomToolBarStatus {
-    _previewButton.enabled = self.selectedPhotoArr.count > 0;
-    _okButton.enabled = self.selectedPhotoArr.count > 0;
-    
-    _numberImageView.hidden = _selectedPhotoArr.count <= 0;
-    _numberLable.hidden = _selectedPhotoArr.count <= 0;
-    _numberLable.text = [NSString stringWithFormat:@"%zd",_selectedPhotoArr.count];
-    
-    _originalPhotoButton.enabled = _selectedPhotoArr.count > 0;
-    _originalPhotoButton.selected = (_isSelectOriginalPhoto && _originalPhotoButton.enabled);
-    _originalPhotoLable.hidden = (!_originalPhotoButton.isSelected);
-    if (_isSelectOriginalPhoto) [self getSelectedPhotoBytes];
+
+
+- (void)refreshBottomConfirmBtn {
+
 }
 
-- (void)pushPhotoPrevireViewController:(TZPhotoPreviewController *)photoPreviewVc {
-    photoPreviewVc.isSelectOriginalPhoto = _isSelectOriginalPhoto;
-    photoPreviewVc.selectedPhotoArr = self.selectedPhotoArr;
-    photoPreviewVc.returnNewSelectedPhotoArrBlock = ^(NSMutableArray *newSelectedPhotoArr,BOOL isSelectOriginalPhoto) {
-        _selectedPhotoArr = newSelectedPhotoArr;
-        _isSelectOriginalPhoto = isSelectOriginalPhoto;
-        [_collectionView reloadData];
-        [self refreshBottomToolBarStatus];
-    };
-    photoPreviewVc.okButtonClickBlock = ^(NSMutableArray *newSelectedPhotoArr,BOOL isSelectOriginalPhoto){
-        _selectedPhotoArr = newSelectedPhotoArr;
-        _isSelectOriginalPhoto = isSelectOriginalPhoto;
-        [self okButtonClick];
-    };
-    [self.navigationController pushViewController:photoPreviewVc animated:YES];
-}
 
 - (void)getSelectedPhotoBytes {
     [[TZImageManager manager] getPhotosBytesWithArray:_selectedPhotoArr completion:^(NSString *totalBytes) {
-        _originalPhotoLable.text = [NSString stringWithFormat:@"(%@)",totalBytes];
+        
     }];
 }
 
 @end
-// 版权属于原作者
-// http://code4app.com (cn) http://code4app.net (en)
-// 发布代码于最专业的源码分享网站: Code4App.com
+
+
+@implementation TitleViewButton
+
+- (CGRect)titleRectForContentRect:(CGRect)contentRect{
+    return CGRectMake(0, 0, contentRect.size.width-7.0, contentRect.size.height);
+}
+
+- (CGRect)imageRectForContentRect:(CGRect)contentRect{
+    return CGRectMake(contentRect.size.width - 7.0, contentRect.size.height/2 - 7.0/2, 7.0, 7.0);
+}
+
+@end
+
+

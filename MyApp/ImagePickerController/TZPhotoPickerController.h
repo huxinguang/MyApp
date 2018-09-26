@@ -7,13 +7,22 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "RootViewController.h"
+
+#define kItemMargin 4                                                                                           //item间距
+#define kItemsAtEachLine 3                                                                                      //每行显示多少个
+#define kBottomConfirmBtnHeight 49                                                                              //底部确定按钮的高度
+#define kBottomConfirmBtnTitleFontSize 16                                                                       //底部确定按钮字体大小
+#define kAlbumTableViewHeight (kAppScreenHeight-kAppStatusBarAndNavigationBarHeight-kBottomConfirmBtnHeight)/2  //底部确定按钮字体大小
 
 @class TZAlbumModel;
-@interface TZPhotoPickerController : UIViewController
+@interface TZPhotoPickerController : RootViewController
 
 @property (nonatomic, strong) TZAlbumModel *model;
 
 @end
-// 版权属于原作者
-// http://code4app.com (cn) http://code4app.net (en)
-// 发布代码于最专业的源码分享网站: Code4App.com
+
+@interface TitleViewButton : UIButton
+
+@end
+

@@ -10,7 +10,6 @@
 #import "TZAssetModel.h"
 #import "UIView+Layout.h"
 #import "TZImageManager.h"
-#import "TZImagePickerController.h"
 
 @interface TZAssetCell ()
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;       // The photo / 照片
@@ -90,16 +89,5 @@
     }];
 }
 
-/// For fitting iOS6
-- (void)layoutSubviews {
-    if (iOS7Later) [super layoutSubviews];
-}
 
-- (void)layoutSublayersOfLayer:(CALayer *)layer {
-    if (iOS7Later) [super layoutSublayersOfLayer:layer];
-}
-
-
-@end// 版权属于原作者
-// http://code4app.com (cn) http://code4app.net (en)
-// 发布代码于最专业的源码分享网站: Code4App.com
+@end

@@ -19,12 +19,11 @@ typedef enum : NSUInteger {
 @class PHAsset;
 @interface TZAssetModel : NSObject
 
-@property (nonatomic, strong) id asset;             ///< PHAsset or ALAsset
-@property (nonatomic, assign) BOOL isSelected;      ///< The select status of a photo, default is No
+@property (nonatomic, strong) id asset;             // PHAsset 或 ALAsset
+@property (nonatomic, assign) BOOL isSelected;      // 选中状态 默认NO
 @property (nonatomic, assign) TZAssetModelMediaType type;
 @property (nonatomic, copy) NSString *timeLength;
 
-/// Init a photo dataModel With a asset
 /// 用一个PHAsset/ALAsset实例，初始化一个照片模型
 + (instancetype)modelWithAsset:(id)asset type:(TZAssetModelMediaType)type;
 + (instancetype)modelWithAsset:(id)asset type:(TZAssetModelMediaType)type timeLength:(NSString *)timeLength;
@@ -35,10 +34,8 @@ typedef enum : NSUInteger {
 @class PHFetchResult;
 @interface TZAlbumModel : NSObject
 
-@property (nonatomic, strong) NSString *name;        ///< The album name
-@property (nonatomic, assign) NSInteger count;       ///< Count of photos the album contain
-@property (nonatomic, strong) id result;             ///< PHFetchResult<PHAsset> or ALAssetsGroup<ALAsset>
+@property (nonatomic, strong) NSString *name;        //相册名称
+@property (nonatomic, assign) NSInteger count;       //相册照片数量
+@property (nonatomic, strong) id result;             //PHFetchResult<PHAsset> 或 ALAssetsGroup<ALAsset>
 
-@end// 版权属于原作者
-// http://code4app.com (cn) http://code4app.net (en)
-// 发布代码于最专业的源码分享网站: Code4App.com
+@end

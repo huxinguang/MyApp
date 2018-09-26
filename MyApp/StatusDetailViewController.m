@@ -12,9 +12,11 @@
 #import "StatusCell.h"
 #import "YYPhotoGroupView.h"
 #import "InputToolBar.h"
-#import "TZImagePickerController.h"
+#import "TZPhotoPickerController.h"
+#import "TZImageManager.h"
+#import "MyApp-Swift.h"//OC 引用Swift类需要导入 "工程名-Swift.h"
 
-@interface StatusDetailViewController ()<UITableViewDelegate,UITableViewDataSource,CommentCellDelegate,UITextViewDelegate>
+@interface StatusDetailViewController ()<UITableViewDelegate,UITableViewDataSource,CommentCellDelegate,UITextViewDelegate,UIAlertViewDelegate>
 
 @property (nonatomic, strong) UIActivityIndicatorView *indicatorView;
 @property (nonatomic, strong) NSArray *dataArray;
@@ -316,12 +318,20 @@
 }
 
 - (void)onImgEntryBtnClick{
-    TZImagePickerController *imagePickerVc = [[TZImagePickerController alloc] initWithMaxImagesCount:9 delegate:self];
-    // 你可以通过block或者代理，来得到用户选择的照片.
-    [imagePickerVc setDidFinishPickingPhotosHandle:^(NSArray<UIImage *> *photos, NSArray *assets) {
-        
-    }];
-    [self presentViewController:imagePickerVc animated:YES completion:nil];
+    if ([[TZImageManager manager] authorizationStatusNotDetermined] || [[TZImageManager manager] authorizationStatusAuthorized]) {
+        TZPhotoPickerController *photoPickerVc = [[TZPhotoPickerController alloc] init];
+        CBNavigationController *nav = [[CBNavigationController alloc]initWithRootViewController:photoPickerVc];
+        [nav setNavigationBarWithType:CBNavigationBarTypeWhiteOpaque];
+        [nav setStatusBarWithStyle:UIStatusBarStyleDefault];
+        __weak typeof (self) weakSelf = self;
+        [[TZImageManager manager] getCameraRollAlbum:YES completion:^(TZAlbumModel *model) {
+            photoPickerVc.model = model;
+            [weakSelf presentViewController:nav animated:YES completion:nil];
+        }];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"未开启相册权限，是否去设置中开启？" message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"去设置", nil];
+        [alert show];
+    }
     
 }
 
@@ -342,6 +352,20 @@
     self.inputToolbar.inputToolBarHeight = textViewHeight + kTextViewMaginTopBottom*2;
     [self.inputToolbar setNeedsUpdateConstraints];
     [self.inputToolbar updateConstraintsIfNeeded];
+}
+
+#pragma mark - UIAlertViewDelegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (buttonIndex == 0) {
+        //取消
+    }else{
+        //去设置
+        NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+        if ([[UIApplication sharedApplication] canOpenURL:url]) {
+            [[UIApplication sharedApplication] openURL:url];
+        }
+    }
 }
 
 

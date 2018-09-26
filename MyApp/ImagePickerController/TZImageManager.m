@@ -10,7 +10,6 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <Photos/Photos.h>
 #import "TZAssetModel.h"
-#import "TZImagePickerController.h"
 
 @interface TZImageManager ()
 @property (nonatomic, strong) ALAssetsLibrary *assetLibrary;
@@ -32,7 +31,16 @@
     return _assetLibrary;
 }
 
-/// Return YES if Authorized 返回YES如果得到了授权
+- (BOOL)authorizationStatusNotDetermined{
+    if (iOS8Later) {
+        if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined) return YES;
+    } else {
+        if ([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusNotDetermined) return YES;
+    }
+    return NO;
+}
+
+// 如果得到了授权返回YES
 - (BOOL)authorizationStatusAuthorized {
     if (iOS8Later) {
         if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized) return YES;
@@ -44,7 +52,7 @@
 
 #pragma mark - Get Album
 
-/// Get Album 获得相册/相册数组
+// 获得相册/相册数组
 - (void)getCameraRollAlbum:(BOOL)allowPickingVideo completion:(void (^)(TZAlbumModel *))completion{
     __block TZAlbumModel *model;
     if (iOS8Later) {
@@ -82,7 +90,7 @@
         option.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:YES]];
         
         PHAssetCollectionSubtype smartAlbumSubtype = PHAssetCollectionSubtypeSmartAlbumUserLibrary | PHAssetCollectionSubtypeSmartAlbumRecentlyAdded | PHAssetCollectionSubtypeSmartAlbumVideos;
-        // For iOS 9, We need to show ScreenShots Album && SelfPortraits Album
+        // For iOS 9, We need to show ScreenShots Album（屏幕快照） && SelfPortraits Album
         if (iOS9Later) {
             smartAlbumSubtype = PHAssetCollectionSubtypeSmartAlbumUserLibrary | PHAssetCollectionSubtypeSmartAlbumRecentlyAdded | PHAssetCollectionSubtypeSmartAlbumScreenshots | PHAssetCollectionSubtypeSmartAlbumSelfPortraits | PHAssetCollectionSubtypeSmartAlbumVideos;
         }
@@ -129,7 +137,7 @@
 
 #pragma mark - Get Asset
 
-/// Get Asset 获得照片数组
+// 获得照片数组
 - (void)getAssetsFromFetchResult:(id)result allowPickingVideo:(BOOL)allowPickingVideo completion:(void (^)(NSArray<TZAssetModel *> *))completion {
     NSMutableArray *photoArr = [NSMutableArray array];
     if ([result isKindOfClass:[PHFetchResult class]]) {
@@ -227,7 +235,7 @@
 
 #pragma mark - Get Photo
 
-/// Get photo 获得照片本身
+//获得照片本身
 - (void)getPhotoWithAsset:(id)asset completion:(void (^)(UIImage *, NSDictionary *))completion {
     [self getPhotoWithAsset:asset photoWidth:[UIScreen mainScreen].bounds.size.width completion:completion];
 }
@@ -321,6 +329,4 @@
 }
 
 @end
-// 版权属于原作者
-// http://code4app.com (cn) http://code4app.net (en)
-// 发布代码于最专业的源码分享网站: Code4App.com
+
