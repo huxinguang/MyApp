@@ -32,7 +32,7 @@
         self.imageView.image = photo;
     }];
     self.selectPhotoButton.selected = model.isSelected;
-    self.selectImageView.image = self.selectPhotoButton.isSelected ? [UIImage imageNamed:@"photo_sel_photoPickerVc"] : [UIImage imageNamed:@"photo_def_photoPickerVc"];
+    self.selectImageView.image = self.selectPhotoButton.isSelected ? [UIImage imageNamed:@"picker_selected"] : [UIImage imageNamed:@"picker_unselected"];
     self.type = AssetCellTypePhoto;
     if (model.type == AssetModelMediaTypeLivePhoto)      self.type = AssetCellTypeLivePhoto;
     else if (model.type == AssetModelMediaTypeAudio)     self.type = AssetCellTypeAudio;
@@ -59,7 +59,7 @@
     if (self.didSelectPhotoBlock) {
         self.didSelectPhotoBlock(sender.isSelected);
     }
-    self.selectImageView.image = sender.isSelected ? [UIImage imageNamed:@"photo_sel_photoPickerVc"] : [UIImage imageNamed:@"photo_def_photoPickerVc"];
+    self.selectImageView.image = sender.isSelected ? [UIImage imageNamed:@"picker_selected"] : [UIImage imageNamed:@"picker_unselected"];
     if (sender.isSelected) {
         [UIView showScaleAnimationWithLayer:_selectImageView.layer type:TZScaleAnimationToBigger];
     }

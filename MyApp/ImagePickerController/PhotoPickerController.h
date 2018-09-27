@@ -18,7 +18,7 @@
 #define kContainerViewMaxHeight (kAppScreenHeight-kAppStatusBarAndNavigationBarHeight-kBottomConfirmBtnHeight)/2      //相册列表最大高度
 #define kTitleViewTextImageDistance 0                                                                                 //标题和三角形距离
 #define kTitleViewArrowSize CGSizeMake(7.0, 7.0)                                                                      //三角图片大小
-#define kTitleViewTitleFont [UIFont boldSystemFontOfSize:15]                                                          //标题字体大小
+#define kTitleViewTitleFont [UIFont boldSystemFontOfSize:16]                                                          //标题字体大小
 
 @class AlbumModel;
 @interface PhotoPickerController : RootViewController
