@@ -7,7 +7,7 @@
 //
 
 #import "AlbumCell.h"
-#import "TZImageManager.h"
+#import "PickerImageManager.h"
 
 @implementation AlbumCell
 
@@ -17,10 +17,10 @@
     // Initialization code
 }
 
-- (void)setModel:(TZAlbumModel *)model{
+- (void)setModel:(AlbumModel *)model{
     _model = model;
     self.albumNameLabel.text = [NSString stringWithFormat:@"%@(%ld)",model.name,model.count];
-    [[TZImageManager manager] getPostImageWithAlbumModel:model completion:^(UIImage *postImage) {
+    [[PickerImageManager manager] getPostImageWithAlbumModel:model completion:^(UIImage *postImage) {
         self.imgView.image = postImage;
     }];
 }

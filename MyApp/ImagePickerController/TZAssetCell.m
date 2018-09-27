@@ -7,10 +7,9 @@
 //
 
 #import "TZAssetCell.h"
-#import "TZAssetModel.h"
-#import "UIView+Layout.h"
-#import "TZImageManager.h"
-
+#import "AssetModel.h"
+#import "UIView+ScaleAnimation.h"
+#import "PickerImageManager.h"
 
 @interface TZAssetCell ()
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;       // The photo / 照片
@@ -26,17 +25,17 @@
     self.timeLength.font = [UIFont boldSystemFontOfSize:11];
 }
 
-- (void)setModel:(TZAssetModel *)model {
+- (void)setModel:(AssetModel *)model {
     _model = model;
-    [[TZImageManager manager] getPhotoWithAsset:model.asset photoWidth:self.width completion:^(UIImage *photo, NSDictionary *info) {
+    [[PickerImageManager manager] getPhotoWithAsset:model.asset photoWidth:self.width completion:^(UIImage *photo, NSDictionary *info) {
         self.imageView.image = photo;
     }];
     self.selectPhotoButton.selected = model.isSelected;
     self.selectImageView.image = self.selectPhotoButton.isSelected ? [UIImage imageNamed:@"photo_sel_photoPickerVc"] : [UIImage imageNamed:@"photo_def_photoPickerVc"];
     self.type = TZAssetCellTypePhoto;
-    if (model.type == TZAssetModelMediaTypeLivePhoto)      self.type = TZAssetCellTypeLivePhoto;
-    else if (model.type == TZAssetModelMediaTypeAudio)     self.type = TZAssetCellTypeAudio;
-    else if (model.type == TZAssetModelMediaTypeVideo) {
+    if (model.type == AssetModelMediaTypeLivePhoto)      self.type = TZAssetCellTypeLivePhoto;
+    else if (model.type == AssetModelMediaTypeAudio)     self.type = TZAssetCellTypeAudio;
+    else if (model.type == AssetModelMediaTypeVideo) {
         self.type = TZAssetCellTypeVideo;
         self.timeLength.text = model.timeLength;
     }
@@ -61,7 +60,7 @@
     }
     self.selectImageView.image = sender.isSelected ? [UIImage imageNamed:@"photo_sel_photoPickerVc"] : [UIImage imageNamed:@"photo_def_photoPickerVc"];
     if (sender.isSelected) {
-        [UIView showOscillatoryAnimationWithLayer:_selectImageView.layer type:TZOscillatoryAnimationToBigger];
+        [UIView showScaleAnimationWithLayer:_selectImageView.layer type:TZScaleAnimationToBigger];
     }
 }
 

@@ -1,9 +1,9 @@
 //
-//  TZImageManager.h
-//  TZImagePickerController
+//  PickerImageManager.h
+//  MyApp
 //
-//  Created by 谭真 on 16/1/4.
-//  Copyright © 2016年 谭真. All rights reserved.
+//  Created by huxinguang on 2018/9/26.
+//  Copyright © 2018年 huxinguang. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -14,8 +14,8 @@
 #define iOS8Later ([UIDevice currentDevice].systemVersion.floatValue >= 8.0f)
 #define iOS9Later ([UIDevice currentDevice].systemVersion.floatValue >= 9.0f)
 
-@class TZAlbumModel,TZAssetModel;
-@interface TZImageManager : NSObject
+@class AlbumModel,AssetModel;
+@interface PickerImageManager : NSObject
 
 + (instancetype)manager;
 
@@ -25,14 +25,14 @@
 - (BOOL)authorizationStatusAuthorized;
 
 /// Get Album 获得相册/相册数组
-- (void)getCameraRollAlbum:(BOOL)allowPickingVideo completion:(void (^)(TZAlbumModel *model))completion;
-- (void)getAllAlbums:(BOOL)allowPickingVideo completion:(void (^)(NSArray<TZAlbumModel *> *models))completion;
+- (void)getCameraRollAlbum:(BOOL)allowPickingVideo completion:(void (^)(AlbumModel *model))completion;
+- (void)getAllAlbums:(BOOL)allowPickingVideo completion:(void (^)(NSArray<AlbumModel *> *models))completion;
 
 /// Get Asset 获得Asset数组
-- (void)getAssetsFromFetchResult:(id)result allowPickingVideo:(BOOL)allowPickingVideo completion:(void (^)(NSArray<TZAssetModel *> *models))completion;
+- (void)getAssetsFromFetchResult:(id)result allowPickingVideo:(BOOL)allowPickingVideo completion:(void (^)(NSArray<AssetModel *> *models))completion;
 
 /// Get photo 获得照片
-- (void)getPostImageWithAlbumModel:(TZAlbumModel *)model completion:(void (^)(UIImage *postImage))completion;
+- (void)getPostImageWithAlbumModel:(AlbumModel *)model completion:(void (^)(UIImage *postImage))completion;
 - (void)getPhotoWithAsset:(id)asset completion:(void (^)(UIImage *photo,NSDictionary *info))completion;
 - (void)getPhotoWithAsset:(id)asset photoWidth:(CGFloat)photoWidth completion:(void (^)(UIImage *photo,NSDictionary *info))completion;
 

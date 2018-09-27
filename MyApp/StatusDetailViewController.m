@@ -12,8 +12,8 @@
 #import "StatusCell.h"
 #import "YYPhotoGroupView.h"
 #import "InputToolBar.h"
-#import "TZPhotoPickerController.h"
-#import "TZImageManager.h"
+#import "PhotoPickerController.h"
+#import "PickerImageManager.h"
 #import "MyApp-Swift.h"//OC 引用Swift类需要导入 "工程名-Swift.h"
 
 @interface StatusDetailViewController ()<UITableViewDelegate,UITableViewDataSource,CommentCellDelegate,UITextViewDelegate,UIAlertViewDelegate>
@@ -323,13 +323,13 @@
 }
 
 - (void)onImgEntryBtnClick{
-    if ([[TZImageManager manager] authorizationStatusNotDetermined] || [[TZImageManager manager] authorizationStatusAuthorized]) {
-        TZPhotoPickerController *photoPickerVc = [[TZPhotoPickerController alloc] init];
+    if ([[PickerImageManager manager] authorizationStatusNotDetermined] || [[PickerImageManager manager] authorizationStatusAuthorized]) {
+        PhotoPickerController *photoPickerVc = [[PhotoPickerController alloc] init];
         CBNavigationController *nav = [[CBNavigationController alloc]initWithRootViewController:photoPickerVc];
         [nav setNavigationBarWithType:CBNavigationBarTypeWhiteOpaque];
         [nav setStatusBarWithStyle:UIStatusBarStyleDefault];
         __weak typeof (self) weakSelf = self;
-        [[TZImageManager manager] getCameraRollAlbum:YES completion:^(TZAlbumModel *model) {
+        [[PickerImageManager manager] getCameraRollAlbum:YES completion:^(AlbumModel *model) {
             photoPickerVc.model = model;
             [weakSelf presentViewController:nav animated:YES completion:nil];
         }];

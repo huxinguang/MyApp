@@ -64,10 +64,10 @@
 		C944F33C21476EE400159984 /* mine_accessory@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C944F33A21476EE400159984 /* mine_accessory@2x.png */; };
 		C9658BEF215B255200D25E4F /* picker_arrow@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9658BED215B255200D25E4F /* picker_arrow@3x.png */; };
 		C9658BF0215B255200D25E4F /* picker_arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9658BEE215B255200D25E4F /* picker_arrow@2x.png */; };
-		C9658BF2215B258A00D25E4F /* TZPhotoPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9658BF1215B258A00D25E4F /* TZPhotoPickerController.m */; };
+		C9658BF2215B258A00D25E4F /* PhotoPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9658BF1215B258A00D25E4F /* PhotoPickerController.m */; };
 		C9658BF9215B633400D25E4F /* AlbumCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C9658BF7215B633400D25E4F /* AlbumCell.m */; };
 		C9658BFA215B633400D25E4F /* AlbumCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C9658BF8215B633400D25E4F /* AlbumCell.xib */; };
-		C9658BFD215B6C1800D25E4F /* TZAlbumModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C9658BFC215B6C1800D25E4F /* TZAlbumModel.m */; };
+		C9658BFD215B6C1800D25E4F /* AlbumModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C9658BFC215B6C1800D25E4F /* AlbumModel.m */; };
 		C98B26442153332200845F73 /* comment@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C98B26432153332200845F73 /* comment@2x.png */; };
 		C98B26482153359200845F73 /* YYPhotoGroupView.m in Sources */ = {isa = PBXBuildFile; fileRef = C98B26472153359200845F73 /* YYPhotoGroupView.m */; };
 		C98B264C2153504800845F73 /* UIButton+PassValue.m in Sources */ = {isa = PBXBuildFile; fileRef = C98B264B2153504800845F73 /* UIButton+PassValue.m */; };
@@ -87,9 +87,9 @@
 		C98B268021548FD000845F73 /* photo_original_def@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C98B266121548FD000845F73 /* photo_original_def@2x.png */; };
 		C98B268121548FD000845F73 /* photo_number_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C98B266221548FD000845F73 /* photo_number_icon@2x.png */; };
 		C98B268221548FD000845F73 /* VideoSendIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C98B266321548FD000845F73 /* VideoSendIcon@2x.png */; };
-		C98B268321548FD000845F73 /* TZAssetModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C98B266421548FD000845F73 /* TZAssetModel.m */; };
-		C98B268421548FD000845F73 /* UIView+Layout.m in Sources */ = {isa = PBXBuildFile; fileRef = C98B266621548FD000845F73 /* UIView+Layout.m */; };
-		C98B268621548FD000845F73 /* TZImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C98B266921548FD000845F73 /* TZImageManager.m */; };
+		C98B268321548FD000845F73 /* AssetModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C98B266421548FD000845F73 /* AssetModel.m */; };
+		C98B268421548FD000845F73 /* UIView+ScaleAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = C98B266621548FD000845F73 /* UIView+ScaleAnimation.m */; };
+		C98B268621548FD000845F73 /* PickerImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C98B266921548FD000845F73 /* PickerImageManager.m */; };
 		C98B268C215494C000845F73 /* InputToolBar.m in Sources */ = {isa = PBXBuildFile; fileRef = C98B268B215494C000845F73 /* InputToolBar.m */; };
 		C98B26962154B78400845F73 /* UITextView+XGPlaceholder.m in Sources */ = {isa = PBXBuildFile; fileRef = C98B26952154B78400845F73 /* UITextView+XGPlaceholder.m */; };
 		C98B26992154EB6300845F73 /* input_micphone@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C98B26972154EB6200845F73 /* input_micphone@3x.png */; };
@@ -251,19 +251,19 @@
 		C944F33A21476EE400159984 /* mine_accessory@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mine_accessory@2x.png"; sourceTree = "<group>"; };
 		C9658BED215B255200D25E4F /* picker_arrow@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "picker_arrow@3x.png"; sourceTree = "<group>"; };
 		C9658BEE215B255200D25E4F /* picker_arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "picker_arrow@2x.png"; sourceTree = "<group>"; };
-		C9658BF1215B258A00D25E4F /* TZPhotoPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TZPhotoPickerController.m; sourceTree = "<group>"; };
+		C9658BF1215B258A00D25E4F /* PhotoPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoPickerController.m; sourceTree = "<group>"; };
 		C9658BF6215B633400D25E4F /* AlbumCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlbumCell.h; sourceTree = "<group>"; };
 		C9658BF7215B633400D25E4F /* AlbumCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AlbumCell.m; sourceTree = "<group>"; };
 		C9658BF8215B633400D25E4F /* AlbumCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AlbumCell.xib; sourceTree = "<group>"; };
-		C9658BFB215B6C1800D25E4F /* TZAlbumModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TZAlbumModel.h; sourceTree = "<group>"; };
-		C9658BFC215B6C1800D25E4F /* TZAlbumModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TZAlbumModel.m; sourceTree = "<group>"; };
+		C9658BFB215B6C1800D25E4F /* AlbumModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlbumModel.h; sourceTree = "<group>"; };
+		C9658BFC215B6C1800D25E4F /* AlbumModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AlbumModel.m; sourceTree = "<group>"; };
 		C98B26432153332200845F73 /* comment@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "comment@2x.png"; sourceTree = "<group>"; };
 		C98B26462153359200845F73 /* YYPhotoGroupView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYPhotoGroupView.h; sourceTree = "<group>"; };
 		C98B26472153359200845F73 /* YYPhotoGroupView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYPhotoGroupView.m; sourceTree = "<group>"; };
 		C98B264A2153504800845F73 /* UIButton+PassValue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIButton+PassValue.h"; sourceTree = "<group>"; };
 		C98B264B2153504800845F73 /* UIButton+PassValue.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIButton+PassValue.m"; sourceTree = "<group>"; };
-		C98B265021548FD000845F73 /* TZPhotoPickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TZPhotoPickerController.h; sourceTree = "<group>"; };
-		C98B265121548FD000845F73 /* TZImageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TZImageManager.h; sourceTree = "<group>"; };
+		C98B265021548FD000845F73 /* PhotoPickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoPickerController.h; sourceTree = "<group>"; };
+		C98B265121548FD000845F73 /* PickerImageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PickerImageManager.h; sourceTree = "<group>"; };
 		C98B265221548FD000845F73 /* TZAssetCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TZAssetCell.m; sourceTree = "<group>"; };
 		C98B265321548FD000845F73 /* TZAssetCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TZAssetCell.xib; sourceTree = "<group>"; };
 		C98B265621548FD000845F73 /* photo_sel_photoPickerVc@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "photo_sel_photoPickerVc@2x.png"; sourceTree = "<group>"; };
@@ -280,12 +280,12 @@
 		C98B266121548FD000845F73 /* photo_original_def@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "photo_original_def@2x.png"; sourceTree = "<group>"; };
 		C98B266221548FD000845F73 /* photo_number_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "photo_number_icon@2x.png"; sourceTree = "<group>"; };
 		C98B266321548FD000845F73 /* VideoSendIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "VideoSendIcon@2x.png"; sourceTree = "<group>"; };
-		C98B266421548FD000845F73 /* TZAssetModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TZAssetModel.m; sourceTree = "<group>"; };
-		C98B266621548FD000845F73 /* UIView+Layout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Layout.m"; sourceTree = "<group>"; };
+		C98B266421548FD000845F73 /* AssetModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AssetModel.m; sourceTree = "<group>"; };
+		C98B266621548FD000845F73 /* UIView+ScaleAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+ScaleAnimation.m"; sourceTree = "<group>"; };
 		C98B266821548FD000845F73 /* TZAssetCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TZAssetCell.h; sourceTree = "<group>"; };
-		C98B266921548FD000845F73 /* TZImageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TZImageManager.m; sourceTree = "<group>"; };
-		C98B266C21548FD000845F73 /* TZAssetModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TZAssetModel.h; sourceTree = "<group>"; };
-		C98B266F21548FD000845F73 /* UIView+Layout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Layout.h"; sourceTree = "<group>"; };
+		C98B266921548FD000845F73 /* PickerImageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PickerImageManager.m; sourceTree = "<group>"; };
+		C98B266C21548FD000845F73 /* AssetModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssetModel.h; sourceTree = "<group>"; };
+		C98B266F21548FD000845F73 /* UIView+ScaleAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+ScaleAnimation.h"; sourceTree = "<group>"; };
 		C98B268A215494C000845F73 /* InputToolBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InputToolBar.h; sourceTree = "<group>"; };
 		C98B268B215494C000845F73 /* InputToolBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InputToolBar.m; sourceTree = "<group>"; };
 		C98B26942154B78400845F73 /* UITextView+XGPlaceholder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UITextView+XGPlaceholder.h"; sourceTree = "<group>"; };
@@ -604,16 +604,16 @@
 				C98B266821548FD000845F73 /* TZAssetCell.h */,
 				C98B265221548FD000845F73 /* TZAssetCell.m */,
 				C98B265321548FD000845F73 /* TZAssetCell.xib */,
-				C98B266F21548FD000845F73 /* UIView+Layout.h */,
-				C98B266621548FD000845F73 /* UIView+Layout.m */,
-				C98B265121548FD000845F73 /* TZImageManager.h */,
-				C98B266921548FD000845F73 /* TZImageManager.m */,
-				C98B266C21548FD000845F73 /* TZAssetModel.h */,
-				C98B266421548FD000845F73 /* TZAssetModel.m */,
-				C9658BFB215B6C1800D25E4F /* TZAlbumModel.h */,
-				C9658BFC215B6C1800D25E4F /* TZAlbumModel.m */,
-				C98B265021548FD000845F73 /* TZPhotoPickerController.h */,
-				C9658BF1215B258A00D25E4F /* TZPhotoPickerController.m */,
+				C98B266F21548FD000845F73 /* UIView+ScaleAnimation.h */,
+				C98B266621548FD000845F73 /* UIView+ScaleAnimation.m */,
+				C98B265121548FD000845F73 /* PickerImageManager.h */,
+				C98B266921548FD000845F73 /* PickerImageManager.m */,
+				C98B266C21548FD000845F73 /* AssetModel.h */,
+				C98B266421548FD000845F73 /* AssetModel.m */,
+				C9658BFB215B6C1800D25E4F /* AlbumModel.h */,
+				C9658BFC215B6C1800D25E4F /* AlbumModel.m */,
+				C98B265021548FD000845F73 /* PhotoPickerController.h */,
+				C9658BF1215B258A00D25E4F /* PhotoPickerController.m */,
 				C9658BF6215B633400D25E4F /* AlbumCell.h */,
 				C9658BF7215B633400D25E4F /* AlbumCell.m */,
 				C9658BF8215B633400D25E4F /* AlbumCell.xib */,
@@ -968,16 +968,16 @@
 				C9AA11802151FAF400050385 /* ResumeViewController.m in Sources */,
 				C944F2C521461D3B00159984 /* MBProgressHUD+MJ.m in Sources */,
 				C944F2FC21464C4900159984 /* CYTabBarController.m in Sources */,
-				C98B268621548FD000845F73 /* TZImageManager.m in Sources */,
+				C98B268621548FD000845F73 /* PickerImageManager.m in Sources */,
 				C944F30521464D5C00159984 /* TabBarController.m in Sources */,
 				C944F2CA2146201200159984 /* HomeViewController.m in Sources */,
 				C944F2A7214615F500159984 /* StatusViewController.m in Sources */,
 				C9E5FE8A2147B8BC00B6AC3D /* RootViewController.m in Sources */,
 				C9E5FEAA214A56B300B6AC3D /* User.m in Sources */,
-				C9658BF2215B258A00D25E4F /* TZPhotoPickerController.m in Sources */,
+				C9658BF2215B258A00D25E4F /* PhotoPickerController.m in Sources */,
 				C944F2FA21464C4900159984 /* CYTabBar.m in Sources */,
 				C944F2B12146168500159984 /* UIImageView+CornerRadius.m in Sources */,
-				C98B268421548FD000845F73 /* UIView+Layout.m in Sources */,
+				C98B268421548FD000845F73 /* UIView+ScaleAnimation.m in Sources */,
 				C944F2652146072600159984 /* ViewController.m in Sources */,
 				C944F2F821464C4900159984 /* CYCenterButton.m in Sources */,
 				C9999D862147AC26002B1503 /* CBDefaultPageView.m in Sources */,
@@ -991,7 +991,7 @@
 				C9E5FE8D2147BE0100B6AC3D /* CBTitleView.m in Sources */,
 				C944F2FD21464C4900159984 /* UINavigationController+hidesBottomBarWhenPushed.m in Sources */,
 				C9999D772147A047002B1503 /* CBNavigationController.swift in Sources */,
-				C98B268321548FD000845F73 /* TZAssetModel.m in Sources */,
+				C98B268321548FD000845F73 /* AssetModel.m in Sources */,
 				C944F2FB21464C4900159984 /* CYButton.m in Sources */,
 				C944F31C214753DA00159984 /* MyCell.m in Sources */,
 				C98B264C2153504800845F73 /* UIButton+PassValue.m in Sources */,
@@ -1018,7 +1018,7 @@
 				C9999D7B2147A438002B1503 /* CBUtil.swift in Sources */,
 				C9AA117D2150AAA800050385 /* BaseCell.m in Sources */,
 				C944F2FE21464C4900159984 /* UITabBarItem+BadgeColor.m in Sources */,
-				C9658BFD215B6C1800D25E4F /* TZAlbumModel.m in Sources */,
+				C9658BFD215B6C1800D25E4F /* AlbumModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

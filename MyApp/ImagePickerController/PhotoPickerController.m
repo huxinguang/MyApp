@@ -1,33 +1,33 @@
 //
-//  TZPhotoPickerController.m
-//  TZImagePickerController
+//  PhotoPickerController.m
+//  MyApp
 //
-//  Created by 谭真 on 15/12/24.
-//  Copyright © 2015年 谭真. All rights reserved.
+//  Created by huxinguang on 2018/9/26.
+//  Copyright © 2018年 huxinguang. All rights reserved.
 //
 
-#import "TZPhotoPickerController.h"
+#import "PhotoPickerController.h"
 #import "TZAssetCell.h"
-#import "TZAssetModel.h"
-#import "TZImageManager.h"
+#import "AssetModel.h"
+#import "PickerImageManager.h"
 #import "CBTitleView.h"
 #import "CBBarButton.h"
 #import "AlbumCell.h"
 
-@interface TZPhotoPickerController ()<UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDelegate,UITableViewDataSource>
+@interface PhotoPickerController ()<UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic, strong)UICollectionView *collectionView;
-@property (nonatomic, strong)NSMutableArray<TZAssetModel *> *photoArr;
+@property (nonatomic, strong)NSMutableArray<AssetModel *> *photoArr;
 @property (nonatomic, strong)NSMutableArray *selectedPhotoArr;
 @property (nonatomic, strong)UIButton *bottomConfirmBtn;
 @property (nonatomic, strong)UITableView *albumTableView;
 @property (nonatomic, strong)UIView *containerView;
-@property (nonatomic, strong)NSMutableArray<TZAlbumModel *> *albumArr;
+@property (nonatomic, strong)NSMutableArray<AlbumModel *> *albumArr;
 @property (nonatomic, strong)UIControl *maskView;
 @property (nonatomic, strong)NavTitleView *ntView;
 @property (nonatomic, assign)CGFloat containerViewHeight;
 @end
 
-@implementation TZPhotoPickerController
+@implementation PhotoPickerController
 
 
 - (NSMutableArray *)selectedPhotoArr {
@@ -41,13 +41,13 @@
     [self configMaskView];
     
     __weak typeof(self) weakSelf = self;
-    [[TZImageManager manager] getAssetsFromFetchResult:self.model.result allowPickingVideo:YES completion:^(NSArray<TZAssetModel *> *models) {
+    [[PickerImageManager manager] getAssetsFromFetchResult:self.model.result allowPickingVideo:YES completion:^(NSArray<AssetModel *> *models) {
         weakSelf.photoArr = [NSMutableArray arrayWithArray:models];
         [weakSelf configCollectionView];
         [weakSelf configBottomConfirmBtn];
     }];
     
-    [[TZImageManager manager] getAllAlbums:YES completion:^(NSArray<TZAlbumModel *> *models) {
+    [[PickerImageManager manager] getAllAlbums:YES completion:^(NSArray<AlbumModel *> *models) {
         weakSelf.albumArr = [NSMutableArray arrayWithArray:models];
         [weakSelf configAlbumTableView];
     }];
@@ -142,8 +142,8 @@
     NSMutableArray *infoArr = @[].mutableCopy;
     __weak typeof (self) weakSelf = self;
     for (NSInteger i = 0; i < _selectedPhotoArr.count; i++) {
-        TZAssetModel *model = _selectedPhotoArr[i];
-        [[TZImageManager manager] getPhotoWithAsset:model.asset completion:^(UIImage *photo, NSDictionary *info) {
+        AssetModel *model = _selectedPhotoArr[i];
+        [[PickerImageManager manager] getPhotoWithAsset:model.asset completion:^(UIImage *photo, NSDictionary *info) {
             if (photo) [photos addObject:photo];
             if (info) [infoArr addObject:info];
             if (photos.count < weakSelf.selectedPhotoArr.count) return;
@@ -191,7 +191,7 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     TZAssetCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"TZAssetCell" forIndexPath:indexPath];
-    TZAssetModel *model = _photoArr[indexPath.row];
+    AssetModel *model = _photoArr[indexPath.row];
     cell.model = model;
     typeof(cell) weakCell = cell;
     cell.didSelectPhotoBlock = ^(BOOL isSelected) {
@@ -218,7 +218,7 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    TZAssetModel *model = _photoArr[indexPath.row];
+    AssetModel *model = _photoArr[indexPath.row];
     
 }
 
@@ -245,7 +245,7 @@
     [self.ntView.titleBtn setTitle:self.model.name forState:UIControlStateNormal];
     self.ntView.titleBtnWidth = [self.model.name widthForFont:kTitleViewTitleFont] + kTitleViewTextImageDistance + kTitleViewArrowSize.width;
     __weak typeof(self) weakSelf = self;
-    [[TZImageManager manager] getAssetsFromFetchResult:self.model.result allowPickingVideo:YES completion:^(NSArray<TZAssetModel *> *models) {
+    [[PickerImageManager manager] getAssetsFromFetchResult:self.model.result allowPickingVideo:YES completion:^(NSArray<AssetModel *> *models) {
         weakSelf.photoArr = [NSMutableArray arrayWithArray:models];
         [weakSelf.collectionView reloadData];
         [weakSelf onTitleBtnClick:weakSelf.ntView.titleBtn];
@@ -260,7 +260,7 @@
 
 
 - (void)getSelectedPhotoBytes {
-    [[TZImageManager manager] getPhotosBytesWithArray:_selectedPhotoArr completion:^(NSString *totalBytes) {
+    [[PickerImageManager manager] getPhotosBytesWithArray:_selectedPhotoArr completion:^(NSString *totalBytes) {
         
     }];
 }

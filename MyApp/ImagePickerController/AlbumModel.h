@@ -1,5 +1,5 @@
 //
-//  TZAlbumModel.h
+//  AlbumModel.h
 //  MyApp
 //
 //  Created by huxinguang on 2018/9/26.
@@ -10,7 +10,7 @@
 #import <UIKit/UIKit.h>
 
 @class PHFetchResult;
-@interface TZAlbumModel : NSObject
+@interface AlbumModel : NSObject
 @property (nonatomic, strong) NSString *name;        //相册名称
 @property (nonatomic, assign) NSInteger count;       //相册照片数量
 @property (nonatomic, strong) id result;             //PHFetchResult<PHAsset> 或 ALAssetsGroup<ALAsset>

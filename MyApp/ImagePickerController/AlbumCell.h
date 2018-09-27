@@ -7,10 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TZAlbumModel.h"
+#import "AlbumModel.h"
 
 @interface AlbumCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *imgView;
 @property (weak, nonatomic) IBOutlet UILabel *albumNameLabel;
-@property (nonatomic, strong) TZAlbumModel *model;
+@property (nonatomic, strong) AlbumModel *model;
 @end

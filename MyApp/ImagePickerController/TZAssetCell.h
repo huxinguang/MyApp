@@ -15,22 +15,22 @@ typedef enum : NSUInteger {
     TZAssetCellTypeAudio,
 } TZAssetCellType;
 
-@class TZAssetModel;
+@class AssetModel;
 @interface TZAssetCell : UICollectionViewCell
 
 @property (weak, nonatomic) IBOutlet UIButton *selectPhotoButton;
-@property (nonatomic, strong) TZAssetModel *model;
+@property (nonatomic, strong) AssetModel *model;
 @property (nonatomic, copy) void (^didSelectPhotoBlock)(BOOL);
 @property (nonatomic, assign) TZAssetCellType type;
 
 @end
 
 
-@class TZAlbumModel;
+@class AlbumModel;
 
 @interface TZAlbumCell : UITableViewCell
 
-@property (nonatomic, strong) TZAlbumModel *model;
+@property (nonatomic, strong) AlbumModel *model;
 
 @end
 // 版权属于原作者

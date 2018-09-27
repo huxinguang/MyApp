@@ -1,9 +1,9 @@
 //
-//  TZPhotoPickerController.h
-//  TZImagePickerController
+//  PhotoPickerController.h
+//  MyApp
 //
-//  Created by 谭真 on 15/12/24.
-//  Copyright © 2015年 谭真. All rights reserved.
+//  Created by huxinguang on 2018/9/26.
+//  Copyright © 2018年 huxinguang. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -20,10 +20,10 @@
 #define kTitleViewArrowSize CGSizeMake(7.0, 7.0)                                                                      //三角图片大小
 #define kTitleViewTitleFont [UIFont boldSystemFontOfSize:15]                                                          //标题字体大小
 
-@class TZAlbumModel;
-@interface TZPhotoPickerController : RootViewController
+@class AlbumModel;
+@interface PhotoPickerController : RootViewController
 
-@property (nonatomic, strong) TZAlbumModel *model;
+@property (nonatomic, strong) AlbumModel *model;
 
 @end
 

@@ -1,25 +1,25 @@
 //
-//  TZImageManager.m
-//  TZImagePickerController
+//  PickerImageManager.m
+//  MyApp
 //
-//  Created by 谭真 on 16/1/4.
-//  Copyright © 2016年 谭真. All rights reserved.
+//  Created by huxinguang on 2018/9/26.
+//  Copyright © 2018年 huxinguang. All rights reserved.
 //
 
-#import "TZImageManager.h"
+#import "PickerImageManager.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <Photos/Photos.h>
-#import "TZAssetModel.h"
-#import "TZAlbumModel.h"
+#import "AssetModel.h"
+#import "AlbumModel.h"
 
-@interface TZImageManager ()
+@interface PickerImageManager ()
 @property (nonatomic, strong) ALAssetsLibrary *assetLibrary;
 @end
 
-@implementation TZImageManager
+@implementation PickerImageManager
 
 + (instancetype)manager {
-    static TZImageManager *manager;
+    static PickerImageManager *manager;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         manager = [[self alloc] init];
@@ -54,8 +54,8 @@
 #pragma mark - Get Album
 
 // 获得相册/相册数组
-- (void)getCameraRollAlbum:(BOOL)allowPickingVideo completion:(void (^)(TZAlbumModel *))completion{
-    __block TZAlbumModel *model;
+- (void)getCameraRollAlbum:(BOOL)allowPickingVideo completion:(void (^)(AlbumModel *))completion{
+    __block AlbumModel *model;
     if (iOS8Later) {
         PHFetchOptions *option = [[PHFetchOptions alloc] init];
         if (!allowPickingVideo) option.predicate = [NSPredicate predicateWithFormat:@"mediaType == %ld", PHAssetMediaTypeImage];
@@ -83,7 +83,7 @@
     }
 }
 
-- (void)getAllAlbums:(BOOL)allowPickingVideo completion:(void (^)(NSArray<TZAlbumModel *> *))completion{
+- (void)getAllAlbums:(BOOL)allowPickingVideo completion:(void (^)(NSArray<AlbumModel *> *))completion{
     NSMutableArray *albumArr = [NSMutableArray array];
     if (iOS8Later) {
         PHFetchOptions *option = [[PHFetchOptions alloc] init];
@@ -139,19 +139,19 @@
 #pragma mark - Get Asset
 
 // 获得照片数组
-- (void)getAssetsFromFetchResult:(id)result allowPickingVideo:(BOOL)allowPickingVideo completion:(void (^)(NSArray<TZAssetModel *> *))completion {
+- (void)getAssetsFromFetchResult:(id)result allowPickingVideo:(BOOL)allowPickingVideo completion:(void (^)(NSArray<AssetModel *> *))completion {
     NSMutableArray *photoArr = [NSMutableArray array];
     if ([result isKindOfClass:[PHFetchResult class]]) {
         for (PHAsset *asset in result) {
-            TZAssetModelMediaType type = TZAssetModelMediaTypePhoto;
-            if (asset.mediaType == PHAssetMediaTypeVideo)      type = TZAssetModelMediaTypeVideo;
-            else if (asset.mediaType == PHAssetMediaTypeAudio) type = TZAssetModelMediaTypeAudio;
+            AssetModelMediaType type = AssetModelMediaTypePhoto;
+            if (asset.mediaType == PHAssetMediaTypeVideo)      type = AssetModelMediaTypeVideo;
+            else if (asset.mediaType == PHAssetMediaTypeAudio) type = AssetModelMediaTypeAudio;
             else if (asset.mediaType == PHAssetMediaTypeImage) {
-                if (asset.mediaSubtypes == PHAssetMediaSubtypePhotoLive) type = TZAssetModelMediaTypeLivePhoto;
+                if (asset.mediaSubtypes == PHAssetMediaSubtypePhotoLive) type = AssetModelMediaTypeLivePhoto;
             }
-            NSString *timeLength = type == TZAssetModelMediaTypeVideo ? [NSString stringWithFormat:@"%0.0f",asset.duration] : @"";
+            NSString *timeLength = type == AssetModelMediaTypeVideo ? [NSString stringWithFormat:@"%0.0f",asset.duration] : @"";
             timeLength = [self getNewTimeFromDurationSecond:timeLength.integerValue];
-            [photoArr addObject:[TZAssetModel modelWithAsset:asset type:type timeLength:timeLength]];
+            [photoArr addObject:[AssetModel modelWithAsset:asset type:type timeLength:timeLength]];
         }
         if (completion) completion(photoArr);
     } else if ([result isKindOfClass:[ALAssetsGroup class]]) {
@@ -161,20 +161,20 @@
             if (result == nil) {
                 if (completion) completion(photoArr);
             }
-            TZAssetModelMediaType type = TZAssetModelMediaTypePhoto;
+            AssetModelMediaType type = AssetModelMediaTypePhoto;
             if (!allowPickingVideo){
-                [photoArr addObject:[TZAssetModel modelWithAsset:result type:type]];
+                [photoArr addObject:[AssetModel modelWithAsset:result type:type]];
                 return;
             }
             /// Allow picking video
             if ([[result valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo]) {
-                type = TZAssetModelMediaTypeVideo;
+                type = AssetModelMediaTypeVideo;
                 NSTimeInterval duration = [[result valueForProperty:ALAssetPropertyDuration] integerValue];
                 NSString *timeLength = [NSString stringWithFormat:@"%0.0f",duration];
                 timeLength = [self getNewTimeFromDurationSecond:timeLength.integerValue];
-                [photoArr addObject:[TZAssetModel modelWithAsset:result type:type timeLength:timeLength]];
+                [photoArr addObject:[AssetModel modelWithAsset:result type:type timeLength:timeLength]];
             } else {
-                [photoArr addObject:[TZAssetModel modelWithAsset:result type:type]];
+                [photoArr addObject:[AssetModel modelWithAsset:result type:type]];
             }
         }];
     }
@@ -202,10 +202,10 @@
 - (void)getPhotosBytesWithArray:(NSArray *)photos completion:(void (^)(NSString *totalBytes))completion {
     __block NSInteger dataLength = 0;
     for (NSInteger i = 0; i < photos.count; i++) {
-        TZAssetModel *model = photos[i];
+        AssetModel *model = photos[i];
         if ([model.asset isKindOfClass:[PHAsset class]]) {
             [[PHImageManager defaultManager] requestImageDataForAsset:model.asset options:nil resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
-                if (model.type != TZAssetModelMediaTypeVideo) dataLength += imageData.length;
+                if (model.type != AssetModelMediaTypeVideo) dataLength += imageData.length;
                 if (i >= photos.count - 1) {
                     NSString *bytes = [self getBytesFromDataLength:dataLength];
                     if (completion) completion(bytes);
@@ -213,7 +213,7 @@
             }];
         } else if ([model.asset isKindOfClass:[ALAsset class]]) {
             ALAssetRepresentation *representation = [model.asset defaultRepresentation];
-            if (model.type != TZAssetModelMediaTypeVideo) dataLength += (NSInteger)representation.size;
+            if (model.type != AssetModelMediaTypeVideo) dataLength += (NSInteger)representation.size;
             if (i >= photos.count - 1) {
                 NSString *bytes = [self getBytesFromDataLength:dataLength];
                 if (completion) completion(bytes);
@@ -268,9 +268,9 @@
     }
 }
 
-- (void)getPostImageWithAlbumModel:(TZAlbumModel *)model completion:(void (^)(UIImage *))completion {
+- (void)getPostImageWithAlbumModel:(AlbumModel *)model completion:(void (^)(UIImage *))completion {
     if (iOS8Later) {
-        [[TZImageManager manager] getPhotoWithAsset:[model.result lastObject] photoWidth:80 completion:^(UIImage *photo, NSDictionary *info) {
+        [[PickerImageManager manager] getPhotoWithAsset:[model.result lastObject] photoWidth:80 completion:^(UIImage *photo, NSDictionary *info) {
             if (completion) completion(photo);
         }];
     } else {
@@ -299,8 +299,8 @@
 
 #pragma mark - Private Method
 
-- (TZAlbumModel *)modelWithResult:(id)result name:(NSString *)name{
-    TZAlbumModel *model = [[TZAlbumModel alloc] init];
+- (AlbumModel *)modelWithResult:(id)result name:(NSString *)name{
+    AlbumModel *model = [[AlbumModel alloc] init];
     model.result = result;
     model.name = [self getNewAlbumName:name];
     if ([result isKindOfClass:[PHFetchResult class]]) {
