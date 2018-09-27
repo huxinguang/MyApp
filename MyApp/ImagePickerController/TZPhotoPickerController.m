@@ -23,7 +23,7 @@
 @property (nonatomic, strong)UIView *containerView;
 @property (nonatomic, strong)NSMutableArray<TZAlbumModel *> *albumArr;
 @property (nonatomic, strong)UIControl *maskView;
-@property (nonatomic, strong)TitleViewButton *titleBtn;
+@property (nonatomic, strong)NavTitleView *ntView;
 @property (nonatomic, assign)CGFloat containerViewHeight;
 @end
 
@@ -51,8 +51,6 @@
         weakSelf.albumArr = [NSMutableArray arrayWithArray:models];
         [weakSelf configAlbumTableView];
     }];
-    
-    
 }
 
 - (void)configMaskView{
@@ -73,15 +71,13 @@
 }
 
 - (void)configTitleView{
-    self.titleBtn = [TitleViewButton buttonWithType:UIButtonTypeCustom];
-    [self.titleBtn setImage:[UIImage imageNamed:@"picker_arrow"] forState:UIControlStateNormal];
-    [self.titleBtn setTitle:@"相机胶卷" forState:UIControlStateNormal];
-    [self.titleBtn setTitleColor:kAppThemeColor forState:UIControlStateNormal];
-    self.titleBtn.titleLabel.font = [UIFont systemFontOfSize:15];
-    self.titleBtn.bounds = CGRectMake(0, 0, 70, 44);
-    self.titleBtn.selected = NO;
-    [self.titleBtn addTarget:self action:@selector(onTitleBtnClick:) forControlEvents:UIControlEventTouchUpInside];
-    self.navigationItem.titleView = self.titleBtn;
+    self.ntView = [[NavTitleView alloc]init];
+    self.ntView.intrinsicContentSize = CGSizeMake(kAppScreenWidth - 2*50, kAppNavigationBarHeight);
+    [self.ntView.titleBtn setTitle:self.model.name forState:UIControlStateNormal];
+    self.ntView.titleBtnWidth = [self.model.name widthForFont:kTitleViewTitleFont] + kTitleViewTextImageDistance + kTitleViewArrowSize.width;
+    self.ntView.titleBtn.selected = NO;
+    [self.ntView.titleBtn addTarget:self action:@selector(onTitleBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.titleView = self.ntView;
 }
 
 - (void)configRightBarButtonItem{
@@ -156,7 +152,7 @@
     }
 }
 
-- (void)onTitleBtnClick:(TitleViewButton *)btn{
+- (void)onTitleBtnClick:(UIButton *)btn{
     btn.selected = !btn.selected;
     if (btn.selected) {
         [self.view insertSubview:self.maskView belowSubview:self.containerView];
@@ -164,13 +160,13 @@
     [UIView animateWithDuration:0.35 animations:^{
         if (btn.selected) {
             CGAffineTransform transform = CGAffineTransformMakeRotation(M_PI);
-            btn.imageView.transform = transform;
+            self.ntView.arrowView.transform = transform;
             CGRect frame = self.containerView.frame;
             frame.origin.y += self.containerViewHeight;
             self.containerView.frame = frame;
             self.maskView.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.2];
         }else{
-            btn.imageView.transform = CGAffineTransformIdentity;
+            self.ntView.arrowView.transform = CGAffineTransformIdentity;
             CGRect frame = self.containerView.frame;
             frame.origin.y -= self.containerViewHeight;
             self.containerView.frame = frame;
@@ -184,7 +180,7 @@
 }
 
 - (void)onClickMaskView{
-    [self onTitleBtnClick:self.titleBtn];
+    [self onTitleBtnClick:self.ntView.titleBtn];
 }
 
 #pragma mark - UICollectionViewDataSource && Delegate
@@ -223,7 +219,7 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     TZAssetModel *model = _photoArr[indexPath.row];
-   
+    
 }
 
 
@@ -244,10 +240,17 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-    
+    self.model = self.albumArr[indexPath.row];
+//    self.ntView.titleBtn.titleLabel.text = self.model.name;
+    [self.ntView.titleBtn setTitle:self.model.name forState:UIControlStateNormal];
+    self.ntView.titleBtnWidth = [self.model.name widthForFont:kTitleViewTitleFont] + kTitleViewTextImageDistance + kTitleViewArrowSize.width;
+    __weak typeof(self) weakSelf = self;
+    [[TZImageManager manager] getAssetsFromFetchResult:self.model.result allowPickingVideo:YES completion:^(NSArray<TZAssetModel *> *models) {
+        weakSelf.photoArr = [NSMutableArray arrayWithArray:models];
+        [weakSelf.collectionView reloadData];
+        [weakSelf onTitleBtnClick:weakSelf.ntView.titleBtn];
+    }];
 }
-
 
 
 
@@ -265,15 +268,51 @@
 @end
 
 
-@implementation TitleViewButton
+@implementation NavTitleView
 
-- (CGRect)titleRectForContentRect:(CGRect)contentRect{
-    return CGRectMake(0, 0, contentRect.size.width-7.0, contentRect.size.height);
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        self.titleBtn = [[UIButton alloc]init];
+        self.titleBtn.titleLabel.font = kTitleViewTitleFont;
+        [self.titleBtn setTitleColor:kAppThemeColor forState:UIControlStateNormal];
+        [self addSubview:self.titleBtn];
+        
+        self.arrowView = [UIImageView new];
+        NSString *path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"picker_arrow.png"];
+        self.arrowView.image = [UIImage imageWithContentsOfFile:path];
+        [self addSubview:self.arrowView];
+        
+    }
+    return self;
 }
 
-- (CGRect)imageRectForContentRect:(CGRect)contentRect{
-    return CGRectMake(contentRect.size.width - 7.0, contentRect.size.height/2 - 7.0/2, 7.0, 7.0);
++ (BOOL)requiresConstraintBasedLayout{
+    return YES;
 }
+
+-(void)updateConstraints{
+    [self.titleBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.mas_centerY);
+        make.centerX.equalTo(self.mas_centerX).with.offset(-(kTitleViewTextImageDistance + kTitleViewArrowSize.width)/2);
+        make.size.mas_equalTo(CGSizeMake(self.titleBtnWidth, kAppNavigationBarHeight));
+    }];
+    
+    [self.arrowView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.mas_centerY);
+        make.left.mas_equalTo(self.titleBtn.mas_right).with.offset(kTitleViewTextImageDistance);
+        make.size.mas_equalTo(kTitleViewArrowSize);
+    }];
+    [super updateConstraints];
+}
+
+- (void)setTitleBtnWidth:(CGFloat)titleBtnWidth{
+    _titleBtnWidth = titleBtnWidth;
+    [self setNeedsUpdateConstraints];
+    [self updateConstraintsIfNeeded];
+}
+
 
 @end
 

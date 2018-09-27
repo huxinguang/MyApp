@@ -16,6 +16,9 @@
 #define kAlbumTableViewMarginTopBottom 10                                                                             //相册列表上下边距
 #define kAlbumTableViewRowHeight 60                                                                                   //相册列表cell高度
 #define kContainerViewMaxHeight (kAppScreenHeight-kAppStatusBarAndNavigationBarHeight-kBottomConfirmBtnHeight)/2      //相册列表最大高度
+#define kTitleViewTextImageDistance 0                                                                                 //标题和三角形距离
+#define kTitleViewArrowSize CGSizeMake(7.0, 7.0)                                                                      //三角图片大小
+#define kTitleViewTitleFont [UIFont boldSystemFontOfSize:15]                                                          //标题字体大小
 
 @class TZAlbumModel;
 @interface TZPhotoPickerController : RootViewController
@@ -24,7 +27,11 @@
 
 @end
 
-@interface TitleViewButton : UIButton
+@interface NavTitleView : UIView
+@property (nonatomic, strong)UIButton *titleBtn;
+@property (nonatomic, strong)UIImageView *arrowView;
+@property (nonatomic, assign)CGFloat titleBtnWidth;
+@property (nonatomic, assign)CGSize intrinsicContentSize;
 
 @end
 
