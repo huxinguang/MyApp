@@ -1,17 +1,17 @@
 //
-//  TZAssetCell.m
-//  TZImagePickerController
+//  AssetCell.m
+//  MyApp
 //
-//  Created by 谭真 on 15/12/24.
-//  Copyright © 2015年 谭真. All rights reserved.
+//  Created by huxinguang on 2018/9/26.
+//  Copyright © 2018年 huxinguang. All rights reserved.
 //
 
-#import "TZAssetCell.h"
+#import "AssetCell.h"
 #import "AssetModel.h"
 #import "UIView+ScaleAnimation.h"
 #import "PickerImageManager.h"
 
-@interface TZAssetCell ()
+@interface AssetCell ()
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;       // The photo / 照片
 @property (weak, nonatomic) IBOutlet UIImageView *selectImageView;
 @property (weak, nonatomic) IBOutlet UIView *bottomView;
@@ -19,9 +19,10 @@
 
 @end
 
-@implementation TZAssetCell
+@implementation AssetCell
 
 - (void)awakeFromNib {
+    [super awakeFromNib];
     self.timeLength.font = [UIFont boldSystemFontOfSize:11];
 }
 
@@ -32,18 +33,18 @@
     }];
     self.selectPhotoButton.selected = model.isSelected;
     self.selectImageView.image = self.selectPhotoButton.isSelected ? [UIImage imageNamed:@"photo_sel_photoPickerVc"] : [UIImage imageNamed:@"photo_def_photoPickerVc"];
-    self.type = TZAssetCellTypePhoto;
-    if (model.type == AssetModelMediaTypeLivePhoto)      self.type = TZAssetCellTypeLivePhoto;
-    else if (model.type == AssetModelMediaTypeAudio)     self.type = TZAssetCellTypeAudio;
+    self.type = AssetCellTypePhoto;
+    if (model.type == AssetModelMediaTypeLivePhoto)      self.type = AssetCellTypeLivePhoto;
+    else if (model.type == AssetModelMediaTypeAudio)     self.type = AssetCellTypeAudio;
     else if (model.type == AssetModelMediaTypeVideo) {
-        self.type = TZAssetCellTypeVideo;
+        self.type = AssetCellTypeVideo;
         self.timeLength.text = model.timeLength;
     }
 }
 
-- (void)setType:(TZAssetCellType)type {
+- (void)setType:(AssetCellType)type {
     _type = type;
-    if (type == TZAssetCellTypePhoto || type == TZAssetCellTypeLivePhoto) {
+    if (type == AssetCellTypePhoto || type == AssetCellTypeLivePhoto) {
         _selectImageView.hidden = NO;
         _selectPhotoButton.hidden = NO;
         _bottomView.hidden = YES;

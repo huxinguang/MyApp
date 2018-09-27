@@ -7,7 +7,7 @@
 //
 
 #import "PhotoPickerController.h"
-#import "TZAssetCell.h"
+#import "AssetCell.h"
 #import "AssetModel.h"
 #import "PickerImageManager.h"
 #import "CBTitleView.h"
@@ -100,7 +100,7 @@
     self.collectionView.delegate = self;
     self.collectionView.alwaysBounceVertical = YES;
     [self.view addSubview:self.collectionView];
-    [self.collectionView registerNib:[UINib nibWithNibName:@"TZAssetCell" bundle:nil] forCellWithReuseIdentifier:@"TZAssetCell"];
+    [self.collectionView registerNib:[UINib nibWithNibName:@"AssetCell" bundle:nil] forCellWithReuseIdentifier:@"AssetCell"];
 }
 
 - (void)configAlbumTableView{
@@ -190,7 +190,7 @@
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    TZAssetCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"TZAssetCell" forIndexPath:indexPath];
+    AssetCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"AssetCell" forIndexPath:indexPath];
     AssetModel *model = _photoArr[indexPath.row];
     cell.model = model;
     typeof(cell) weakCell = cell;

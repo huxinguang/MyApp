@@ -1,27 +1,27 @@
 //
-//  TZAssetCell.h
-//  TZImagePickerController
+//  AssetCell.h
+//  MyApp
 //
-//  Created by 谭真 on 15/12/24.
-//  Copyright © 2015年 谭真. All rights reserved.
+//  Created by huxinguang on 2018/9/26.
+//  Copyright © 2018年 huxinguang. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
 typedef enum : NSUInteger {
-    TZAssetCellTypePhoto = 0,
-    TZAssetCellTypeLivePhoto,
-    TZAssetCellTypeVideo,
-    TZAssetCellTypeAudio,
-} TZAssetCellType;
+    AssetCellTypePhoto = 0,
+    AssetCellTypeLivePhoto,
+    AssetCellTypeVideo,
+    AssetCellTypeAudio,
+} AssetCellType;
 
 @class AssetModel;
-@interface TZAssetCell : UICollectionViewCell
+@interface AssetCell : UICollectionViewCell
 
 @property (weak, nonatomic) IBOutlet UIButton *selectPhotoButton;
 @property (nonatomic, strong) AssetModel *model;
 @property (nonatomic, copy) void (^didSelectPhotoBlock)(BOOL);
-@property (nonatomic, assign) TZAssetCellType type;
+@property (nonatomic, assign) AssetCellType type;
 
 @end
 
