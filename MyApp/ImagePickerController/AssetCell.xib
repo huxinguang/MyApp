@@ -66,11 +66,22 @@
                             <constraint firstAttribute="bottom" secondItem="N0z-qh-hcG" secondAttribute="bottom" id="nr0-UX-ihC"/>
                         </constraints>
                     </view>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f1r-tb-RCx">
+                        <rect key="frame" x="42" y="8" width="30" height="30"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="30" id="45e-kf-HyP"/>
+                            <constraint firstAttribute="height" constant="30" id="c5M-qx-k7w"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
             </view>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="a4Q-ox-UyB" secondAttribute="trailing" id="4hT-aw-TYf"/>
                 <constraint firstAttribute="trailing" secondItem="Yy8-bS-MRb" secondAttribute="trailing" id="5Gq-So-iWs"/>
+                <constraint firstItem="f1r-tb-RCx" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="8" id="CSH-3D-0Yo"/>
                 <constraint firstAttribute="trailing" secondItem="ova-UI-tV1" secondAttribute="trailing" constant="8" id="GRy-ue-4Qr"/>
                 <constraint firstItem="ova-UI-tV1" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="8" id="Glw-Yv-tQT"/>
                 <constraint firstAttribute="bottom" secondItem="Yy8-bS-MRb" secondAttribute="bottom" id="Gsd-C1-gkC"/>
@@ -80,10 +91,12 @@
                 <constraint firstAttribute="bottom" secondItem="a4Q-ox-UyB" secondAttribute="bottom" id="X3A-bD-wef"/>
                 <constraint firstItem="dNW-bU-KEf" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="epf-0O-UJg"/>
                 <constraint firstItem="Yy8-bS-MRb" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="s7f-8d-u0B"/>
+                <constraint firstAttribute="trailing" secondItem="f1r-tb-RCx" secondAttribute="trailing" constant="8" id="vBL-Lc-Xa7"/>
             </constraints>
             <connections>
                 <outlet property="bottomView" destination="a4Q-ox-UyB" id="3k1-bw-ZPW"/>
                 <outlet property="imageView" destination="Yy8-bS-MRb" id="q1a-cl-0zn"/>
+                <outlet property="numberLabel" destination="f1r-tb-RCx" id="fsZ-xz-l4m"/>
                 <outlet property="selectImageView" destination="ova-UI-tV1" id="xXa-XQ-rUc"/>
                 <outlet property="selectPhotoButton" destination="dNW-bU-KEf" id="vDo-uv-cp6"/>
                 <outlet property="timeLength" destination="BXd-4T-A1o" id="dbx-Cf-g5W"/>

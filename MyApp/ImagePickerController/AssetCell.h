@@ -19,6 +19,7 @@ typedef enum : NSUInteger {
 @interface AssetCell : UICollectionViewCell
 
 @property (weak, nonatomic) IBOutlet UIButton *selectPhotoButton;
+@property (weak, nonatomic) IBOutlet UILabel *numberLabel;
 @property (nonatomic, strong) AssetModel *model;
 @property (nonatomic, copy) void (^didSelectPhotoBlock)(BOOL);
 @property (nonatomic, assign) AssetCellType type;

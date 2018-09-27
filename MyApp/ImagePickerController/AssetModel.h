@@ -19,10 +19,11 @@ typedef enum : NSUInteger {
 @class PHAsset;
 @interface AssetModel : NSObject
 
-@property (nonatomic, strong) id asset;             // PHAsset 或 ALAsset
-@property (nonatomic, assign) BOOL isSelected;      // 选中状态 默认NO
-@property (nonatomic, assign) AssetModelMediaType type;
-@property (nonatomic, copy) NSString *timeLength;
+@property (nonatomic, strong)id asset;                  // PHAsset 或 ALAsset
+@property (nonatomic, assign)BOOL isSelected;           // 选中状态 默认NO
+@property (nonatomic, assign)int number;                // 数字
+@property (nonatomic, assign)AssetModelMediaType type;  //
+@property (nonatomic, copy)NSString *timeLength;
 
 /// 用一个PHAsset/ALAsset实例，初始化一个照片模型
 + (instancetype)modelWithAsset:(id)asset type:(AssetModelMediaType)type;

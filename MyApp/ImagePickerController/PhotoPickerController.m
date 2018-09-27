@@ -17,7 +17,8 @@
 @interface PhotoPickerController ()<UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic, strong)UICollectionView *collectionView;
 @property (nonatomic, strong)NSMutableArray<AssetModel *> *photoArr;
-@property (nonatomic, strong)NSMutableArray *selectedPhotoArr;
+@property (nonatomic, strong)NSMutableArray<AssetModel *> *selectedPhotoArr;
+@property (nonatomic, strong)NSMutableArray<NSIndexPath *> *selectedIndexpaths;
 @property (nonatomic, strong)UIButton *bottomConfirmBtn;
 @property (nonatomic, strong)UITableView *albumTableView;
 @property (nonatomic, strong)UIView *containerView;
@@ -34,6 +35,12 @@
     if (_selectedPhotoArr == nil) _selectedPhotoArr = [NSMutableArray array];
     return _selectedPhotoArr;
 }
+
+- (NSMutableArray *)selectedIndexpaths{
+    if (_selectedIndexpaths == nil) _selectedIndexpaths = [NSMutableArray array];
+    return _selectedIndexpaths;
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -193,14 +200,17 @@
     AssetCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"AssetCell" forIndexPath:indexPath];
     AssetModel *model = _photoArr[indexPath.row];
     cell.model = model;
-    typeof(cell) weakCell = cell;
+    __weak typeof(cell) weakCell = cell;
     cell.didSelectPhotoBlock = ^(BOOL isSelected) {
         // 1. 取消选择
         if (isSelected) {
             weakCell.selectPhotoButton.selected = NO;
             model.isSelected = NO;
             [self.selectedPhotoArr removeObject:model];
+            [self.selectedIndexpaths removeObject:indexPath];
+            weakCell.numberLabel.text = @"";
             [self refreshBottomConfirmBtn];
+            
         } else {
             // 2. 选择照片,检查是否超过了最大个数的限制
             
@@ -208,11 +218,21 @@
                 weakCell.selectPhotoButton.selected = YES;
                 model.isSelected = YES;
                 [self.selectedPhotoArr addObject:model];
+                [self.selectedIndexpaths addObject:indexPath];
+                weakCell.numberLabel.text = [NSString stringWithFormat:@"%ld",self.selectedPhotoArr.count];
                 [self refreshBottomConfirmBtn];
             } else {
 //                [NSString stringWithFormat:@"最多选择%zd张照片",9];
             }
         }
+        for (int i=0; i<self.selectedPhotoArr.count; i++) {
+            AssetModel *selectedModel = self.selectedPhotoArr[i];
+            selectedModel.number = i+1;
+        }
+        if (self.selectedIndexpaths.count > 0) {
+            [collectionView reloadItemsAtIndexPaths:self.selectedIndexpaths];
+        }
+        
     };
     return cell;
 }
@@ -255,7 +275,12 @@
 
 
 - (void)refreshBottomConfirmBtn {
-
+    if (self.selectedPhotoArr.count > 0) {
+        self.bottomConfirmBtn.enabled = YES;
+    }else{
+        self.bottomConfirmBtn.enabled = NO;
+    }
+    [self.bottomConfirmBtn setTitle:[NSString stringWithFormat:@"确定(%ld/9)",self.selectedPhotoArr.count] forState:UIControlStateNormal];
 }
 
 

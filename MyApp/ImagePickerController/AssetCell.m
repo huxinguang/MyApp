@@ -33,6 +33,7 @@
     }];
     self.selectPhotoButton.selected = model.isSelected;
     self.selectImageView.image = self.selectPhotoButton.isSelected ? [UIImage imageNamed:@"picker_selected"] : [UIImage imageNamed:@"picker_unselected"];
+    self.numberLabel.text = self.selectPhotoButton.selected ? [NSString stringWithFormat:@"%d",self.model.number] : @"";
     self.type = AssetCellTypePhoto;
     if (model.type == AssetModelMediaTypeLivePhoto)      self.type = AssetCellTypeLivePhoto;
     else if (model.type == AssetModelMediaTypeAudio)     self.type = AssetCellTypeAudio;
