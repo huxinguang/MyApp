@@ -56,6 +56,7 @@
     
     [[PickerImageManager manager] getAllAlbums:YES completion:^(NSArray<AlbumModel *> *models) {
         weakSelf.albumArr = [NSMutableArray arrayWithArray:models];
+        weakSelf.albumArr[0].isSelected = YES;//默认第一个选中
         [weakSelf configAlbumTableView];
     }];
 }
@@ -128,8 +129,6 @@
     [self.containerView addSubview:self.albumTableView];
 }
 
-
-
 - (void)configBottomConfirmBtn {
     self.bottomConfirmBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     self.bottomConfirmBtn.frame = CGRectMake(0, kAppScreenHeight - kBottomConfirmBtnHeight - kAppStatusBarAndNavigationBarHeight, kAppScreenWidth, kBottomConfirmBtnHeight);
@@ -180,6 +179,7 @@
             self.maskView.backgroundColor = [UIColor clearColor];
         }
     } completion:^(BOOL finished) {
+        [self.albumTableView reloadData];
         if (!btn.selected) {
             [self.view insertSubview:self.maskView belowSubview:self.collectionView];
         }
@@ -193,7 +193,7 @@
 #pragma mark - UICollectionViewDataSource && Delegate
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return _photoArr.count;
+    return self.photoArr.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -202,27 +202,24 @@
     cell.model = model;
     __weak typeof(cell) weakCell = cell;
     cell.didSelectPhotoBlock = ^(BOOL isSelected) {
-        // 1. 取消选择
+        weakCell.selectPhotoButton.selected = !isSelected;
+        model.isSelected = !isSelected;
         if (isSelected) {
-            weakCell.selectPhotoButton.selected = NO;
-            model.isSelected = NO;
+            // 1. 取消选择
             [self.selectedPhotoArr removeObject:model];
             [self.selectedIndexpaths removeObject:indexPath];
             weakCell.numberLabel.text = @"";
-            [self refreshBottomConfirmBtn];
-            
         } else {
             // 2. 选择照片,检查是否超过了最大个数的限制
-            
             if (self.selectedPhotoArr.count < 9) {
-                weakCell.selectPhotoButton.selected = YES;
-                model.isSelected = YES;
                 [self.selectedPhotoArr addObject:model];
                 [self.selectedIndexpaths addObject:indexPath];
                 weakCell.numberLabel.text = [NSString stringWithFormat:@"%ld",self.selectedPhotoArr.count];
-                [self refreshBottomConfirmBtn];
             } else {
-//                [NSString stringWithFormat:@"最多选择%zd张照片",9];
+                MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                hud.mode = MBProgressHUDModeText;
+                hud.label.text = @"最多选择9张照片";
+                [hud hideAnimated:YES afterDelay:1.5f];
             }
         }
         for (int i=0; i<self.selectedPhotoArr.count; i++) {
@@ -232,13 +229,14 @@
         if (self.selectedIndexpaths.count > 0) {
             [collectionView reloadItemsAtIndexPaths:self.selectedIndexpaths];
         }
+        [self refreshBottomConfirmBtn];
         
     };
     return cell;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    AssetModel *model = _photoArr[indexPath.row];
+    AssetModel *model = self.photoArr[indexPath.row];
     
 }
 
@@ -260,8 +258,11 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    for (AlbumModel *album in self.albumArr) {
+        album.isSelected = NO;
+    }
     self.model = self.albumArr[indexPath.row];
-//    self.ntView.titleBtn.titleLabel.text = self.model.name;
+    self.model.isSelected = YES;
     [self.ntView.titleBtn setTitle:self.model.name forState:UIControlStateNormal];
     self.ntView.titleBtnWidth = [self.model.name widthForFont:kTitleViewTitleFont] + kTitleViewTextImageDistance + kTitleViewArrowSize.width;
     __weak typeof(self) weakSelf = self;

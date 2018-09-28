@@ -22,6 +22,11 @@
     [[PickerImageManager manager] getPostImageWithAlbumModel:model completion:^(UIImage *postImage) {
         self.imgView.image = postImage;
     }];
+    if (model.isSelected) {
+        self.contentView.backgroundColor = [UIColor colorWithRGB:0xF0FCFF];
+    }else{
+        self.contentView.backgroundColor = [UIColor whiteColor];
+    }
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

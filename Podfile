@@ -10,4 +10,5 @@ pod 'FLEX', '~> 2.0', :configurations => ['Debug']
 pod 'MJRefresh'
 pod 'FLAnimatedImage', '~> 1.0'
 pod 'YYKit'
+pod 'MBProgressHUD', '~> 1.1.0'
 end
