@@ -339,7 +339,6 @@
     
 }
 
-
 - (void)refreshNavRightBtn{
     CBBarButton *btn = (CBBarButton *)self.navigationItem.rightBarButtonItem.customView;
     if (self.selectedPhotoArr.count > 0) {
@@ -358,7 +357,6 @@
     [self.bottomConfirmBtn setTitle:[NSString stringWithFormat:@"确定(%ld/9)",self.selectedPhotoArr.count] forState:UIControlStateNormal];
 }
 
-
 - (void)openCamera{
     UIImagePickerController *picker = [[UIImagePickerController alloc] init];
     picker.sourceType = UIImagePickerControllerSourceTypeCamera;
@@ -372,7 +370,6 @@
     [self presentViewController:picker animated:YES completion:nil];
     
 }
-
 
 #pragma mark - UIImagePickerControllerDelegate
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info{

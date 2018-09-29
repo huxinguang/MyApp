@@ -582,22 +582,22 @@
 			isa = PBXGroup;
 			children = (
 				C98B265521548FD000845F73 /* PickerImage */,
-				C98B266821548FD000845F73 /* AssetCell.h */,
-				C98B265221548FD000845F73 /* AssetCell.m */,
-				C98B265321548FD000845F73 /* AssetCell.xib */,
-				C98B266F21548FD000845F73 /* UIView+ScaleAnimation.h */,
-				C98B266621548FD000845F73 /* UIView+ScaleAnimation.m */,
-				C98B265121548FD000845F73 /* PickerImageManager.h */,
-				C98B266921548FD000845F73 /* PickerImageManager.m */,
 				C98B266C21548FD000845F73 /* AssetModel.h */,
 				C98B266421548FD000845F73 /* AssetModel.m */,
 				C9658BFB215B6C1800D25E4F /* AlbumModel.h */,
 				C9658BFC215B6C1800D25E4F /* AlbumModel.m */,
-				C98B265021548FD000845F73 /* PhotoPickerController.h */,
-				C9658BF1215B258A00D25E4F /* PhotoPickerController.m */,
+				C98B266821548FD000845F73 /* AssetCell.h */,
+				C98B265221548FD000845F73 /* AssetCell.m */,
+				C98B265321548FD000845F73 /* AssetCell.xib */,
 				C9658BF6215B633400D25E4F /* AlbumCell.h */,
 				C9658BF7215B633400D25E4F /* AlbumCell.m */,
 				C9658BF8215B633400D25E4F /* AlbumCell.xib */,
+				C98B266F21548FD000845F73 /* UIView+ScaleAnimation.h */,
+				C98B266621548FD000845F73 /* UIView+ScaleAnimation.m */,
+				C98B265121548FD000845F73 /* PickerImageManager.h */,
+				C98B266921548FD000845F73 /* PickerImageManager.m */,
+				C98B265021548FD000845F73 /* PhotoPickerController.h */,
+				C9658BF1215B258A00D25E4F /* PhotoPickerController.m */,
 			);
 			path = ImagePickerController;
 			sourceTree = "<group>";
