@@ -86,7 +86,7 @@
     }
     self.selectImageView.image = sender.isSelected ? [UIImage imageNamed:@"picker_selected"] : [UIImage imageNamed:@"picker_unselected"];
     if (sender.isSelected) {
-        [UIView showScaleAnimationWithLayer:_selectImageView.layer type:TZScaleAnimationToBigger];
+        [UIView showScaleAnimationWithLayer:_selectImageView.layer type:ScaleAnimationToBigger];
     }
 }
 

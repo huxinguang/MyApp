@@ -9,9 +9,9 @@
 
 @implementation UIView (ScaleAnimation)
 
-+ (void)showScaleAnimationWithLayer:(CALayer *)layer type:(TZScaleAnimationType)type{
-    NSNumber *animationScale1 = type == TZScaleAnimationToBigger ? @(1.15) : @(0.5);
-    NSNumber *animationScale2 = type == TZScaleAnimationToBigger ? @(0.92) : @(1.15);
++ (void)showScaleAnimationWithLayer:(CALayer *)layer type:(ScaleAnimationType)type{
+    NSNumber *animationScale1 = type == ScaleAnimationToBigger ? @(1.15) : @(0.5);
+    NSNumber *animationScale2 = type == ScaleAnimationToBigger ? @(0.92) : @(1.15);
     
     [UIView animateWithDuration:0.15 delay:0 options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut animations:^{
         [layer setValue:animationScale1 forKeyPath:@"transform.scale"];

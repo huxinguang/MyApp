@@ -8,13 +8,13 @@
 #import <UIKit/UIKit.h>
 
 typedef enum : NSUInteger {
-    TZScaleAnimationToBigger,
-    TZScaleAnimationToSmaller,
-} TZScaleAnimationType;
+    ScaleAnimationToBigger,
+    ScaleAnimationToSmaller,
+} ScaleAnimationType;
 
 @interface UIView (ScaleAnimation)
 
-+ (void)showScaleAnimationWithLayer:(CALayer *)layer type:(TZScaleAnimationType)type;
++ (void)showScaleAnimationWithLayer:(CALayer *)layer type:(ScaleAnimationType)type;
 
 @end
 
