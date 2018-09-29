@@ -68,7 +68,8 @@
     __weak typeof(self) weakSelf = self;
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.requestSerializer.timeoutInterval = 20;
-    NSURLSessionDataTask *task = [manager GET:@"http://127.0.0.1:8080/status/getStatusList?user_id=1&page=1&page_size=10" parameters:nil progress:^(NSProgress * _Nonnull downloadProgress) {
+    NSDictionary *dic = @{@"page":@1,@"page_size":@10,@"user_id":@1};
+    NSURLSessionDataTask *task = [manager GET:[NetworkUtil getStatusListUrl] parameters:dic progress:^(NSProgress * _Nonnull downloadProgress) {
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if ([responseObject isKindOfClass:[NSDictionary class]]) {
             NSDictionary *response = (NSDictionary *)responseObject;
@@ -304,7 +305,7 @@
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.requestSerializer.timeoutInterval = 20;
     NSDictionary *dic = @{@"user_id":@1,@"id":[NSNumber numberWithInteger:status.status_id],@"type":@1};
-    [manager POST:@"http://127.0.0.1:8080/news/praise" parameters:dic progress:^(NSProgress * _Nonnull uploadProgress) {
+    [manager POST:@"http://127.0.0.1:8080/status/praise" parameters:dic progress:^(NSProgress * _Nonnull uploadProgress) {
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if ([responseObject isKindOfClass:[NSDictionary class]]) {
             NSDictionary *response = (NSDictionary *)responseObject;

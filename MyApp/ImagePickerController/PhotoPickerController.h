@@ -21,9 +21,10 @@
 #define kTitleViewTitleFont [UIFont boldSystemFontOfSize:16]                                                          //标题字体大小
 
 @class AlbumModel;
+@class NavTitleView;
+@class AssetModel;
 @interface PhotoPickerController : RootViewController
 
-@property (nonatomic, strong) AlbumModel *model;
 
 @end
 

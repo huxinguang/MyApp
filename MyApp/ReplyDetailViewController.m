@@ -72,7 +72,7 @@
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.requestSerializer.timeoutInterval = 20;
     NSDictionary *dic = @{@"page":@1,@"page_size":@20,@"comment_id":[NSNumber numberWithInteger:self.sts.status_id],@"user_id":@1};
-    NSURLSessionDataTask *task = [manager GET:@"http://127.0.0.1:8080/status/getCommentReplies" parameters:dic progress:^(NSProgress * _Nonnull downloadProgress) {
+    NSURLSessionDataTask *task = [manager GET:[NetworkUtil getCommentRepliesUrl] parameters:dic progress:^(NSProgress * _Nonnull downloadProgress) {
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if ([responseObject isKindOfClass:[NSDictionary class]]) {
             NSDictionary *response = (NSDictionary *)responseObject;

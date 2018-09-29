@@ -13,6 +13,7 @@ typedef enum : NSUInteger {
     AssetCellTypeLivePhoto,
     AssetCellTypeVideo,
     AssetCellTypeAudio,
+    AssetCellTypeCamera
 } AssetCellType;
 
 @class AssetModel;

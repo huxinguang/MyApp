@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		C944F2622146072600159984 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C944F2612146072600159984 /* AppDelegate.m */; };
-		C944F2652146072600159984 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C944F2642146072600159984 /* ViewController.m */; };
 		C944F2682146072600159984 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C944F2662146072600159984 /* Main.storyboard */; };
 		C944F26A2146072700159984 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C944F2692146072700159984 /* Assets.xcassets */; };
 		C944F26D2146072700159984 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C944F26B2146072700159984 /* LaunchScreen.storyboard */; };
@@ -69,6 +68,8 @@
 		C9658C01215CB79A00D25E4F /* picker_unselected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9658BFF215CB79A00D25E4F /* picker_unselected@2x.png */; };
 		C9658C04215CB8CF00D25E4F /* picker_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9658C02215CB8CE00D25E4F /* picker_selected@2x.png */; };
 		C9658C05215CB8CF00D25E4F /* picker_selected@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9658C03215CB8CF00D25E4F /* picker_selected@3x.png */; };
+		C9658C0F215DECE300D25E4F /* picker_camera@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9658C0E215DECE200D25E4F /* picker_camera@2x.png */; };
+		C9658C14215DF94300D25E4F /* NetworkUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = C9658C13215DF94300D25E4F /* NetworkUtil.m */; };
 		C98B26442153332200845F73 /* comment@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C98B26432153332200845F73 /* comment@2x.png */; };
 		C98B26482153359200845F73 /* YYPhotoGroupView.m in Sources */ = {isa = PBXBuildFile; fileRef = C98B26472153359200845F73 /* YYPhotoGroupView.m */; };
 		C98B264C2153504800845F73 /* UIButton+PassValue.m in Sources */ = {isa = PBXBuildFile; fileRef = C98B264B2153504800845F73 /* UIButton+PassValue.m */; };
@@ -157,8 +158,6 @@
 		C944F25D2146072600159984 /* MyApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C944F2602146072600159984 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		C944F2612146072600159984 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		C944F2632146072600159984 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		C944F2642146072600159984 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		C944F2672146072600159984 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C944F2692146072700159984 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C944F26C2146072700159984 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -253,6 +252,9 @@
 		C9658BFF215CB79A00D25E4F /* picker_unselected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "picker_unselected@2x.png"; sourceTree = "<group>"; };
 		C9658C02215CB8CE00D25E4F /* picker_selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "picker_selected@2x.png"; sourceTree = "<group>"; };
 		C9658C03215CB8CF00D25E4F /* picker_selected@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "picker_selected@3x.png"; sourceTree = "<group>"; };
+		C9658C0E215DECE200D25E4F /* picker_camera@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "picker_camera@2x.png"; sourceTree = "<group>"; };
+		C9658C12215DF94300D25E4F /* NetworkUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NetworkUtil.h; sourceTree = "<group>"; };
+		C9658C13215DF94300D25E4F /* NetworkUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NetworkUtil.m; sourceTree = "<group>"; };
 		C98B26432153332200845F73 /* comment@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "comment@2x.png"; sourceTree = "<group>"; };
 		C98B26462153359200845F73 /* YYPhotoGroupView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYPhotoGroupView.h; sourceTree = "<group>"; };
 		C98B26472153359200845F73 /* YYPhotoGroupView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYPhotoGroupView.m; sourceTree = "<group>"; };
@@ -464,8 +466,8 @@
 				C98B26A02159C30800845F73 /* InputTextView.m */,
 				C944F2602146072600159984 /* AppDelegate.h */,
 				C944F2612146072600159984 /* AppDelegate.m */,
-				C944F2632146072600159984 /* ViewController.h */,
-				C944F2642146072600159984 /* ViewController.m */,
+				C9658C12215DF94300D25E4F /* NetworkUtil.h */,
+				C9658C13215DF94300D25E4F /* NetworkUtil.m */,
 				C944F2662146072600159984 /* Main.storyboard */,
 				C944F2692146072700159984 /* Assets.xcassets */,
 				C944F26B2146072700159984 /* LaunchScreen.storyboard */,
@@ -603,6 +605,7 @@
 		C98B265521548FD000845F73 /* PickerImage */ = {
 			isa = PBXGroup;
 			children = (
+				C9658C0E215DECE200D25E4F /* picker_camera@2x.png */,
 				C9658C02215CB8CE00D25E4F /* picker_selected@2x.png */,
 				C9658C03215CB8CF00D25E4F /* picker_selected@3x.png */,
 				C9658BFF215CB79A00D25E4F /* picker_unselected@2x.png */,
@@ -849,6 +852,7 @@
 				C9AA1158214CC67D00050385 /* timeline_image_longimage@3x.png in Resources */,
 				C944F33C21476EE400159984 /* mine_accessory@2x.png in Resources */,
 				C944F26A2146072700159984 /* Assets.xcassets in Resources */,
+				C9658C0F215DECE300D25E4F /* picker_camera@2x.png in Resources */,
 				C9AA1146214B915700050385 /* comment_dislike@3x.png in Resources */,
 				C944F328214766DD00159984 /* mine_praise@3x.png in Resources */,
 				C9AA114D214B9D2C00050385 /* rank_comment@3x.png in Resources */,
@@ -955,7 +959,6 @@
 				C944F2FA21464C4900159984 /* CYTabBar.m in Sources */,
 				C944F2B12146168500159984 /* UIImageView+CornerRadius.m in Sources */,
 				C98B268421548FD000845F73 /* UIView+ScaleAnimation.m in Sources */,
-				C944F2652146072600159984 /* ViewController.m in Sources */,
 				C944F2F821464C4900159984 /* CYCenterButton.m in Sources */,
 				C9999D862147AC26002B1503 /* CBDefaultPageView.m in Sources */,
 				C944F2702146072700159984 /* main.m in Sources */,
@@ -986,6 +989,7 @@
 				C98B26A12159C30800845F73 /* InputTextView.m in Sources */,
 				C944F2AB214615F500159984 /* ReplyCell.m in Sources */,
 				C944F2A6214615F500159984 /* ReplyDetailViewController.m in Sources */,
+				C9658C14215DF94300D25E4F /* NetworkUtil.m in Sources */,
 				C98B267221548FD000845F73 /* AssetCell.m in Sources */,
 				C9658BF9215B633400D25E4F /* AlbumCell.m in Sources */,
 				C98B26482153359200845F73 /* YYPhotoGroupView.m in Sources */,

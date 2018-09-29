@@ -13,7 +13,8 @@ typedef enum : NSUInteger {
     AssetModelMediaTypePhoto = 0,
     AssetModelMediaTypeLivePhoto,
     AssetModelMediaTypeVideo,
-    AssetModelMediaTypeAudio
+    AssetModelMediaTypeAudio,
+    AssetModelMediaTypeCamera       //相机占位
 } AssetModelMediaType;
 
 @class PHAsset;

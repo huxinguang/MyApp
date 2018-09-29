@@ -23,5 +23,6 @@
 #import "Macro.h"
 #import <YYKit/YYKit.h>
 #import "UIButton+PassValue.h"
+#import "NetworkUtil.h"
 
 #endif /* PrefixHeader_pch */

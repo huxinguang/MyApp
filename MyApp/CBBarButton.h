@@ -19,10 +19,13 @@ typedef NS_ENUM(NSInteger,CBBarButtonType) {
 
 @property (nonatomic, copy)NSString *normalImageName;
 @property (nonatomic, copy)NSString *selectedImageName;
+@property (nonatomic, copy)NSString *highlightedImageName;
 @property (nonatomic, copy)NSString *titleString;
 @property (nonatomic, strong)UIFont *titleFont;
 @property (nonatomic, strong)UIColor *normalColor;
 @property (nonatomic, strong)UIColor *selectedColor;
+@property (nonatomic, strong)UIColor *disabledColor;
+@property (nonatomic, strong)UIColor *highlightedColor;
 @property (nonatomic, assign)CBBarButtonType type;
 
 @end

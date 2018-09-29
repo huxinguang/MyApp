@@ -31,17 +31,26 @@
                         <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VJ0-Be-GcX">
+                        <rect key="frame" x="284" y="24.5" width="33" height="16"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                        <color key="textColor" red="0.14117647058823529" green="0.62745098039215685" blue="0.9882352941176471" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <constraints>
                     <constraint firstItem="pBf-2X-kas" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="9DY-fh-mA4"/>
+                    <constraint firstAttribute="trailing" secondItem="VJ0-Be-GcX" secondAttribute="trailing" constant="15" id="Ej6-G2-ano"/>
                     <constraint firstItem="niG-aL-ETk" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="PgE-ME-xPb"/>
                     <constraint firstItem="niG-aL-ETk" firstAttribute="leading" secondItem="pBf-2X-kas" secondAttribute="trailing" constant="15" id="VDX-EA-MVW"/>
+                    <constraint firstItem="VJ0-Be-GcX" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="spY-Yi-8eI"/>
                     <constraint firstItem="pBf-2X-kas" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="xm3-j8-GdH"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>
                 <outlet property="albumNameLabel" destination="niG-aL-ETk" id="stS-wo-QF3"/>
                 <outlet property="imgView" destination="pBf-2X-kas" id="8PK-lv-f5j"/>
+                <outlet property="selectedCountLabel" destination="VJ0-Be-GcX" id="3wv-NU-XSq"/>
             </connections>
             <point key="canvasLocation" x="-284" y="-14"/>
         </tableViewCell>

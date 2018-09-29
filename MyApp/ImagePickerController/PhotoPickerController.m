@@ -14,11 +14,10 @@
 #import "CBBarButton.h"
 #import "AlbumCell.h"
 
-@interface PhotoPickerController ()<UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDelegate,UITableViewDataSource>
+@interface PhotoPickerController ()<UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDelegate,UITableViewDataSource,UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 @property (nonatomic, strong)UICollectionView *collectionView;
 @property (nonatomic, strong)NSMutableArray<AssetModel *> *photoArr;
 @property (nonatomic, strong)NSMutableArray<AssetModel *> *selectedPhotoArr;
-@property (nonatomic, strong)NSMutableArray<NSIndexPath *> *selectedIndexpaths;
 @property (nonatomic, strong)UIButton *bottomConfirmBtn;
 @property (nonatomic, strong)UITableView *albumTableView;
 @property (nonatomic, strong)UIView *containerView;
@@ -26,21 +25,56 @@
 @property (nonatomic, strong)UIControl *maskView;
 @property (nonatomic, strong)NavTitleView *ntView;
 @property (nonatomic, assign)CGFloat containerViewHeight;
+@property (nonatomic, strong)NSIndexPath *currentAlbumIndexpath;
+@property (nonatomic, strong)AssetModel *placeholderModel;//相机占位model
+@property (nonatomic, strong)NSMutableArray<NSIndexPath *> *albumSelectedIndexpaths;
+
 @end
 
 @implementation PhotoPickerController
+@synthesize photoArr = _photoArr;//同时重写setter/getter方法需要这样
 
+-(AssetModel *)placeholderModel{
+    if (_placeholderModel == nil) {
+        _placeholderModel = [[AssetModel alloc]init];
+        _placeholderModel.type = AssetModelMediaTypeCamera;
+    }
+    return _placeholderModel;
+}
 
-- (NSMutableArray *)selectedPhotoArr {
+-(NSMutableArray<AlbumModel *> *)albumArr{
+    if (_albumArr == nil) {
+        _albumArr = [NSMutableArray array];
+    }
+    return _albumArr;
+}
+
+-(NSMutableArray<AssetModel *> *)photoArr{
+    if (_photoArr == nil) {
+        _photoArr = [NSMutableArray array];
+    }
+    return _photoArr;
+}
+
+- (NSMutableArray<NSIndexPath *> *)albumSelectedIndexpaths{
+    if (_albumSelectedIndexpaths == nil) {
+        _albumSelectedIndexpaths = [NSMutableArray array];
+    }
+    return _albumSelectedIndexpaths;
+}
+
+-(void)setPhotoArr:(NSMutableArray<AssetModel *> *)photoArr{
+    _photoArr = photoArr;
+    //插入相机占位
+    if (![_photoArr containsObject:self.placeholderModel]) {
+        [_photoArr insertObject:self.placeholderModel atIndex:0];
+    }
+}
+
+- (NSMutableArray<AssetModel *> *)selectedPhotoArr{
     if (_selectedPhotoArr == nil) _selectedPhotoArr = [NSMutableArray array];
     return _selectedPhotoArr;
 }
-
-- (NSMutableArray *)selectedIndexpaths{
-    if (_selectedIndexpaths == nil) _selectedIndexpaths = [NSMutableArray array];
-    return _selectedIndexpaths;
-}
-
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -48,16 +82,18 @@
     [self configMaskView];
     
     __weak typeof(self) weakSelf = self;
-    [[PickerImageManager manager] getAssetsFromFetchResult:self.model.result allowPickingVideo:YES completion:^(NSArray<AssetModel *> *models) {
-        weakSelf.photoArr = [NSMutableArray arrayWithArray:models];
-        [weakSelf configCollectionView];
-        [weakSelf configBottomConfirmBtn];
-    }];
-    
     [[PickerImageManager manager] getAllAlbums:YES completion:^(NSArray<AlbumModel *> *models) {
         weakSelf.albumArr = [NSMutableArray arrayWithArray:models];
         weakSelf.albumArr[0].isSelected = YES;//默认第一个选中
+        [weakSelf.ntView.titleBtn setTitle:weakSelf.albumArr[0].name forState:UIControlStateNormal];
+        weakSelf.ntView.titleBtnWidth = [weakSelf.albumArr[0].name widthForFont:kTitleViewTitleFont] + kTitleViewTextImageDistance + kTitleViewArrowSize.width;
+        weakSelf.currentAlbumIndexpath = [NSIndexPath indexPathForRow:0 inSection:0];
+        weakSelf.photoArr = weakSelf.albumArr[0].assetArray;
+        [weakSelf configCollectionView];
+        [weakSelf.collectionView reloadData];
         [weakSelf configAlbumTableView];
+        [weakSelf.albumTableView reloadData];
+        [weakSelf configBottomConfirmBtn];
     }];
 }
 
@@ -81,19 +117,43 @@
 - (void)configTitleView{
     self.ntView = [[NavTitleView alloc]init];
     self.ntView.intrinsicContentSize = CGSizeMake(kAppScreenWidth - 2*50, kAppNavigationBarHeight);
-    [self.ntView.titleBtn setTitle:self.model.name forState:UIControlStateNormal];
-    self.ntView.titleBtnWidth = [self.model.name widthForFont:kTitleViewTitleFont] + kTitleViewTextImageDistance + kTitleViewArrowSize.width;
     self.ntView.titleBtn.selected = NO;
     [self.ntView.titleBtn addTarget:self action:@selector(onTitleBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.titleView = self.ntView;
 }
 
 - (void)configRightBarButtonItem{
-    
+    CBBarButtonConfiguration *config = [[CBBarButtonConfiguration alloc]init];
+    config.type = CBBarButtonTypeText;
+    config.titleString = @"重选";
+    config.normalColor = kAppThemeColor;
+    config.disabledColor = [UIColor lightGrayColor];
+    config.titleFont = [UIFont boldSystemFontOfSize:15];
+    CBBarButton *rightBarButton = [[CBBarButton alloc]initWithConfiguration:config];
+    [rightBarButton addTarget:self action:@selector(onRightBarButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:rightBarButton];
+    [self refreshNavRightBtn];
 }
 
 - (void)onLeftBarButtonClick{
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)onRightBarButtonClick{
+    [self.selectedPhotoArr removeAllObjects];
+    NSArray *indexPaths = [self.albumSelectedIndexpaths copy];
+    [self.albumSelectedIndexpaths removeAllObjects];
+    for (AlbumModel *album in self.albumArr) {
+        album.selectedCount = 0;
+        for (AssetModel *asset in album.assetArray) {
+            asset.isSelected = NO;
+            asset.number = 0;
+        }
+    }
+    [self.albumTableView reloadData];
+    [self.collectionView reloadItemsAtIndexPaths:indexPaths];
+    [self refreshNavRightBtn];
+    [self refreshBottomConfirmBtn];
 }
 
 - (void)configCollectionView {
@@ -133,7 +193,7 @@
     self.bottomConfirmBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     self.bottomConfirmBtn.frame = CGRectMake(0, kAppScreenHeight - kBottomConfirmBtnHeight - kAppStatusBarAndNavigationBarHeight, kAppScreenWidth, kBottomConfirmBtnHeight);
     self.bottomConfirmBtn.backgroundColor = [UIColor whiteColor];
-    self.bottomConfirmBtn.titleLabel.font = [UIFont systemFontOfSize:kBottomConfirmBtnTitleFontSize];
+    self.bottomConfirmBtn.titleLabel.font = [UIFont boldSystemFontOfSize:kBottomConfirmBtnTitleFontSize];
     [self.bottomConfirmBtn addTarget:self action:@selector(onConfirmBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.bottomConfirmBtn setTitle:@"确定(0/9)" forState:UIControlStateNormal];
     [self.bottomConfirmBtn setTitleColor:kAppThemeColor forState:UIControlStateNormal];
@@ -143,19 +203,7 @@
 }
 
 - (void)onConfirmBtnClick {
-    NSMutableArray *photos = @[].mutableCopy;
-    NSMutableArray *assets = @[].mutableCopy;
-    NSMutableArray *infoArr = @[].mutableCopy;
-    __weak typeof (self) weakSelf = self;
-    for (NSInteger i = 0; i < _selectedPhotoArr.count; i++) {
-        AssetModel *model = _selectedPhotoArr[i];
-        [[PickerImageManager manager] getPhotoWithAsset:model.asset completion:^(UIImage *photo, NSDictionary *info) {
-            if (photo) [photos addObject:photo];
-            if (info) [infoArr addObject:info];
-            if (photos.count < weakSelf.selectedPhotoArr.count) return;
-            
-        }];
-    }
+
 }
 
 - (void)onTitleBtnClick:(UIButton *)btn{
@@ -163,6 +211,8 @@
     if (btn.selected) {
         [self.view insertSubview:self.maskView belowSubview:self.containerView];
     }
+    [self.albumTableView reloadData];
+    [self.albumTableView scrollToRowAtIndexPath:self.currentAlbumIndexpath atScrollPosition:UITableViewScrollPositionTop animated:NO];
     [UIView animateWithDuration:0.35 animations:^{
         if (btn.selected) {
             CGAffineTransform transform = CGAffineTransformMakeRotation(M_PI);
@@ -179,7 +229,6 @@
             self.maskView.backgroundColor = [UIColor clearColor];
         }
     } completion:^(BOOL finished) {
-        [self.albumTableView reloadData];
         if (!btn.selected) {
             [self.view insertSubview:self.maskView belowSubview:self.collectionView];
         }
@@ -198,22 +247,24 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     AssetCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"AssetCell" forIndexPath:indexPath];
-    AssetModel *model = _photoArr[indexPath.row];
+    AssetModel *model = self.photoArr[indexPath.row];
     cell.model = model;
     __weak typeof(cell) weakCell = cell;
     cell.didSelectPhotoBlock = ^(BOOL isSelected) {
-        weakCell.selectPhotoButton.selected = !isSelected;
-        model.isSelected = !isSelected;
         if (isSelected) {
             // 1. 取消选择
+            weakCell.selectPhotoButton.selected = NO;
+            model.isSelected = NO;
             [self.selectedPhotoArr removeObject:model];
-            [self.selectedIndexpaths removeObject:indexPath];
             weakCell.numberLabel.text = @"";
+            self.albumArr[self.currentAlbumIndexpath.row].selectedCount --;
         } else {
             // 2. 选择照片,检查是否超过了最大个数的限制
             if (self.selectedPhotoArr.count < 9) {
+                weakCell.selectPhotoButton.selected = YES;
+                model.isSelected = YES;
                 [self.selectedPhotoArr addObject:model];
-                [self.selectedIndexpaths addObject:indexPath];
+                self.albumArr[self.currentAlbumIndexpath.row].selectedCount ++;
                 weakCell.numberLabel.text = [NSString stringWithFormat:@"%ld",self.selectedPhotoArr.count];
             } else {
                 MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -226,9 +277,19 @@
             AssetModel *selectedModel = self.selectedPhotoArr[i];
             selectedModel.number = i+1;
         }
-        if (self.selectedIndexpaths.count > 0) {
-            [collectionView reloadItemsAtIndexPaths:self.selectedIndexpaths];
+       
+        [self.albumSelectedIndexpaths removeAllObjects];
+        for (AssetModel *am in self.selectedPhotoArr) {
+            if ([self.albumArr[self.currentAlbumIndexpath.row].assetArray containsObject:am]) {
+                NSUInteger indexAtCurrentAlbum = [self.albumArr[self.currentAlbumIndexpath.row].assetArray indexOfObject:am];
+                [self.albumSelectedIndexpaths addObject:[NSIndexPath indexPathForItem:indexAtCurrentAlbum inSection:0]];
+            }
         }
+        //取消选择的时候才刷新所有选中的item
+        if (self.albumSelectedIndexpaths.count > 0 && isSelected) {
+            [collectionView reloadItemsAtIndexPaths:self.albumSelectedIndexpaths];
+        }
+        [self refreshNavRightBtn];
         [self refreshBottomConfirmBtn];
         
     };
@@ -236,10 +297,13 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    AssetModel *model = self.photoArr[indexPath.row];
-    
+    if (indexPath.item == 0) {
+        //打开相机
+        [self openCamera];
+    }else{
+        AssetModel *model = self.photoArr[indexPath.row];
+    }
 }
-
 
 #pragma mark - UITableViewDelegate,UITableViewDataSource
 
@@ -261,19 +325,29 @@
     for (AlbumModel *album in self.albumArr) {
         album.isSelected = NO;
     }
-    self.model = self.albumArr[indexPath.row];
-    self.model.isSelected = YES;
-    [self.ntView.titleBtn setTitle:self.model.name forState:UIControlStateNormal];
-    self.ntView.titleBtnWidth = [self.model.name widthForFont:kTitleViewTitleFont] + kTitleViewTextImageDistance + kTitleViewArrowSize.width;
-    __weak typeof(self) weakSelf = self;
-    [[PickerImageManager manager] getAssetsFromFetchResult:self.model.result allowPickingVideo:YES completion:^(NSArray<AssetModel *> *models) {
-        weakSelf.photoArr = [NSMutableArray arrayWithArray:models];
-        [weakSelf.collectionView reloadData];
-        [weakSelf onTitleBtnClick:weakSelf.ntView.titleBtn];
-    }];
+    self.albumArr[indexPath.row].isSelected = YES;
+    [self.ntView.titleBtn setTitle:self.albumArr[indexPath.row].name forState:UIControlStateNormal];
+    self.ntView.titleBtnWidth = [self.albumArr[indexPath.row].name widthForFont:kTitleViewTitleFont] + kTitleViewTextImageDistance + kTitleViewArrowSize.width;
+    self.photoArr = self.albumArr[indexPath.row].assetArray;
+    if (indexPath != self.currentAlbumIndexpath) {
+        [self.collectionView reloadData];
+        [self onTitleBtnClick:self.ntView.titleBtn];
+    }else{
+        [self onTitleBtnClick:self.ntView.titleBtn];
+    }
+    self.currentAlbumIndexpath = indexPath;
+    
 }
 
 
+- (void)refreshNavRightBtn{
+    CBBarButton *btn = (CBBarButton *)self.navigationItem.rightBarButtonItem.customView;
+    if (self.selectedPhotoArr.count > 0) {
+        btn.enabled = YES;
+    }else{
+        btn.enabled = NO;
+    }
+}
 
 - (void)refreshBottomConfirmBtn {
     if (self.selectedPhotoArr.count > 0) {
@@ -285,10 +359,30 @@
 }
 
 
-- (void)getSelectedPhotoBytes {
-    [[PickerImageManager manager] getPhotosBytesWithArray:_selectedPhotoArr completion:^(NSString *totalBytes) {
-        
-    }];
+- (void)openCamera{
+    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+    picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+    picker.delegate = self;
+    if (iOS7Later) {
+        picker.navigationBar.barTintColor = self.navigationController.navigationBar.barTintColor;
+    }
+    // 设置导航默认标题的颜色及字体大小
+    picker.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor],
+                                                 NSFontAttributeName : [UIFont boldSystemFontOfSize:18]};
+    [self presentViewController:picker animated:YES completion:nil];
+    
+}
+
+
+#pragma mark - UIImagePickerControllerDelegate
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info{
+//    UIImage *image = info[UIImagePickerControllerOriginalImage];
+//    NSData *data = UIImagePNGRepresentation(image);
+    [picker dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
+    [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

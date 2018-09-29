@@ -36,17 +36,25 @@
             }
             if (configuration.selectedImageName) {
                 [self setImage:[UIImage imageNamed:configuration.selectedImageName] forState:UIControlStateSelected];
-                [self setImage:[UIImage imageNamed:configuration.selectedImageName] forState:UIControlStateHighlighted];
+            }
+            if (configuration.highlightedImageName) {
+                [self setImage:[UIImage imageNamed:configuration.highlightedImageName] forState:UIControlStateHighlighted];
             }
             break;
         case CBBarButtonTypeText:
             [self setTitle:configuration.titleString ? configuration.titleString: @""forState:UIControlStateNormal];
+            self.titleLabel.font = configuration.titleFont;
             if (configuration.normalColor) {
                 [self setTitleColor:configuration.normalColor forState:UIControlStateNormal];
             }
             if (configuration.selectedColor) {
                 [self setTitleColor:configuration.selectedColor forState:UIControlStateSelected];
-                [self setTitleColor:configuration.selectedColor forState:UIControlStateHighlighted];
+            }
+            if (configuration.highlightedColor) {
+                [self setTitleColor:configuration.highlightedColor forState:UIControlStateHighlighted];
+            }
+            if (configuration.disabledColor) {
+                [self setTitleColor:configuration.disabledColor forState:UIControlStateDisabled];
             }
             break;
             

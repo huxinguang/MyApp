@@ -98,7 +98,7 @@
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.requestSerializer.timeoutInterval = 20;
     NSDictionary *dic = @{@"page":@1,@"page_size":@20,@"status_id":[NSNumber numberWithInteger:self.sts.status_id],@"user_id":@1};
-    NSURLSessionDataTask *task = [manager GET:@"http://127.0.0.1:8080/status/getStatusComments" parameters:dic progress:^(NSProgress * _Nonnull downloadProgress) {
+    NSURLSessionDataTask *task = [manager GET:[NetworkUtil getStatusCommentsUrl] parameters:dic progress:^(NSProgress * _Nonnull downloadProgress) {
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if ([responseObject isKindOfClass:[NSDictionary class]]) {
             NSDictionary *response = (NSDictionary *)responseObject;
@@ -328,11 +328,8 @@
         CBNavigationController *nav = [[CBNavigationController alloc]initWithRootViewController:photoPickerVc];
         [nav setNavigationBarWithType:CBNavigationBarTypeWhiteOpaque];
         [nav setStatusBarWithStyle:UIStatusBarStyleDefault];
-        __weak typeof (self) weakSelf = self;
-        [[PickerImageManager manager] getCameraRollAlbum:YES completion:^(AlbumModel *model) {
-            photoPickerVc.model = model;
-            [weakSelf presentViewController:nav animated:YES completion:nil];
-        }];
+        [self presentViewController:nav animated:YES completion:nil];
+        
     } else {
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"未开启相册权限，是否去设置中开启？" message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"去设置", nil];
         [alert show];
