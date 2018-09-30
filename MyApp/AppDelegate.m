@@ -10,6 +10,7 @@
 #import "TabBarController.h"
 #import "HomeViewController.h"
 #import "PersonalViewController.h"
+//#import "KeyboardManager.h"
 #import "MyApp-Swift.h"//OC 引用Swift类需要导入 "工程名-Swift.h"
 
 @interface AppDelegate ()
@@ -37,7 +38,10 @@
     self.window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen]bounds]];
     self.window.rootViewController = tabbar;
     [self.window makeKeyAndVisible];
-    return YES;
+    
+    [self configKeyboard];
+    
+    
     return YES;
 }
 
@@ -49,6 +53,11 @@
     [tabbar addCenterController:nil bulge:NO title:nil imageName:@"release" selectedImageName:@"release"];
 }
 
+- (void)configKeyboard{
+//    [IQKeyboardManager sharedManager].enable = YES;//默认为YES，关闭为NO
+//    [IQKeyboardManager sharedManager].shouldResignOnTouchOutside = YES;//键盘弹出时，点击背景，键盘收回
+//    [IQKeyboardManager sharedManager].enableAutoToolbar = NO;//隐藏键盘上面的toolBar,默认是开启的
+}
 
 
 

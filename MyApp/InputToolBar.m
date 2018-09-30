@@ -29,7 +29,9 @@
     UIView *topLine = [UIView new];
     topLine.backgroundColor = [UIColor colorWithRGB:0xE0E0E0];
     [self addSubview:topLine];
+    @weakify(self);
     [topLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        @strongify(self);
         make.top.equalTo(self.mas_top);
         make.left.equalTo(self.mas_left);
         make.right.equalTo(self.mas_right);
@@ -41,6 +43,7 @@
     [self.voiceEntryBtn setImage:[UIImage imageNamed:@""] forState:UIControlStateSelected];
     [self addSubview:self.voiceEntryBtn];
     [self.voiceEntryBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        @strongify(self);
         make.bottom.equalTo(self.mas_bottom).with.offset(-(kInputBarOriginalHeight-kVoiceEntryIconSize.height)/2);
         make.left.equalTo(self.mas_left).with.offset(kVoiceImageEntryIconMaginLeftRight);
         make.size.mas_equalTo(kVoiceEntryIconSize);
@@ -61,6 +64,7 @@
     self.inputView.layer.cornerRadius = kTextViewOriginalHeight/2;
     [self addSubview:self.inputView];
     [self.inputView mas_makeConstraints:^(MASConstraintMaker *make) {
+        @strongify(self);
         make.top.equalTo(self.mas_top).with.offset(kTextViewMaginTopBottom);
         make.bottom.equalTo(self.mas_bottom).with.offset(-kTextViewMaginTopBottom);
         make.left.equalTo(self.voiceEntryBtn.mas_right).with.offset(kVoiceImageEntryIconMaginLeftRight);
@@ -70,8 +74,15 @@
     
 }
 
+// tell UIKit that you are using AutoLayout
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
 -(void)updateConstraints{
+    @weakify(self);
     [self mas_updateConstraints:^(MASConstraintMaker *make) {
+        @strongify(self);
         make.height.mas_equalTo(self.inputToolBarHeight > kInputBarMaxlHeight ? kInputBarMaxlHeight : self.inputToolBarHeight);
     }];
     [super updateConstraints];

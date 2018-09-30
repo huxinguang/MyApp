@@ -37,6 +37,7 @@
     self.replyTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:self.replyTableView];
     
+    self.inputToolbar.inputView.delegate = self;
     
     self.indicatorView  = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     self.indicatorView.center = self.view.center;
@@ -56,7 +57,6 @@
     sts.replies = @[];
     [cell fillCellData:sts];
     [cell setNeedsUpdateConstraints];
-    [cell updateConstraintsIfNeeded];
     
     for (int i=0; i<cell.picsContainer.picViews.count; i++) {
         UIButton *btn = cell.picsContainer.picViews[i];
@@ -162,7 +162,6 @@
     Status *sts = self.dataArray[indexPath.row];
     [cell fillCellData:sts];
     [cell setNeedsUpdateConstraints];
-    [cell updateConstraintsIfNeeded];
     
     for (int i=0; i<cell.picsContainer.picViews.count; i++) {
         UIButton *btn = cell.picsContainer.picViews[i];

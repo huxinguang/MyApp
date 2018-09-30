@@ -14,7 +14,7 @@ static NSString *const baseDebugUrl = @"http://127.0.0.1:8080/";
 @implementation NetworkUtil
 
 + (NSString *)getBaseUrl{
-    return baseReleaseUrl;
+    return baseDebugUrl;
 }
 
 + (NSString *)getStatusListUrl{

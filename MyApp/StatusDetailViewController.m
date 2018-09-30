@@ -11,17 +11,17 @@
 #import "ReplyDetailViewController.h"
 #import "StatusCell.h"
 #import "YYPhotoGroupView.h"
-#import "InputToolBar.h"
+
 #import "PhotoPickerController.h"
 #import "PickerImageManager.h"
 #import "MyApp-Swift.h"//OC 引用Swift类需要导入 "工程名-Swift.h"
 
-@interface StatusDetailViewController ()<UITableViewDelegate,UITableViewDataSource,CommentCellDelegate,UITextViewDelegate,UIAlertViewDelegate>
+@interface StatusDetailViewController ()<UITableViewDelegate,UITableViewDataSource,CommentCellDelegate,UIAlertViewDelegate>
 
 @property (nonatomic, strong) UIActivityIndicatorView *indicatorView;
 @property (nonatomic, strong) NSArray *dataArray;
 @property (nonatomic, strong) UITableView *commentTableView;
-@property (nonatomic, strong) InputToolBar *inputToolbar;
+
 
 @end
 
@@ -46,24 +46,14 @@
 }
 
 - (void)buildSubviews{
-    self.commentTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, kAppStatusBarAndNavigationBarHeight, kAppScreenWidth, kAppScreenHeight - kAppStatusBarAndNavigationBarHeight - kInputBarOriginalHeight) style:UITableViewStylePlain];
+    self.commentTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, kAppStatusBarAndNavigationBarHeight, kAppScreenWidth, kAppScreenHeight - kAppStatusBarAndNavigationBarHeight - kInputBarOriginalHeight - kAppTabbarSafeBottomMargin) style:UITableViewStylePlain];
     self.commentTableView.delegate = self;
     self.commentTableView.dataSource = self;
     self.commentTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:self.commentTableView];
     
-    self.inputToolbar = [[InputToolBar alloc]init];
-    [self.view addSubview:self.inputToolbar];
-    [self.inputToolbar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.view.mas_bottom);
-        make.left.equalTo(self.view.mas_left);
-        make.right.equalTo(self.view.mas_right);
-        make.height.mas_equalTo(kInputBarOriginalHeight);
-    }];
     self.inputToolbar.inputView.delegate = self;
-    [self.inputToolbar.imgEntryBtn addTarget:self action:@selector(onImgEntryBtnClick) forControlEvents:UIControlEventTouchUpInside];
-    
-    
+
     self.indicatorView  = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     self.indicatorView.center = self.view.center;
     [self.view addSubview:self.indicatorView];
@@ -82,7 +72,6 @@
     sts.comment_medias = @[];
     [cell fillCellData:sts];
     [cell setNeedsUpdateConstraints];
-    [cell updateConstraintsIfNeeded];
     for (int i=0; i<cell.picsContainer.picViews.count; i++) {
         UIButton *btn = cell.picsContainer.picViews[i];
         btn.paramDic = @{@"cell":cell,@"pic_index":[NSNumber numberWithInt:i]};
@@ -263,7 +252,6 @@
     Status *status = self.dataArray[indexPath.row];
     [cell fillCellData:status];
     [cell setNeedsUpdateConstraints];
-    [cell updateConstraintsIfNeeded];
     
     for (int i=0; i<cell.picsContainer.picViews.count; i++) {
         UIButton *btn = cell.picsContainer.picViews[i];
@@ -345,16 +333,7 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-#pragma mark - UITextViewDelegate
 
-- (void)textViewDidChange:(UITextView *)textView{
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGSize newSize = [textView sizeThatFits:CGSizeMake(fixedWidth, MAXFLOAT)];
-    CGFloat textViewHeight = fmaxf(newSize.height, kTextViewOriginalHeight);
-    self.inputToolbar.inputToolBarHeight = textViewHeight + kTextViewMaginTopBottom*2;
-    [self.inputToolbar setNeedsUpdateConstraints];
-    [self.inputToolbar updateConstraintsIfNeeded];
-}
 
 #pragma mark - UIAlertViewDelegate
 

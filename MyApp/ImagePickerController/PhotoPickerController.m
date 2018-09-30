@@ -162,7 +162,7 @@
     layout.itemSize = CGSizeMake(itemWH, itemWH);
     layout.minimumInteritemSpacing = kItemMargin;
     layout.minimumLineSpacing = kItemMargin;
-    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, kAppScreenWidth, kAppScreenHeight-kAppStatusBarAndNavigationBarHeight-kBottomConfirmBtnHeight) collectionViewLayout:layout];
+    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, kAppScreenWidth, kAppScreenHeight-kAppStatusBarAndNavigationBarHeight-kBottomConfirmBtnHeight-kAppTabbarSafeBottomMargin) collectionViewLayout:layout];
     self.collectionView.backgroundColor = [UIColor whiteColor];
     self.collectionView.dataSource = self;
     self.collectionView.delegate = self;
@@ -191,7 +191,7 @@
 
 - (void)configBottomConfirmBtn {
     self.bottomConfirmBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.bottomConfirmBtn.frame = CGRectMake(0, kAppScreenHeight - kBottomConfirmBtnHeight - kAppStatusBarAndNavigationBarHeight, kAppScreenWidth, kBottomConfirmBtnHeight);
+    self.bottomConfirmBtn.frame = CGRectMake(0, kAppScreenHeight - kBottomConfirmBtnHeight - kAppStatusBarAndNavigationBarHeight - kAppTabbarSafeBottomMargin, kAppScreenWidth, kBottomConfirmBtnHeight);
     self.bottomConfirmBtn.backgroundColor = [UIColor whiteColor];
     self.bottomConfirmBtn.titleLabel.font = [UIFont boldSystemFontOfSize:kBottomConfirmBtnTitleFontSize];
     [self.bottomConfirmBtn addTarget:self action:@selector(onConfirmBtnClick) forControlEvents:UIControlEventTouchUpInside];
@@ -410,13 +410,16 @@
 }
 
 -(void)updateConstraints{
+    @weakify(self);
     [self.titleBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+        @strongify(self);
         make.centerY.equalTo(self.mas_centerY);
         make.centerX.equalTo(self.mas_centerX).with.offset(-(kTitleViewTextImageDistance + kTitleViewArrowSize.width)/2);
         make.size.mas_equalTo(CGSizeMake(self.titleBtnWidth, kAppNavigationBarHeight));
     }];
     
     [self.arrowView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        @strongify(self);
         make.centerY.equalTo(self.mas_centerY);
         make.left.mas_equalTo(self.titleBtn.mas_right).with.offset(kTitleViewTextImageDistance);
         make.size.mas_equalTo(kTitleViewArrowSize);
@@ -427,7 +430,6 @@
 - (void)setTitleBtnWidth:(CGFloat)titleBtnWidth{
     _titleBtnWidth = titleBtnWidth;
     [self setNeedsUpdateConstraints];
-    [self updateConstraintsIfNeeded];
 }
 
 

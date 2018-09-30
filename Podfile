@@ -11,4 +11,6 @@ pod 'MJRefresh'
 pod 'FLAnimatedImage', '~> 1.0'
 pod 'YYKit'
 pod 'MBProgressHUD', '~> 1.1.0'
+#pod 'IQKeyboardManager', '3.3.7'
+
 end

@@ -8,13 +8,15 @@
 
 #import "RootViewController.h"
 
-
-
 @interface RootViewController ()<CBDefaultPageViewDelegate>
 
 @end
 
 @implementation RootViewController
+
+-(void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
@@ -27,10 +29,47 @@
     self.view.backgroundColor = [UIColor whiteColor];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
     self.defaultPageView.delegate = self;
+    [self configKeyboard];
     [self configWindowLevel];
     [self configTitleView];
     [self configLeftBarButtonItem];
     [self configRightBarButtonItem];
+}
+
+- (void)configKeyboard{
+    UITapGestureRecognizer *tapGes = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction)];
+    tapGes.cancelsTouchesInView = NO;
+    @weakify(self);
+    NSOperationQueue * mainQueue = [NSOperationQueue mainQueue];
+    [[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardWillShowNotification
+                                                      object:nil
+                                                       queue:mainQueue
+                                                  usingBlock:^(NSNotification *noti)
+    {
+        @strongify(self);
+        [self.view addGestureRecognizer:tapGes];
+        CGRect rect = [noti.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+        double duration = [noti.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+        //self可能为nil
+        if (self && self->_inputToolbar) {
+            [self refreshKeyboardStatusWithRect:rect duration:duration hide:NO];
+        }
+    }];
+    
+    [[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardWillHideNotification
+                                                      object:nil
+                                                       queue:mainQueue
+                                                  usingBlock:^(NSNotification *noti)
+    {
+        @strongify(self);
+        [self.view removeGestureRecognizer:tapGes];
+        double duration = [noti.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+        //self可能为nil
+        if (self && self->_inputToolbar) {
+            [self refreshKeyboardStatusWithRect:CGRectZero duration:duration hide:YES];
+        }
+    }];
+
 }
 
 - (void)configWindowLevel{
@@ -45,8 +84,6 @@
 //    self.titleView.delegate = self;
     self.navigationItem.titleView = self.titleView;
 }
-
-
 
 //若不要返回按钮或者想替换成其他按钮可重写此方法
 - (void)configLeftBarButtonItem{
@@ -67,7 +104,6 @@
 }
 
 
-
 - (CGFloat)heightForYYLabelDisplayedString:(NSMutableAttributedString *)attributedString font:(UIFont *)font maxWidth:(CGFloat)width{
     attributedString.font = font;
     CGSize labelSize = CGSizeMake(width, CGFLOAT_MAX);
@@ -75,6 +111,64 @@
     CGFloat labelHeight = layout.textBoundingSize.height;
     return labelHeight;
 }
+
+-(InputToolBar *)inputToolbar{
+    if (_inputToolbar == nil) {
+        _inputToolbar = [[InputToolBar alloc]init];
+        _inputToolbar.inputToolBarHeight = kInputBarOriginalHeight;
+        [self.view addSubview:_inputToolbar];
+        
+        @weakify(self);
+        [_inputToolbar mas_makeConstraints:^(MASConstraintMaker *make) {
+            @strongify(self);
+            make.bottom.equalTo(self.view.mas_bottom).with.offset(-kAppTabbarSafeBottomMargin);
+            make.left.equalTo(self.view.mas_left);
+            make.right.equalTo(self.view.mas_right);
+            make.height.mas_equalTo(self->_inputToolbar.inputToolBarHeight);//不使用self.inputToolbar避免死循环
+        }];
+        [_inputToolbar.imgEntryBtn addTarget:self action:@selector(onImgEntryBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _inputToolbar;
+}
+
+-(void)onImgEntryBtnClick{
+    
+}
+
+- (void)refreshKeyboardStatusWithRect:(CGRect)rect duration:(double)duration hide:(BOOL)hide{
+    [UIView animateWithDuration:duration animations:^{
+        //这里不能用self.inputToolbar,因为调用get方法会创建inputToolbar，而有些页面是没有inputToolbar的
+        [self->_inputToolbar mas_updateConstraints:^(MASConstraintMaker *make) {
+            if(hide){
+                make.bottom.equalTo(self.view.mas_bottom).with.offset(-kAppTabbarSafeBottomMargin);
+            }else{
+                make.bottom.equalTo(self.view.mas_bottom).with.offset(-rect.size.height);
+            }
+            
+        }];
+    } completion:^(BOOL finished) {
+    }];
+    [self.view layoutIfNeeded];
+}
+
+- (void)tapAction
+{
+    [self.view endEditing:YES];
+}
+
+#pragma mark - UITextViewDelegate
+
+- (void)textViewDidChange:(UITextView *)textView{
+    //这里不能用self.inputToolbar,因为调用get方法会创建inputToolbar，而有些页面是没有inputToolbar的
+    if (_inputToolbar) {
+        CGFloat fixedWidth = textView.frame.size.width;
+        CGSize newSize = [textView sizeThatFits:CGSizeMake(fixedWidth, MAXFLOAT)];
+        CGFloat textViewHeight = fmaxf(newSize.height, kTextViewOriginalHeight);
+        _inputToolbar.inputToolBarHeight = textViewHeight + kTextViewMaginTopBottom*2;
+        [_inputToolbar setNeedsUpdateConstraints];
+    }
+}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

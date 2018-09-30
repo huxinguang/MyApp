@@ -191,14 +191,16 @@
 }
 
 - (void)updateConstraints{
-
+    @weakify(self);
     [self.avatarView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        @strongify(self);
         make.top.equalTo(self.contentView.mas_top).with.offset(kCommentAvatarViewMarginTop);
         make.left.equalTo(self.contentView.mas_left).with.offset(kCommentCellPaddingLeftRight);
         make.size.mas_equalTo(kCommentAvatarViewSize);
     }];
     
     [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        @strongify(self);
         make.top.equalTo(self.avatarView.mas_top);
         make.left.equalTo(self.avatarView.mas_right).with.offset(kCommentNameMarginLeft);
         make.right.equalTo(self.contentView.mas_right).with.offset(-kCommentCellPaddingLeftRight);
@@ -206,20 +208,22 @@
     }];
     
     [self.timeLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        @strongify(self);
         make.bottom.equalTo(self.avatarView.mas_bottom);
         make.left.equalTo(self.avatarView.mas_right).with.offset(kCommentNameMarginLeft);
         make.right.equalTo(self.contentView.mas_right).with.offset(-kCommentCellPaddingLeftRight);
         make.height.mas_equalTo(kCommentTimeLabelHeight);
     }];
     
-    
     [self.contentLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        @strongify(self);
         make.top.equalTo(self.avatarView.mas_bottom).with.offset(kCommentTextMarginTop);
         make.left.equalTo(self.nameLabel.mas_left);
         make.right.equalTo(self.contentView.mas_right).with.offset(-kCommentCellPaddingLeftRight);
     }];
 
     [self.picsContainer mas_remakeConstraints:^(MASConstraintMaker *make) {
+        @strongify(self);
         make.top.equalTo(self.contentLabel.mas_bottom).with.offset(kCommentImageMarginTop);
         make.left.equalTo(self.nameLabel.mas_left);
         make.right.equalTo(self.contentView.mas_right).with.offset(-kCommentCellPaddingLeftRight);
@@ -227,6 +231,7 @@
     }];
     
     [self.replyBgView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        @strongify(self);
         make.bottom.equalTo(self.contentView.mas_bottom).with.offset(-kCommentCellPaddingBottom);
         make.left.equalTo(self.picsContainer.mas_left);
         make.right.equalTo(self.picsContainer.mas_right);
@@ -235,18 +240,21 @@
 
     if (self.sts.replies_count > 2) {
         [self.replayLabel1 mas_remakeConstraints:^(MASConstraintMaker *make) {
+            @strongify(self);
             make.top.equalTo(self.replyBgView.mas_top).with.offset(kReplyBackgroundPadding);
             make.left.equalTo(self.replyBgView.mas_left).with.offset(kReplyBackgroundPadding);
             make.right.equalTo(self.replyBgView.mas_right).with.offset(-kReplyBackgroundPadding);
         }];
 
         [self.replayLabel2 mas_remakeConstraints:^(MASConstraintMaker *make) {
+            @strongify(self);
             make.top.equalTo(self.replayLabel1.mas_bottom).with.offset(kReplyLabelDistance);
             make.left.equalTo(self.replayLabel1.mas_left);
             make.right.equalTo(self.replayLabel1.mas_right);
         }];
 
         [self.replayLabel3 mas_remakeConstraints:^(MASConstraintMaker *make) {
+            @strongify(self);
             make.top.equalTo(self.replayLabel2.mas_bottom).with.offset(kReplyLabelDistance);
             make.left.equalTo(self.replayLabel2.mas_left);
             make.right.equalTo(self.replayLabel2.mas_right);
@@ -255,12 +263,14 @@
 
     }else if (self.sts.replies_count == 2){
         [self.replayLabel1 mas_remakeConstraints:^(MASConstraintMaker *make) {
+            @strongify(self);
             make.top.equalTo(self.replyBgView.mas_top).with.offset(kReplyBackgroundPadding);
             make.left.equalTo(self.replyBgView.mas_left).with.offset(kReplyBackgroundPadding);
             make.right.equalTo(self.replyBgView.mas_right).with.offset(-kReplyBackgroundPadding);
         }];
 
         [self.replayLabel2 mas_remakeConstraints:^(MASConstraintMaker *make) {
+            @strongify(self);
             make.top.equalTo(self.replayLabel1.mas_bottom).with.offset(kReplyLabelDistance);
             make.left.equalTo(self.replayLabel1.mas_left);
             make.right.equalTo(self.replayLabel1.mas_right);
@@ -268,6 +278,7 @@
 
     }else if (self.sts.replies_count == 1){
         [self.replayLabel1 mas_remakeConstraints:^(MASConstraintMaker *make) {
+            @strongify(self);
             make.top.equalTo(self.replyBgView.mas_top).with.offset(kReplyBackgroundPadding);
             make.left.equalTo(self.replyBgView.mas_left).with.offset(kReplyBackgroundPadding);
             make.right.equalTo(self.replyBgView.mas_right).with.offset(-kReplyBackgroundPadding);
@@ -277,6 +288,7 @@
     }
     
     [self.bottomLine mas_remakeConstraints:^(MASConstraintMaker *make) {
+        @strongify(self);
         make.bottom.equalTo(self.contentView.mas_bottom);
         make.left.equalTo(self.contentView.mas_left);
         make.right.equalTo(self.contentView.mas_right);

@@ -215,7 +215,6 @@
     Status *status = self.dataArray[indexPath.row];
     [cell fillCellData:status];
     [cell setNeedsUpdateConstraints];
-    [cell updateConstraintsIfNeeded];
     
     for (int i=0; i<cell.picsContainer.picViews.count; i++) {
         UIButton *btn = cell.picsContainer.picViews[i];
