@@ -7,6 +7,8 @@
 //
 
 #import "RootViewController.h"
+#import "PhotoPickerController.h"
+#import "PickerImageManager.h"
 
 @interface RootViewController ()<CBDefaultPageViewDelegate>
 
@@ -37,8 +39,6 @@
 }
 
 - (void)configKeyboard{
-    UITapGestureRecognizer *tapGes = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction)];
-    tapGes.cancelsTouchesInView = NO;
     @weakify(self);
     NSOperationQueue * mainQueue = [NSOperationQueue mainQueue];
     [[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardWillShowNotification
@@ -47,7 +47,6 @@
                                                   usingBlock:^(NSNotification *noti)
     {
         @strongify(self);
-        [self.view addGestureRecognizer:tapGes];
         CGRect rect = [noti.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
         double duration = [noti.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
         //self可能为nil
@@ -62,7 +61,6 @@
                                                   usingBlock:^(NSNotification *noti)
     {
         @strongify(self);
-        [self.view removeGestureRecognizer:tapGes];
         double duration = [noti.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
         //self可能为nil
         if (self && self->_inputToolbar) {
@@ -132,11 +130,40 @@
     return _inputToolbar;
 }
 
+- (UIControl *)maskView{
+    if (_maskView == nil) {
+        _maskView = [WindowMaskView new];
+        _maskView.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+        [_maskView addTarget:self action:@selector(hideKeyboard) forControlEvents:UIControlEventTouchUpInside];
+        UIWindow *window = [UIApplication sharedApplication].keyWindow;
+        [window addSubview:_maskView];
+        [_maskView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(window.mas_top);
+            make.left.equalTo(window.mas_left);
+            make.right.equalTo(window.mas_right);
+            make.bottom.equalTo(window.mas_bottom);
+        }];
+    }
+    return _maskView;
+}
+
 -(void)onImgEntryBtnClick{
-    
+    [self hideKeyboard];
+    if ([[PickerImageManager manager] authorizationStatusNotDetermined] || [[PickerImageManager manager] authorizationStatusAuthorized]) {
+        PhotoPickerController *photoPickerVc = [[PhotoPickerController alloc] init];
+        CBNavigationController *nav = [[CBNavigationController alloc]initWithRootViewController:photoPickerVc];
+        [nav setNavigationBarWithType:CBNavigationBarTypeWhiteOpaque];
+        [nav setStatusBarWithStyle:UIStatusBarStyleDefault];
+        [self presentViewController:nav animated:YES completion:nil];
+        
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"未开启相册权限，是否去设置中开启？" message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"去设置", nil];
+        [alert show];
+    }
 }
 
 - (void)refreshKeyboardStatusWithRect:(CGRect)rect duration:(double)duration hide:(BOOL)hide{
+    self.cuurentKeyboardHeight = rect.size.height;
     [UIView animateWithDuration:duration animations:^{
         //这里不能用self.inputToolbar,因为调用get方法会创建inputToolbar，而有些页面是没有inputToolbar的
         [self->_inputToolbar mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -147,12 +174,21 @@
             }
         }];
     } completion:^(BOOL finished) {
+        if (finished) {
+            if (!hide) {
+                self.maskView.marginBottom = self->_inputToolbar.inputToolBarHeight + rect.size.height;
+                [self.maskView setNeedsUpdateConstraints];
+            }
+            
+        }
     }];
     [self.view layoutIfNeeded];
 }
 
-- (void)tapAction
-{
+- (void)hideKeyboard{
+    [_maskView removeTarget:self action:@selector(hideKeyboard) forControlEvents:UIControlEventTouchUpInside];
+    [_maskView removeFromSuperview];
+    _maskView = nil;
     [self.view endEditing:YES];
 }
 
@@ -166,6 +202,9 @@
         CGFloat textViewHeight = fmaxf(newSize.height, kTextViewOriginalHeight);
         _inputToolbar.inputToolBarHeight = textViewHeight + kTextViewMaginTopBottom*2;
         [_inputToolbar setNeedsUpdateConstraints];
+        _maskView.marginBottom = self.cuurentKeyboardHeight + _inputToolbar.inputToolBarHeight;
+        [_maskView setNeedsUpdateConstraints];
+        
     }
 }
 
@@ -176,13 +215,32 @@
 }
 
 /*
-#pragma mark - Navigation
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
+@end
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+
+@implementation WindowMaskView
+
+// tell UIKit that you are using AutoLayout
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
 }
-*/
+
+-(void)updateConstraints{
+    @weakify(self);
+    [self mas_updateConstraints:^(MASConstraintMaker *make) {
+        @strongify(self);
+        make.bottom.equalTo(self.superview.mas_bottom).with.offset(-self.marginBottom);
+    }];
+    [super updateConstraints];
+}
+
 
 @end
