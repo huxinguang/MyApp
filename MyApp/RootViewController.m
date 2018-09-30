@@ -116,6 +116,7 @@
     if (_inputToolbar == nil) {
         _inputToolbar = [[InputToolBar alloc]init];
         _inputToolbar.inputToolBarHeight = kInputBarOriginalHeight;
+        _inputToolbar.inputView.delegate = self;
         [self.view addSubview:_inputToolbar];
         
         @weakify(self);
@@ -144,7 +145,6 @@
             }else{
                 make.bottom.equalTo(self.view.mas_bottom).with.offset(-rect.size.height);
             }
-            
         }];
     } completion:^(BOOL finished) {
     }];

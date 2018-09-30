@@ -46,14 +46,23 @@
 }
 
 - (void)buildSubviews{
-    self.commentTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, kAppStatusBarAndNavigationBarHeight, kAppScreenWidth, kAppScreenHeight - kAppStatusBarAndNavigationBarHeight - kInputBarOriginalHeight - kAppTabbarSafeBottomMargin) style:UITableViewStylePlain];
+    
+    self.commentTableView = [[UITableView alloc]initWithFrame:CGRectZero style:UITableViewStylePlain];
     self.commentTableView.delegate = self;
     self.commentTableView.dataSource = self;
     self.commentTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:self.commentTableView];
+    @weakify(self);
+    [self.commentTableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        @strongify(self);
+        make.top.equalTo(self.view.mas_top).with.offset(kAppStatusBarAndNavigationBarHeight);
+        make.left.equalTo(self.view.mas_left);
+        make.right.equalTo(self.view.mas_right);
+        make.bottom.equalTo(self.inputToolbar.mas_top);
+    }];
     
-    self.inputToolbar.inputView.delegate = self;
-
+    [self.view bringSubviewToFront:self.inputToolbar];
+    
     self.indicatorView  = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     self.indicatorView.center = self.view.center;
     [self.view addSubview:self.indicatorView];

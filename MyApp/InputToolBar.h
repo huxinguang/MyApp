@@ -22,7 +22,6 @@
 @property (nonatomic, strong)UIButton *voiceEntryBtn;
 @property (nonatomic, strong)UIButton *imgEntryBtn;
 @property (nonatomic, assign)CGFloat inputToolBarHeight;
-//@property (nonatomic, assign)MASConstraint *inputToolBarBottomConstraint;
 @end
 
 

@@ -31,13 +31,23 @@
 }
 
 - (void)buildSubviews{
-    self.replyTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, kAppStatusBarAndNavigationBarHeight, kAppScreenWidth, kAppScreenHeight - kAppStatusBarAndNavigationBarHeight) style:UITableViewStylePlain];
+    
+    self.replyTableView = [[UITableView alloc]initWithFrame:CGRectZero style:UITableViewStylePlain];
     self.replyTableView.delegate = self;
     self.replyTableView.dataSource = self;
     self.replyTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:self.replyTableView];
     
-    self.inputToolbar.inputView.delegate = self;
+    @weakify(self);
+    [self.replyTableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        @strongify(self);
+        make.top.equalTo(self.view.mas_top).with.offset(kAppStatusBarAndNavigationBarHeight);
+        make.left.equalTo(self.view.mas_left);
+        make.right.equalTo(self.view.mas_right);
+        make.bottom.equalTo(self.inputToolbar.mas_top);
+    }];
+    
+    [self.view bringSubviewToFront:self.inputToolbar];
     
     self.indicatorView  = [[UIActivityIndicatorView alloc]initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     self.indicatorView.center = self.view.center;
