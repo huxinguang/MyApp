@@ -10,6 +10,7 @@
 #import "PhotoPickerController.h"
 #import "PickerImageManager.h"
 
+
 @interface RootViewController ()<CBDefaultPageViewDelegate>
 
 @end
@@ -163,26 +164,30 @@
 }
 
 - (void)refreshKeyboardStatusWithRect:(CGRect)rect duration:(double)duration hide:(BOOL)hide{
-    self.cuurentKeyboardHeight = rect.size.height;
-    [UIView animateWithDuration:duration animations:^{
-        //这里不能用self.inputToolbar,因为调用get方法会创建inputToolbar，而有些页面是没有inputToolbar的
-        [self->_inputToolbar mas_updateConstraints:^(MASConstraintMaker *make) {
-            if(hide){
-                make.bottom.equalTo(self.view.mas_bottom).with.offset(-kAppTabbarSafeBottomMargin);
-            }else{
-                make.bottom.equalTo(self.view.mas_bottom).with.offset(-rect.size.height);
+    if (self == self.currentVC) {
+        self.currentKeyboardHeight = rect.size.height;
+        [UIView animateWithDuration:duration animations:^{
+            //这里不能用self.inputToolbar,因为调用get方法会创建inputToolbar，而有些页面是没有inputToolbar的
+            [self->_inputToolbar mas_updateConstraints:^(MASConstraintMaker *make) {
+                if(hide){
+                    make.bottom.equalTo(self.view.mas_bottom).with.offset(-kAppTabbarSafeBottomMargin);
+                }else{
+                    make.bottom.equalTo(self.view.mas_bottom).with.offset(-rect.size.height);
+                }
+            }];
+        } completion:^(BOOL finished) {
+            if (finished) {
+                if (!hide) {
+                    self.maskView.marginBottom = self->_inputToolbar.inputToolBarHeight + rect.size.height;
+                    [self.maskView setNeedsUpdateConstraints];
+                }
+                
             }
         }];
-    } completion:^(BOOL finished) {
-        if (finished) {
-            if (!hide) {
-                self.maskView.marginBottom = self->_inputToolbar.inputToolBarHeight + rect.size.height;
-                [self.maskView setNeedsUpdateConstraints];
-            }
-            
-        }
-    }];
-    [self.view layoutIfNeeded];
+        [self.view layoutIfNeeded];
+    }
+    
+    
 }
 
 - (void)hideKeyboard{
@@ -200,9 +205,9 @@
         CGFloat fixedWidth = textView.frame.size.width;
         CGSize newSize = [textView sizeThatFits:CGSizeMake(fixedWidth, MAXFLOAT)];
         CGFloat textViewHeight = fmaxf(newSize.height, kTextViewOriginalHeight);
-        _inputToolbar.inputToolBarHeight = textViewHeight + kTextViewMaginTopBottom*2;
+        _inputToolbar.inputToolBarHeight = (textViewHeight + kTextViewMaginTopBottom*2) > kInputBarMaxlHeight ? kInputBarMaxlHeight : (textViewHeight + kTextViewMaginTopBottom*2);
         [_inputToolbar setNeedsUpdateConstraints];
-        _maskView.marginBottom = self.cuurentKeyboardHeight + _inputToolbar.inputToolBarHeight;
+        _maskView.marginBottom = self.currentKeyboardHeight + _inputToolbar.inputToolBarHeight;
         [_maskView setNeedsUpdateConstraints];
         
     }

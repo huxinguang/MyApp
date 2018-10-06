@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C91B9A1F216889CE006B50A5 /* UIViewController+Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = C91B9A1E216889CE006B50A5 /* UIViewController+Helper.m */; };
 		C944F2622146072600159984 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C944F2612146072600159984 /* AppDelegate.m */; };
 		C944F2682146072600159984 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C944F2662146072600159984 /* Main.storyboard */; };
 		C944F26A2146072700159984 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C944F2692146072700159984 /* Assets.xcassets */; };
@@ -155,6 +156,8 @@
 /* Begin PBXFileReference section */
 		419DFB2518B76193BA6B6B06 /* Pods-MyApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-MyApp/Pods-MyApp.release.xcconfig"; sourceTree = "<group>"; };
 		62B1A4B6E2B3850CCA4E15F5 /* libPods-MyApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MyApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C91B9A1D216889CE006B50A5 /* UIViewController+Helper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Helper.h"; sourceTree = "<group>"; };
+		C91B9A1E216889CE006B50A5 /* UIViewController+Helper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+Helper.m"; sourceTree = "<group>"; };
 		C944F25D2146072600159984 /* MyApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C944F2602146072600159984 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		C944F2612146072600159984 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -377,6 +380,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		C91B9A1C216889B8006B50A5 /* UIViewController+Helper */ = {
+			isa = PBXGroup;
+			children = (
+				C91B9A1D216889CE006B50A5 /* UIViewController+Helper.h */,
+				C91B9A1E216889CE006B50A5 /* UIViewController+Helper.m */,
+			);
+			path = "UIViewController+Helper";
+			sourceTree = "<group>";
+		};
 		C944F2542146072600159984 = {
 			isa = PBXGroup;
 			children = (
@@ -403,6 +415,7 @@
 		C944F25F2146072600159984 /* MyApp */ = {
 			isa = PBXGroup;
 			children = (
+				C91B9A1C216889B8006B50A5 /* UIViewController+Helper */,
 				C98B268D2154B54400845F73 /* UITextView+XGPlaceholder */,
 				C98B264D21548FD000845F73 /* ImagePickerController */,
 				C98B264921534FDB00845F73 /* UIButton+PassValue */,
@@ -966,6 +979,7 @@
 				C9AA1163214F9D2600050385 /* YYFPSLabel.m in Sources */,
 				C944F2622146072600159984 /* AppDelegate.m in Sources */,
 				C944F2A5214615F500159984 /* StatusCell.m in Sources */,
+				C91B9A1F216889CE006B50A5 /* UIViewController+Helper.m in Sources */,
 				C944F2F721464C4900159984 /* PlusAnimate.m in Sources */,
 				C9AA1151214B9E9200050385 /* HotCommentIcon.m in Sources */,
 				C9E5FE8D2147BE0100B6AC3D /* CBTitleView.m in Sources */,

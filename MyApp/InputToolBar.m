@@ -83,7 +83,7 @@
     @weakify(self);
     [self mas_updateConstraints:^(MASConstraintMaker *make) {
         @strongify(self);
-        make.height.mas_equalTo(self.inputToolBarHeight > kInputBarMaxlHeight ? kInputBarMaxlHeight : self.inputToolBarHeight);
+        make.height.mas_equalTo(self.inputToolBarHeight);
     }];
     [super updateConstraints];
 }
