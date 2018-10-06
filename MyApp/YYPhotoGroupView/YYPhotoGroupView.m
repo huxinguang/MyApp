@@ -131,9 +131,9 @@
         return;
     }
     
-    @weakify(self);
+    @weakify(self)
     [_imageView setImageWithURL:item.largeImageURL placeholder:item.thumbImage options:kNilOptions progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-        @strongify(self);
+        @strongify(self)
         if (!self) return;
         CGFloat progress = receivedSize / (float)expectedSize;
         progress = progress < 0.01 ? 0.01 : progress > 1 ? 1 : progress;

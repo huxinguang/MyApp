@@ -38,9 +38,10 @@
     self.replyTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:self.replyTableView];
     
-    @weakify(self);
+    @weakify(self)
     [self.replyTableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        @strongify(self);
+        @strongify(self)
+        if (!self) return;
         make.top.equalTo(self.view.mas_top).with.offset(kAppStatusBarAndNavigationBarHeight);
         make.left.equalTo(self.view.mas_left);
         make.right.equalTo(self.view.mas_right);
@@ -78,12 +79,15 @@
 }
 
 - (void)loadData{
-    __weak typeof(self) weakSelf = self;
+    
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.requestSerializer.timeoutInterval = 20;
     NSDictionary *dic = @{@"page":@1,@"page_size":@20,@"comment_id":[NSNumber numberWithInteger:self.sts.status_id],@"user_id":@1};
+    @weakify(self)
     NSURLSessionDataTask *task = [manager GET:[NetworkUtil getCommentRepliesUrl] parameters:dic progress:^(NSProgress * _Nonnull downloadProgress) {
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        @strongify(self)
+        if (!self) return;
         if ([responseObject isKindOfClass:[NSDictionary class]]) {
             NSDictionary *response = (NSDictionary *)responseObject;
             if ([[response objectForKey:@"code"] intValue] == 0) {
@@ -105,8 +109,8 @@
                     [self calculateCellHeight];
                     //数据处理完毕回到主线程刷新UI
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        weakSelf.replyTableView.tableHeaderView = [weakSelf tableHeaderView];
-                        [weakSelf.replyTableView reloadData];
+                        self.replyTableView.tableHeaderView = [self tableHeaderView];
+                        [self.replyTableView reloadData];
                     });
                 });
                 

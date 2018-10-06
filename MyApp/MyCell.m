@@ -21,9 +21,10 @@
 - (void)buildSubViews{
     self.iconView = [UIImageView new];
     [self.contentView addSubview:self.iconView];
-    @weakify(self);
+    @weakify(self)
     [self.iconView mas_makeConstraints:^(MASConstraintMaker *make) {
-        @strongify(self);
+        @strongify(self)
+        if (!self) return;
         make.centerY.equalTo(self.contentView.mas_centerY);
         make.left.equalTo(self.contentView.mas_left).with.offset(15);
         make.size.mas_equalTo(CGSizeMake(20, 20));

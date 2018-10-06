@@ -50,9 +50,10 @@
     self.commentTableView.dataSource = self;
     self.commentTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:self.commentTableView];
-    @weakify(self);
+    @weakify(self)
     [self.commentTableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        @strongify(self);
+        @strongify(self)
+        if (!self) return;
         make.top.equalTo(self.view.mas_top).with.offset(kAppStatusBarAndNavigationBarHeight);
         make.left.equalTo(self.view.mas_left);
         make.right.equalTo(self.view.mas_right);
@@ -90,12 +91,14 @@
 
 
 - (void)loadData{
-    __weak typeof(self) weakSelf = self;
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.requestSerializer.timeoutInterval = 20;
     NSDictionary *dic = @{@"page":@1,@"page_size":@20,@"status_id":[NSNumber numberWithInteger:self.sts.status_id],@"user_id":@1};
+    @weakify(self)
     NSURLSessionDataTask *task = [manager GET:[NetworkUtil getStatusCommentsUrl] parameters:dic progress:^(NSProgress * _Nonnull downloadProgress) {
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        @strongify(self)
+        if (!self) return;
         if ([responseObject isKindOfClass:[NSDictionary class]]) {
             NSDictionary *response = (NSDictionary *)responseObject;
             if ([[response objectForKey:@"code"] intValue] == 0) {
@@ -112,13 +115,13 @@
                 }];
                 //当前在主线程，将高度保存在model中，这个过程涉及复杂计算，应该放在子线程
                 dispatch_async(dispatch_get_global_queue(0, 0), ^{
-                    weakSelf.dataArray = [Status mj_objectArrayWithKeyValuesArray:response[@"data"]];
-                    NSLog(@"%@",weakSelf.dataArray);
+                    self.dataArray = [Status mj_objectArrayWithKeyValuesArray:response[@"data"]];
+                    NSLog(@"%@",self.dataArray);
                     [self calculateCellHeight];
                     //数据处理完毕回到主线程刷新UI
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        weakSelf.commentTableView.tableHeaderView = [weakSelf tableHeaderView];
-                        [weakSelf.commentTableView reloadData];
+                        self.commentTableView.tableHeaderView = [self tableHeaderView];
+                        [self.commentTableView reloadData];
                     });
                 });
                 

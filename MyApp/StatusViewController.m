@@ -57,20 +57,24 @@
     
     [self.view addSubview:self.indicatorView];
     [self.view bringSubviewToFront:self.indicatorView];
-    __weak typeof(self) weakSelf = self;
+    @weakify(self)
     self.statusTableView.mj_header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
-        [weakSelf loadData];
+        @strongify(self)
+        if (!self) return;
+        [self loadData];
     }];
     
 }
 
 - (void)loadData{
-    __weak typeof(self) weakSelf = self;
+    @weakify(self)
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.requestSerializer.timeoutInterval = 20;
     NSDictionary *dic = @{@"page":@1,@"page_size":@10,@"user_id":@1};
     NSURLSessionDataTask *task = [manager GET:[NetworkUtil getStatusListUrl] parameters:dic progress:^(NSProgress * _Nonnull downloadProgress) {
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        @strongify(self)
+        if (!self) return;
         if ([responseObject isKindOfClass:[NSDictionary class]]) {
             NSDictionary *response = (NSDictionary *)responseObject;
             if ([[response objectForKey:@"code"] intValue] == 0) {
@@ -86,12 +90,12 @@
                     return @{@"media_id":@"id"};
                 }];
                 dispatch_async(dispatch_get_global_queue(0, 0), ^{
-                    weakSelf.dataArray = [Status mj_objectArrayWithKeyValuesArray:response[@"data"]];
-                    [weakSelf calculateCellHeight];
+                    self.dataArray = [Status mj_objectArrayWithKeyValuesArray:response[@"data"]];
+                    [self calculateCellHeight];
                     //数据处理完毕回到主线程刷新UI
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        [weakSelf.statusTableView reloadData];
-                        [weakSelf.statusTableView.mj_header endRefreshing];
+                        [self.statusTableView reloadData];
+                        [self.statusTableView.mj_header endRefreshing];
                     });
                 });
                 
@@ -99,7 +103,8 @@
         }
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         NSLog(@"%@",[error localizedDescription]);
-        [weakSelf.statusTableView.mj_header endRefreshing];
+        @strongify(self);
+        [self.statusTableView.mj_header endRefreshing];
     }];
     
     [self.indicatorView setAnimatingWithStateOfTask:task];
@@ -300,12 +305,14 @@
 
 - (void)praise:(UIButton *)btn{
     Status *status = self.dataArray[btn.tag];
-    __weak typeof(self) weakSelf = self;
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.requestSerializer.timeoutInterval = 20;
     NSDictionary *dic = @{@"user_id":@1,@"id":[NSNumber numberWithInteger:status.status_id],@"type":@1};
+    @weakify(self)
     [manager POST:@"http://127.0.0.1:8080/status/praise" parameters:dic progress:^(NSProgress * _Nonnull uploadProgress) {
     } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        @strongify(self)
+        if (!self) return;
         if ([responseObject isKindOfClass:[NSDictionary class]]) {
             NSDictionary *response = (NSDictionary *)responseObject;
             if ([[response objectForKey:@"code"] intValue] == 0) {

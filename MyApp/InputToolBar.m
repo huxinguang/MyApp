@@ -29,9 +29,10 @@
     UIView *topLine = [UIView new];
     topLine.backgroundColor = [UIColor colorWithRGB:0xE0E0E0];
     [self addSubview:topLine];
-    @weakify(self);
+    @weakify(self)
     [topLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        @strongify(self);
+        @strongify(self)
+        if (!self) return;
         make.top.equalTo(self.mas_top);
         make.left.equalTo(self.mas_left);
         make.right.equalTo(self.mas_right);
@@ -80,9 +81,10 @@
 }
 
 -(void)updateConstraints{
-    @weakify(self);
+    @weakify(self)
     [self mas_updateConstraints:^(MASConstraintMaker *make) {
-        @strongify(self);
+        @strongify(self)
+        if (!self) return;
         make.height.mas_equalTo(self.inputToolBarHeight);
     }];
     [super updateConstraints];

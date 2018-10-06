@@ -40,18 +40,18 @@
 }
 
 - (void)configKeyboard{
-    @weakify(self);
+    @weakify(self)
     NSOperationQueue * mainQueue = [NSOperationQueue mainQueue];
     [[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardWillShowNotification
                                                       object:nil
                                                        queue:mainQueue
                                                   usingBlock:^(NSNotification *noti)
     {
-        @strongify(self);
+        @strongify(self)
+        if (!self) return;
         CGRect rect = [noti.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
         double duration = [noti.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-        //self可能为nil
-        if (self && self->_inputToolbar) {
+        if (self->_inputToolbar) {
             [self refreshKeyboardStatusWithRect:rect duration:duration hide:NO];
         }
     }];
@@ -62,9 +62,9 @@
                                                   usingBlock:^(NSNotification *noti)
     {
         @strongify(self);
+        if (!self) return;
         double duration = [noti.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-        //self可能为nil
-        if (self && self->_inputToolbar) {
+        if (self->_inputToolbar) {
             [self refreshKeyboardStatusWithRect:CGRectZero duration:duration hide:YES];
         }
     }];
@@ -118,9 +118,10 @@
         _inputToolbar.inputView.delegate = self;
         [self.view addSubview:_inputToolbar];
         
-        @weakify(self);
+        @weakify(self)
         [_inputToolbar mas_makeConstraints:^(MASConstraintMaker *make) {
-            @strongify(self);
+            @strongify(self)
+            if (!self) return;
             make.bottom.equalTo(self.view.mas_bottom).with.offset(-kAppTabbarSafeBottomMargin);
             make.left.equalTo(self.view.mas_left);
             make.right.equalTo(self.view.mas_right);
@@ -235,9 +236,10 @@
 }
 
 -(void)updateConstraints{
-    @weakify(self);
+    @weakify(self)
     [self mas_updateConstraints:^(MASConstraintMaker *make) {
-        @strongify(self);
+        @strongify(self)
+        if (!self) return;
         make.bottom.equalTo(self.superview.mas_bottom).with.offset(-self.marginBottom);
     }];
     [super updateConstraints];

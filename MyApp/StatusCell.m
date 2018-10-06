@@ -134,30 +134,34 @@
 }
 
 - (void)updateConstraints{
-    @weakify(self);
+    @weakify(self)
     [self.avatarView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        @strongify(self);
+        @strongify(self)
+        if (!self) return;
         make.top.equalTo(self.contentView.mas_top).with.offset(kStatusAvatarViewPaddingTop);
         make.left.equalTo(self.contentView.mas_left).with.offset(kStatusCellPaddingLeftRight);
         make.size.mas_equalTo(kStatusAvatarViewSize);
     }];
     
     [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        @strongify(self);
+        @strongify(self)
+        if (!self) return;
         make.centerY.equalTo(self.avatarView.mas_centerY);
         make.left.equalTo(self.avatarView.mas_right).with.offset(kStatusNamePaddingLeft);
         make.right.equalTo(self.contentView.mas_right).with.offset(-50);
     }];
     
     [self.contentLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        @strongify(self);
+        @strongify(self)
+        if (!self) return;
         make.top.equalTo(self.avatarView.mas_bottom).with.offset(kStatusTextPaddingTop);
         make.left.equalTo(self.contentView.mas_left).with.offset(kStatusCellPaddingLeftRight);
         make.right.equalTo(self.contentView.mas_right).with.offset(-kStatusCellPaddingLeftRight);
     }];
     
     [self.topicLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        @strongify(self);
+        @strongify(self)
+        if (!self) return;
         make.top.equalTo(self.contentLabel.mas_bottom).with.offset(kStatusTopicPaddingTop);
         make.left.equalTo(self.contentView.mas_left).with.offset(kStatusCellPaddingLeftRight);
         make.right.equalTo(self.contentView.mas_right).with.offset(-kStatusCellPaddingLeftRight);
@@ -165,7 +169,8 @@
     }];
     
     [self.picsContainer mas_remakeConstraints:^(MASConstraintMaker *make) {
-        @strongify(self);
+        @strongify(self)
+        if (!self) return;
         make.top.equalTo(self.topicLabel.mas_bottom).with.offset(kStatusImagePaddingTop);
         make.left.equalTo(self.contentView.mas_left).with.offset(kStatusCellPaddingLeftRight);
         make.right.equalTo(self.contentView.mas_right).with.offset(-kStatusCellPaddingLeftRight);
@@ -173,7 +178,8 @@
     }];
     
     [self.commentBgView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        @strongify(self);
+        @strongify(self)
+        if (!self) return;
         make.top.equalTo(self.picsContainer.mas_bottom).with.offset(kStatusCommentBackgroundPaddingTop);
         make.left.equalTo(self.contentView.mas_left).with.offset(kStatusCellPaddingLeftRight);
         make.right.equalTo(self.contentView.mas_right).with.offset(-kStatusCellPaddingLeftRight);
@@ -181,21 +187,24 @@
     }];
     
     [self.commentTagIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
-        @strongify(self);
+        @strongify(self)
+        if (!self) return;
         make.top.equalTo(self.commentBgView.mas_top).with.offset(kStatusCommentBackgroundPadding);
         make.left.equalTo(self.commentBgView.mas_left).with.offset(kStatusCommentBackgroundPadding);
         make.size.mas_equalTo(CGSizeMake(kStatusCommentHotIconWidth, kStatusCommentHotIconHeight));
     }];
     
     [self.commentTextLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        @strongify(self);
+        @strongify(self)
+        if (!self) return;
         make.top.equalTo(self.commentTagIcon.mas_bottom).with.offset(kStatusCommentTextPaddingTop);
         make.left.equalTo(self.commentBgView.mas_left).with.offset(kStatusCommentBackgroundPadding);
         make.right.equalTo(self.commentBgView.mas_right).with.offset(-kStatusCommentBackgroundPadding);
     }];
     
     [self.commentPicsContainer mas_remakeConstraints:^(MASConstraintMaker *make) {
-        @strongify(self);
+        @strongify(self)
+        if (!self) return;
         make.top.equalTo(self.commentTextLabel.mas_bottom).with.offset(kStatusCommentImagePaddingTop);
         make.left.equalTo(self.commentBgView.mas_left).with.offset(kStatusCommentBackgroundPadding);
         make.right.equalTo(self.commentBgView.mas_right).with.offset(-kStatusCommentBackgroundPadding);
@@ -203,34 +212,39 @@
     }];
     
     [self.shareBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
-        @strongify(self);
+        @strongify(self)
+        if (!self) return;
         make.bottom.equalTo(self.contentView.mas_bottom).with.offset(-(kStatusToolbarButtonPaddingBottom + kStatusCellBottomLineHeight));
         make.left.equalTo(self.contentView.mas_left).with.offset(kStatusToolbarMargin);
         make.size.mas_equalTo(CGSizeMake(kStatusToolbarButtonItemWidth, kStatusToolbarButtonItemHeight));
     }];
     
     [self.commentBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
-        @strongify(self);
+        @strongify(self)
+        if (!self) return;
         make.bottom.equalTo(self.contentView.mas_bottom).with.offset(-(kStatusToolbarButtonPaddingBottom + kStatusCellBottomLineHeight));
         make.left.equalTo(self.shareBtn.mas_right).with.offset(kStatusToolbarButtonDistance);
         make.size.mas_equalTo(CGSizeMake(kStatusToolbarButtonItemWidth, kStatusToolbarButtonItemHeight));
     }];
     
     [self.likeBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
-        @strongify(self);
+        @strongify(self)
+        if (!self) return;
         make.bottom.equalTo(self.contentView.mas_bottom).with.offset(-(kStatusToolbarButtonPaddingBottom + kStatusCellBottomLineHeight));
         make.left.equalTo(self.commentBtn.mas_right).with.offset(kStatusToolbarButtonDistance);
         make.size.mas_equalTo(CGSizeMake(kStatusToolbarButtonItemWidth, kStatusToolbarButtonItemHeight));
     }];
     [self.dislikeBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
-        @strongify(self);
+        @strongify(self)
+        if (!self) return;
         make.bottom.equalTo(self.contentView.mas_bottom).with.offset(-(kStatusToolbarButtonPaddingBottom + kStatusCellBottomLineHeight));
         make.left.equalTo(self.likeBtn.mas_right).with.offset(kStatusToolbarButtonDistance);
         make.size.mas_equalTo(CGSizeMake(kStatusToolbarButtonItemWidth, kStatusToolbarButtonItemHeight));
     }];
     
     [self.bottomLine mas_remakeConstraints:^(MASConstraintMaker *make) {
-        @strongify(self);
+        @strongify(self)
+        if (!self) return;
         make.bottom.equalTo(self.contentView.mas_bottom);
         make.left.equalTo(self.contentView.mas_left);
         make.right.equalTo(self.contentView.mas_right);

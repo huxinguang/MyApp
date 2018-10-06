@@ -72,7 +72,9 @@
 }
 
 - (NSMutableArray<AssetModel *> *)selectedPhotoArr{
-    if (_selectedPhotoArr == nil) _selectedPhotoArr = [NSMutableArray array];
+    if (_selectedPhotoArr == nil){
+        _selectedPhotoArr = [NSMutableArray array];
+    }
     return _selectedPhotoArr;
 }
 
@@ -81,19 +83,21 @@
     self.view.backgroundColor = [UIColor whiteColor];
     [self configMask];
     
-    __weak typeof(self) weakSelf = self;
+    @weakify(self)
     [[PickerImageManager manager] getAllAlbums:YES completion:^(NSArray<AlbumModel *> *models) {
-        weakSelf.albumArr = [NSMutableArray arrayWithArray:models];
-        weakSelf.albumArr[0].isSelected = YES;//默认第一个选中
-        [weakSelf.ntView.titleBtn setTitle:weakSelf.albumArr[0].name forState:UIControlStateNormal];
-        weakSelf.ntView.titleBtnWidth = [weakSelf.albumArr[0].name widthForFont:kTitleViewTitleFont] + kTitleViewTextImageDistance + kTitleViewArrowSize.width;
-        weakSelf.currentAlbumIndexpath = [NSIndexPath indexPathForRow:0 inSection:0];
-        weakSelf.photoArr = weakSelf.albumArr[0].assetArray;
-        [weakSelf configCollectionView];
-        [weakSelf.collectionView reloadData];
-        [weakSelf configAlbumTableView];
-        [weakSelf.albumTableView reloadData];
-        [weakSelf configBottomConfirmBtn];
+        @strongify(self)
+        if (!self) return;
+        self.albumArr = [NSMutableArray arrayWithArray:models];
+        self.albumArr[0].isSelected = YES;//默认第一个选中
+        [self.ntView.titleBtn setTitle:self.albumArr[0].name forState:UIControlStateNormal];
+        self.ntView.titleBtnWidth = [self.albumArr[0].name widthForFont:kTitleViewTitleFont] + kTitleViewTextImageDistance + kTitleViewArrowSize.width;
+        self.currentAlbumIndexpath = [NSIndexPath indexPathForRow:0 inSection:0];
+        self.photoArr = self.albumArr[0].assetArray;
+        [self configCollectionView];
+        [self.collectionView reloadData];
+        [self configAlbumTableView];
+        [self.albumTableView reloadData];
+        [self configBottomConfirmBtn];
     }];
 }
 
@@ -410,9 +414,10 @@
 }
 
 -(void)updateConstraints{
-    @weakify(self);
+    @weakify(self)
     [self.titleBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
-        @strongify(self);
+        @strongify(self)
+        if (!self) return;
         make.centerY.equalTo(self.mas_centerY);
         make.centerX.equalTo(self.mas_centerX).with.offset(-(kTitleViewTextImageDistance + kTitleViewArrowSize.width)/2);
         make.size.mas_equalTo(CGSizeMake(self.titleBtnWidth, kAppNavigationBarHeight));

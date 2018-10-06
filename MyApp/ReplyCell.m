@@ -62,16 +62,18 @@
 }
 
 - (void)updateConstraints{
-    @weakify(self);
+    @weakify(self)
     [self.avatarView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        @strongify(self);
+        @strongify(self)
+        if (!self) return;
         make.top.equalTo(self.contentView.mas_top).with.offset(kCommentAvatarViewMarginTop);
         make.left.equalTo(self.contentView.mas_left).with.offset(kCommentCellPaddingLeftRight);
         make.size.mas_equalTo(kCommentAvatarViewSize);
     }];
     
     [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        @strongify(self);
+        @strongify(self)
+        if (!self) return;
         make.top.equalTo(self.avatarView.mas_top);
         make.left.equalTo(self.avatarView.mas_right).with.offset(kCommentNameMarginLeft);
         make.right.equalTo(self.contentView.mas_right).with.offset(-kCommentCellPaddingLeftRight);
@@ -79,7 +81,8 @@
     }];
     
     [self.timeLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        @strongify(self);
+        @strongify(self)
+        if (!self) return;
         make.bottom.equalTo(self.avatarView.mas_bottom);
         make.left.equalTo(self.avatarView.mas_right).with.offset(kCommentNameMarginLeft);
         make.right.equalTo(self.contentView.mas_right).with.offset(-kCommentCellPaddingLeftRight);
@@ -87,14 +90,16 @@
     }];
     
     [self.contentLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        @strongify(self);
+        @strongify(self)
+        if (!self) return;
         make.top.equalTo(self.avatarView.mas_bottom).with.offset(kCommentTextMarginTop);
         make.left.equalTo(self.nameLabel.mas_left);
         make.right.equalTo(self.contentView.mas_right).with.offset(-kCommentCellPaddingLeftRight);
     }];
     
     [self.picsContainer mas_remakeConstraints:^(MASConstraintMaker *make) {
-        @strongify(self);
+        @strongify(self)
+        if (!self) return;
         make.top.equalTo(self.contentLabel.mas_bottom).with.offset(kCommentImageMarginTop);
         make.left.equalTo(self.nameLabel.mas_left);
         make.right.equalTo(self.contentView.mas_right).with.offset(-kCommentCellPaddingLeftRight);
@@ -102,7 +107,8 @@
     }];
     
     [self.bottomLine mas_remakeConstraints:^(MASConstraintMaker *make) {
-        @strongify(self);
+        @strongify(self)
+        if (!self) return;
         make.bottom.equalTo(self.contentView.mas_bottom);
         make.left.equalTo(self.contentView.mas_left);
         make.right.equalTo(self.contentView.mas_right);
