@@ -22,7 +22,7 @@
 @property (nonatomic, strong)UITableView *albumTableView;
 @property (nonatomic, strong)UIView *containerView;
 @property (nonatomic, strong)NSMutableArray<AlbumModel *> *albumArr;
-@property (nonatomic, strong)UIControl *maskView;
+@property (nonatomic, strong)UIControl *mask;
 @property (nonatomic, strong)NavTitleView *ntView;
 @property (nonatomic, assign)CGFloat containerViewHeight;
 @property (nonatomic, strong)NSIndexPath *currentAlbumIndexpath;
@@ -79,7 +79,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
-    [self configMaskView];
+    [self configMask];
     
     __weak typeof(self) weakSelf = self;
     [[PickerImageManager manager] getAllAlbums:YES completion:^(NSArray<AlbumModel *> *models) {
@@ -97,12 +97,12 @@
     }];
 }
 
-- (void)configMaskView{
-    self.maskView = [UIControl new];
-    self.maskView.frame = CGRectMake(0, 0, self.view.width, self.view.height);
-    self.maskView.backgroundColor = [UIColor clearColor];
-    [self.view addSubview:self.maskView];
-    [self.maskView addTarget:self action:@selector(onClickMaskView) forControlEvents:UIControlEventTouchUpInside];
+- (void)configMask{
+    self.mask = [UIControl new];
+    self.mask.frame = CGRectMake(0, 0, self.view.width, self.view.height);
+    self.mask.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:self.mask];
+    [self.mask addTarget:self action:@selector(onClickMask) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)configLeftBarButtonItem{
@@ -209,7 +209,7 @@
 - (void)onTitleBtnClick:(UIButton *)btn{
     btn.selected = !btn.selected;
     if (btn.selected) {
-        [self.view insertSubview:self.maskView belowSubview:self.containerView];
+        [self.view insertSubview:self.mask belowSubview:self.containerView];
     }
     [self.albumTableView reloadData];
     [self.albumTableView scrollToRowAtIndexPath:self.currentAlbumIndexpath atScrollPosition:UITableViewScrollPositionTop animated:NO];
@@ -220,22 +220,22 @@
             CGRect frame = self.containerView.frame;
             frame.origin.y += self.containerViewHeight;
             self.containerView.frame = frame;
-            self.maskView.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.2];
+            self.mask.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.2];
         }else{
             self.ntView.arrowView.transform = CGAffineTransformIdentity;
             CGRect frame = self.containerView.frame;
             frame.origin.y -= self.containerViewHeight;
             self.containerView.frame = frame;
-            self.maskView.backgroundColor = [UIColor clearColor];
+            self.mask.backgroundColor = [UIColor clearColor];
         }
     } completion:^(BOOL finished) {
         if (!btn.selected) {
-            [self.view insertSubview:self.maskView belowSubview:self.collectionView];
+            [self.view insertSubview:self.mask belowSubview:self.collectionView];
         }
     }];
 }
 
-- (void)onClickMaskView{
+- (void)onClickMask{
     [self onTitleBtnClick:self.ntView.titleBtn];
 }
 

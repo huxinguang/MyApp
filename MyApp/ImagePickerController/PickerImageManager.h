@@ -25,7 +25,6 @@
 - (BOOL)authorizationStatusAuthorized;
 
 /// Get Album 获得相册/相册数组
-- (void)getCameraRollAlbum:(BOOL)allowPickingVideo completion:(void (^)(AlbumModel *model))completion;
 - (void)getAllAlbums:(BOOL)allowPickingVideo completion:(void (^)(NSArray<AlbumModel *> *models))completion;
 
 /// Get Asset 获得Asset数组

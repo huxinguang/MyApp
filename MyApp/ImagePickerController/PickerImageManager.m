@@ -53,36 +53,6 @@
 
 #pragma mark - Get Album
 
-//// 获得相册/相册数组
-//- (void)getCameraRollAlbum:(BOOL)allowPickingVideo completion:(void (^)(AlbumModel *))completion{
-//    __block AlbumModel *model;
-//    if (iOS8Later) {
-//        PHFetchOptions *option = [[PHFetchOptions alloc] init];
-//        if (!allowPickingVideo) option.predicate = [NSPredicate predicateWithFormat:@"mediaType == %ld", PHAssetMediaTypeImage];
-//        option.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:YES]];
-//        
-//        PHFetchResult *smartAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeSmartAlbumUserLibrary options:nil];
-//        for (PHAssetCollection *collection in smartAlbums) {
-//            if ([collection.localizedTitle isEqualToString:@"Camera Roll"]) {
-//                PHFetchResult *fetchResult = [PHAsset fetchAssetsInAssetCollection:collection options:option];
-//                model = [self modelWithResult:fetchResult name:collection.localizedTitle allowPickingVideo:allowPickingVideo];
-//                if (completion) completion(model);
-//                break;
-//            }
-//        }
-//    } else {
-//        [self.assetLibrary enumerateGroupsWithTypes:ALAssetsGroupAll usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
-//            if ([group numberOfAssets] < 1) return;
-//            NSString *name = [group valueForProperty:ALAssetsGroupPropertyName];
-//            if ([name isEqualToString:@"Camera Roll"] || [name isEqualToString:@"相机胶卷"]) {
-//                model = [self modelWithResult:group name:name allowPickingVideo:allowPickingVideo];
-//                if (completion) completion(model);
-//                *stop = YES;
-//            }
-//        } failureBlock:nil];
-//    }
-//}
-
 - (void)getAllAlbums:(BOOL)allowPickingVideo completion:(void (^)(NSArray<AlbumModel *> *))completion{
     NSMutableArray *albumArr = [NSMutableArray array];
     if (iOS8Later) {

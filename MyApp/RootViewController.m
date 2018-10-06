@@ -134,7 +134,7 @@
 - (UIControl *)maskView{
     if (_maskView == nil) {
         _maskView = [WindowMaskView new];
-        _maskView.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+        _maskView.backgroundColor = [UIColor clearColor];
         [_maskView addTarget:self action:@selector(hideKeyboard) forControlEvents:UIControlEventTouchUpInside];
         UIWindow *window = [UIApplication sharedApplication].keyWindow;
         [window addSubview:_maskView];
@@ -156,7 +156,6 @@
         [nav setNavigationBarWithType:CBNavigationBarTypeWhiteOpaque];
         [nav setStatusBarWithStyle:UIStatusBarStyleDefault];
         [self presentViewController:nav animated:YES completion:nil];
-        
     } else {
         UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"未开启相册权限，是否去设置中开启？" message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"去设置", nil];
         [alert show];
@@ -186,8 +185,6 @@
         }];
         [self.view layoutIfNeeded];
     }
-    
-    
 }
 
 - (void)hideKeyboard{
@@ -208,8 +205,7 @@
         _inputToolbar.inputToolBarHeight = (textViewHeight + kTextViewMaginTopBottom*2) > kInputBarMaxlHeight ? kInputBarMaxlHeight : (textViewHeight + kTextViewMaginTopBottom*2);
         [_inputToolbar setNeedsUpdateConstraints];
         _maskView.marginBottom = self.currentKeyboardHeight + _inputToolbar.inputToolBarHeight;
-        [_maskView setNeedsUpdateConstraints];
-        
+        [_maskView setNeedsUpdateConstraints];  
     }
 }
 
