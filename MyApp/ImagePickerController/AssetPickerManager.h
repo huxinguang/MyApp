@@ -1,5 +1,5 @@
 //
-//  PickerImageManager.h
+//  AssetPickerManager.h
 //  MyApp
 //
 //  Created by huxinguang on 2018/9/26.
@@ -15,7 +15,7 @@
 #define iOS9Later ([UIDevice currentDevice].systemVersion.floatValue >= 9.0f)
 
 @class AlbumModel,AssetModel;
-@interface PickerImageManager : NSObject
+@interface AssetPickerManager : NSObject
 
 + (instancetype)manager;
 

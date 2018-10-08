@@ -1,5 +1,5 @@
 //
-//  PhotoPickerController.h
+//  AssetPickerController.h
 //  MyApp
 //
 //  Created by huxinguang on 2018/9/26.
@@ -20,11 +20,18 @@
 #define kTitleViewArrowSize CGSizeMake(7.0, 7.0)                                                                      //三角图片大小
 #define kTitleViewTitleFont [UIFont boldSystemFontOfSize:16]                                                          //标题字体大小
 
+
+@protocol AssetPickerControllerDelegate <NSObject>
+@optional
+
+
+@end
+
+
 @class AlbumModel;
 @class NavTitleView;
 @class AssetModel;
-@interface PhotoPickerController : RootViewController
-
+@interface AssetPickerController : RootViewController
 
 @end
 

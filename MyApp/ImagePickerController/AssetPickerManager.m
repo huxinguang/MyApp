@@ -1,25 +1,25 @@
 //
-//  PickerImageManager.m
+//  AssetPickerManager.m
 //  MyApp
 //
 //  Created by huxinguang on 2018/9/26.
 //  Copyright © 2018年 huxinguang. All rights reserved.
 //
 
-#import "PickerImageManager.h"
+#import "AssetPickerManager.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <Photos/Photos.h>
 #import "AssetModel.h"
 #import "AlbumModel.h"
 
-@interface PickerImageManager ()
+@interface AssetPickerManager ()
 @property (nonatomic, strong) ALAssetsLibrary *assetLibrary;
 @end
 
-@implementation PickerImageManager
+@implementation AssetPickerManager
 
 + (instancetype)manager {
-    static PickerImageManager *manager;
+    static AssetPickerManager *manager;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         manager = [[self alloc] init];
@@ -240,7 +240,7 @@
 
 - (void)getPostImageWithAlbumModel:(AlbumModel *)model completion:(void (^)(UIImage *))completion {
     if (iOS8Later) {
-        [[PickerImageManager manager] getPhotoWithAsset:[model.result lastObject] photoWidth:80 completion:^(UIImage *photo, NSDictionary *info) {
+        [[AssetPickerManager manager] getPhotoWithAsset:[model.result lastObject] photoWidth:80 completion:^(UIImage *photo, NSDictionary *info) {
             if (completion) completion(photo);
         }];
     } else {

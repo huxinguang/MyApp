@@ -1,20 +1,20 @@
 //
-//  PhotoPickerController.m
+//  AssetPickerController.m
 //  MyApp
 //
 //  Created by huxinguang on 2018/9/26.
 //  Copyright © 2018年 huxinguang. All rights reserved.
 //
 
-#import "PhotoPickerController.h"
+#import "AssetPickerController.h"
 #import "AssetCell.h"
 #import "AssetModel.h"
-#import "PickerImageManager.h"
+#import "AssetPickerManager.h"
 #import "CBTitleView.h"
 #import "CBBarButton.h"
 #import "AlbumCell.h"
 
-@interface PhotoPickerController ()<UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDelegate,UITableViewDataSource,UINavigationControllerDelegate, UIImagePickerControllerDelegate>
+@interface AssetPickerController ()<UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDelegate,UITableViewDataSource,UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 @property (nonatomic, strong)UICollectionView *collectionView;
 @property (nonatomic, strong)NSMutableArray<AssetModel *> *photoArr;
 @property (nonatomic, strong)NSMutableArray<AssetModel *> *selectedPhotoArr;
@@ -31,7 +31,7 @@
 
 @end
 
-@implementation PhotoPickerController
+@implementation AssetPickerController
 @synthesize photoArr = _photoArr;//同时重写setter/getter方法需要这样
 
 -(AssetModel *)placeholderModel{
@@ -76,7 +76,7 @@
     [self configMask];
     
     @weakify(self)
-    [[PickerImageManager manager] getAllAlbums:YES completion:^(NSArray<AlbumModel *> *models) {
+    [[AssetPickerManager manager] getAllAlbums:YES completion:^(NSArray<AlbumModel *> *models) {
         @strongify(self)
         if (!self) return;
         self.albumArr = [NSMutableArray arrayWithArray:models];

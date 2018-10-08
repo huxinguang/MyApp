@@ -9,7 +9,7 @@
 #import "AssetCell.h"
 #import "AssetModel.h"
 #import "UIView+ScaleAnimation.h"
-#import "PickerImageManager.h"
+#import "AssetPickerManager.h"
 
 @interface AssetCell ()
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;       // 照片
@@ -49,7 +49,7 @@
             break;
     }
     if (self.type != AssetCellTypeCamera) {
-        [[PickerImageManager manager] getPhotoWithAsset:model.asset photoWidth:self.width completion:^(UIImage *photo, NSDictionary *info) {
+        [[AssetPickerManager manager] getPhotoWithAsset:model.asset photoWidth:self.width completion:^(UIImage *photo, NSDictionary *info) {
             self.imageView.image = photo;
         }];
         self.selectPhotoButton.selected = model.isSelected;

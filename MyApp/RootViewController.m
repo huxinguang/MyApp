@@ -7,8 +7,8 @@
 //
 
 #import "RootViewController.h"
-#import "PhotoPickerController.h"
-#import "PickerImageManager.h"
+#import "AssetPickerController.h"
+#import "AssetPickerManager.h"
 
 
 @interface RootViewController ()<CBDefaultPageViewDelegate>
@@ -151,8 +151,8 @@
 
 -(void)onImgEntryBtnClick{
     [self hideKeyboard];
-    if ([[PickerImageManager manager] authorizationStatusNotDetermined] || [[PickerImageManager manager] authorizationStatusAuthorized]) {
-        PhotoPickerController *photoPickerVc = [[PhotoPickerController alloc] init];
+    if ([[AssetPickerManager manager] authorizationStatusNotDetermined] || [[AssetPickerManager manager] authorizationStatusAuthorized]) {
+        AssetPickerController *photoPickerVc = [[AssetPickerController alloc] init];
         CBNavigationController *nav = [[CBNavigationController alloc]initWithRootViewController:photoPickerVc];
         [nav setNavigationBarWithType:CBNavigationBarTypeWhiteOpaque];
         [nav setStatusBarWithStyle:UIStatusBarStyleDefault];

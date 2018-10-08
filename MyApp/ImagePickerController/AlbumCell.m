@@ -7,7 +7,7 @@
 //
 
 #import "AlbumCell.h"
-#import "PickerImageManager.h"
+#import "AssetPickerManager.h"
 
 @implementation AlbumCell
 
@@ -20,7 +20,7 @@
     _model = model;
     self.albumNameLabel.text = [NSString stringWithFormat:@"%@(%ld)",model.name,model.count];
     self.selectedCountLabel.text = model.selectedCount > 0 ? [NSString stringWithFormat:@"已选%ld",model.selectedCount] : @"";
-    [[PickerImageManager manager] getPostImageWithAlbumModel:model completion:^(UIImage *postImage) {
+    [[AssetPickerManager manager] getPostImageWithAlbumModel:model completion:^(UIImage *postImage) {
         self.imgView.image = postImage;
     }];
     if (model.isSelected) {

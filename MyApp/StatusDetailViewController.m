@@ -323,8 +323,8 @@
 //- (void)onImgEntryBtnClick{
 //    [super onImgEntryBtnClick];
 //    
-//    if ([[PickerImageManager manager] authorizationStatusNotDetermined] || [[PickerImageManager manager] authorizationStatusAuthorized]) {
-//        PhotoPickerController *photoPickerVc = [[PhotoPickerController alloc] init];
+//    if ([[AssetPickerManager manager] authorizationStatusNotDetermined] || [[AssetPickerManager manager] authorizationStatusAuthorized]) {
+//        AssetPickerController *photoPickerVc = [[AssetPickerController alloc] init];
 //        CBNavigationController *nav = [[CBNavigationController alloc]initWithRootViewController:photoPickerVc];
 //        [nav setNavigationBarWithType:CBNavigationBarTypeWhiteOpaque];
 //        [nav setStatusBarWithStyle:UIStatusBarStyleDefault];
