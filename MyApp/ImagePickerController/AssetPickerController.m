@@ -17,7 +17,7 @@
 @interface AssetPickerController ()<UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDelegate,UITableViewDataSource,UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 @property (nonatomic, strong)UICollectionView *collectionView;
 @property (nonatomic, strong)NSMutableArray<AssetModel *> *assetArr;
-@property (nonatomic, strong)NSMutableArray<AssetModel *> *selectedassetArr;
+@property (nonatomic, strong)NSMutableArray<AssetModel *> *selectedAssetArr;
 @property (nonatomic, strong)UIButton *bottomConfirmBtn;
 @property (nonatomic, strong)UITableView *albumTableView;
 @property (nonatomic, strong)UIView *containerView;
@@ -65,9 +65,9 @@
     }
 }
 
-- (NSMutableArray<AssetModel *> *)selectedassetArr{
-    if (_selectedassetArr == nil) _selectedassetArr = [NSMutableArray array];
-    return _selectedassetArr;
+- (NSMutableArray<AssetModel *> *)selectedAssetArr{
+    if (_selectedAssetArr == nil) _selectedAssetArr = [NSMutableArray array];
+    return _selectedAssetArr;
 }
 
 
@@ -142,11 +142,15 @@
 }
 
 - (void)onLeftBarButtonClick{
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:YES completion:^{
+        if (self.delegate && [self.delegate respondsToSelector:@selector(assetPickerControllerDidCancel:)]) {
+            [self.delegate assetPickerControllerDidCancel:self];
+        }
+    }];
 }
 
 - (void)onRightBarButtonClick{
-    [self.selectedassetArr removeAllObjects];
+    [self.selectedAssetArr removeAllObjects];
     NSArray *indexPaths = [self.albumSelectedIndexpaths copy];
     [self.albumSelectedIndexpaths removeAllObjects];
     for (AlbumModel *album in self.albumArr) {
@@ -209,8 +213,9 @@
 }
 
 - (void)onConfirmBtnClick {
+    [self dismissViewControllerAnimated:YES completion:nil];
     if (self.delegate && [self.delegate respondsToSelector:@selector(assetPickerController:didFinishPickingAssets:)]) {
-//        [self.delegate assetPickerController:self didFinishPickingAssets:<#(NSArray<AssetModel *> *)#>]
+        [self.delegate assetPickerController:self didFinishPickingAssets:self.selectedAssetArr];
     }
 }
 
@@ -263,17 +268,17 @@
             // 1. 取消选择
             weakCell.selectPhotoButton.selected = NO;
             model.isSelected = NO;
-            [self.selectedassetArr removeObject:model];
+            [self.selectedAssetArr removeObject:model];
             weakCell.numberLabel.text = @"";
             self.albumArr[self.currentAlbumIndexpath.row].selectedCount --;
         } else {
             // 2. 选择照片,检查是否超过了最大个数的限制
-            if (self.selectedassetArr.count < self.maxAssetsCount) {
+            if (self.selectedAssetArr.count < self.maxAssetsCount) {
                 weakCell.selectPhotoButton.selected = YES;
                 model.isSelected = YES;
-                [self.selectedassetArr addObject:model];
+                [self.selectedAssetArr addObject:model];
                 self.albumArr[self.currentAlbumIndexpath.row].selectedCount ++;
-                weakCell.numberLabel.text = [NSString stringWithFormat:@"%ld",self.selectedassetArr.count];
+                weakCell.numberLabel.text = [NSString stringWithFormat:@"%ld",self.selectedAssetArr.count];
             } else {
                 MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
                 hud.mode = MBProgressHUDModeText;
@@ -281,13 +286,13 @@
                 [hud hideAnimated:YES afterDelay:1.5f];
             }
         }
-        for (int i=0; i<self.selectedassetArr.count; i++) {
-            AssetModel *selectedModel = self.selectedassetArr[i];
+        for (int i=0; i<self.selectedAssetArr.count; i++) {
+            AssetModel *selectedModel = self.selectedAssetArr[i];
             selectedModel.number = i+1;
         }
        
         [self.albumSelectedIndexpaths removeAllObjects];
-        for (AssetModel *am in self.selectedassetArr) {
+        for (AssetModel *am in self.selectedAssetArr) {
             if ([self.albumArr[self.currentAlbumIndexpath.row].assetArray containsObject:am]) {
                 NSUInteger indexAtCurrentAlbum = [self.albumArr[self.currentAlbumIndexpath.row].assetArray indexOfObject:am];
                 [self.albumSelectedIndexpaths addObject:[NSIndexPath indexPathForItem:indexAtCurrentAlbum inSection:0]];
@@ -349,7 +354,7 @@
 
 - (void)refreshNavRightBtn{
     CBBarButton *btn = (CBBarButton *)self.navigationItem.rightBarButtonItem.customView;
-    if (self.selectedassetArr.count > 0) {
+    if (self.selectedAssetArr.count > 0) {
         btn.enabled = YES;
     }else{
         btn.enabled = NO;
@@ -357,12 +362,12 @@
 }
 
 - (void)refreshBottomConfirmBtn {
-    if (self.selectedassetArr.count > 0) {
+    if (self.selectedAssetArr.count > 0) {
         self.bottomConfirmBtn.enabled = YES;
     }else{
         self.bottomConfirmBtn.enabled = NO;
     }
-    [self.bottomConfirmBtn setTitle:[NSString stringWithFormat:@"确定(%ld/%ld)",self.selectedassetArr.count,self.maxAssetsCount] forState:UIControlStateNormal];
+    [self.bottomConfirmBtn setTitle:[NSString stringWithFormat:@"确定(%ld/%ld)",self.selectedAssetArr.count,self.maxAssetsCount] forState:UIControlStateNormal];
 }
 
 - (void)openCamera{
@@ -395,8 +400,7 @@
 
 @implementation NavTitleView
 
-- (instancetype)init
-{
+- (instancetype)init{
     self = [super init];
     if (self) {
         self.titleBtn = [[UIButton alloc]init];

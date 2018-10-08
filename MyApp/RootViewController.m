@@ -213,11 +213,27 @@
 #pragma mark - AssetPickerControllerDelegate
 
 -(void)assetPickerController:(AssetPickerController *)picker didFinishPickingAssets:(NSArray<AssetModel *> *)assets{
+    if (_inputToolbar) {
+        if (_inputToolbar.assetsContainer.assets.count > 0) {
+            if (assets.count == 0) {
+                _inputToolbar.inputToolBarHeight -= kAssetsContainerHeight;
+                _inputToolbar.containerHeight = 0;
+                [_inputToolbar setNeedsUpdateConstraints];
+            }
+        }else{
+            if (assets.count > 0) {
+                _inputToolbar.inputToolBarHeight += kAssetsContainerHeight;
+                _inputToolbar.containerHeight = kAssetsContainerHeight;
+                [_inputToolbar setNeedsUpdateConstraints];
+            }
+        }
+        _inputToolbar.assetsContainer.assets = assets;
+    }
     
 }
 
 -(void)assetPickerControllerDidCancel:(AssetPickerController *)picker{
-    
+    NSLog(@"点击了取消");
 }
 
 

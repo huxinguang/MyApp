@@ -26,7 +26,7 @@
 @property (nonatomic, strong)CBDefaultPageView *defaultPageView;
 @property (nonatomic, assign)CBDefaultPageType defaultPageType;
 @property (nonatomic, strong)InputToolBar *inputToolbar; //多个控制器都有InputToolbar,所以这里将其抽到父类中来
-@property (nonatomic, strong)WindowMaskView *maskView;  //用于点击空白处收起键盘
+@property (nonatomic, strong)WindowMaskView *maskView;   //用于点击空白处收起键盘
 @property (nonatomic, assign)CGFloat currentKeyboardHeight;
 
 

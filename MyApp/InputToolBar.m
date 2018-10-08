@@ -9,28 +9,45 @@
 #import "InputToolBar.h"
 
 @interface InputToolBar()
-
+@property (nonatomic, strong)UIView *topLine;
 @end
 
 @implementation InputToolBar
-- (instancetype)init
-{
+
+- (instancetype)init{
     self = [super init];
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
         self.inputToolBarHeight = kInputBarOriginalHeight;
+        self.containerHeight = 0;
         [self buildSubViews];
     }
     return self;
 }
 
+-(SelectedAssetsContainer *)assetsContainer{
+    if (_assetsContainer == nil) {
+        _assetsContainer = [[SelectedAssetsContainer alloc]init];
+        _assetsContainer.backgroundColor = [UIColor redColor];
+        [self addSubview:_assetsContainer];
+        @weakify(self)
+        [_assetsContainer mas_makeConstraints:^(MASConstraintMaker *make) {
+            @strongify(self)
+            make.top.equalTo(self.mas_top);
+            make.left.equalTo(self.mas_left);
+            make.right.equalTo(self.mas_right);
+            make.height.mas_equalTo(kAssetsContainerHeight);
+        }];
+    }
+    return _assetsContainer;
+}
+
 - (void)buildSubViews{
-    
-    UIView *topLine = [UIView new];
-    topLine.backgroundColor = [UIColor colorWithRGB:0xE0E0E0];
-    [self addSubview:topLine];
+    self.topLine = [UIView new];
+    self.topLine.backgroundColor = [UIColor colorWithRGB:0xE0E0E0];
+    [self addSubview:self.topLine];
     @weakify(self)
-    [topLine mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.topLine mas_makeConstraints:^(MASConstraintMaker *make) {
         @strongify(self)
         if (!self) return;
         make.top.equalTo(self.mas_top);
@@ -72,7 +89,6 @@
         make.right.equalTo(self.imgEntryBtn.mas_left).with.offset(-kVoiceImageEntryIconMaginLeftRight);
     }];
     
-    
 }
 
 // tell UIKit that you are using AutoLayout
@@ -87,12 +103,21 @@
         if (!self) return;
         make.height.mas_equalTo(self.inputToolBarHeight);
     }];
+    
+    [self.topLine mas_updateConstraints:^(MASConstraintMaker *make) {
+        @strongify(self)
+        if (!self) return;
+        make.top.equalTo(self.mas_top).with.offset(self.containerHeight);
+    }];
+    
+    [self.inputView mas_updateConstraints:^(MASConstraintMaker *make) {
+        @strongify(self)
+        if (!self) return;
+        make.top.equalTo(self.mas_top).with.offset(self.containerHeight + kTextViewMaginTopBottom);
+    }];
+    
     [super updateConstraints];
 }
-
-
-
-
 
 /*
 // Only override drawRect: if you perform custom drawing.
@@ -103,3 +128,15 @@
 */
 
 @end
+
+@implementation SelectedAssetsContainer
+
+-(NSArray<AssetModel *> *)assets{
+    if (_assets == nil) _assets = @[];
+    return _assets;
+}
+
+
+@end
+
+
