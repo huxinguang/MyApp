@@ -11,7 +11,7 @@
 #import "AssetPickerManager.h"
 
 
-@interface RootViewController ()<CBDefaultPageViewDelegate>
+@interface RootViewController ()<CBDefaultPageViewDelegate,AssetPickerControllerDelegate>
 
 @end
 
@@ -152,7 +152,7 @@
 -(void)onImgEntryBtnClick{
     [self hideKeyboard];
     if ([[AssetPickerManager manager] authorizationStatusNotDetermined] || [[AssetPickerManager manager] authorizationStatusAuthorized]) {
-        AssetPickerController *photoPickerVc = [[AssetPickerController alloc] init];
+        AssetPickerController *photoPickerVc = [[AssetPickerController alloc] initWithMaxAssetsCount:3 delegate:self];
         CBNavigationController *nav = [[CBNavigationController alloc]initWithRootViewController:photoPickerVc];
         [nav setNavigationBarWithType:CBNavigationBarTypeWhiteOpaque];
         [nav setStatusBarWithStyle:UIStatusBarStyleDefault];
@@ -209,6 +209,17 @@
         [_maskView setNeedsUpdateConstraints];  
     }
 }
+
+#pragma mark - AssetPickerControllerDelegate
+
+-(void)assetPickerController:(AssetPickerController *)picker didFinishPickingAssets:(NSArray<AssetModel *> *)assets{
+    
+}
+
+-(void)assetPickerControllerDidCancel:(AssetPickerController *)picker{
+    
+}
+
 
 
 - (void)didReceiveMemoryWarning {

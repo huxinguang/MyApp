@@ -11,7 +11,6 @@
 #import "ReplyDetailViewController.h"
 #import "StatusCell.h"
 #import "YYPhotoGroupView.h"
-
 #import "MyApp-Swift.h"//OC 引用Swift类需要导入 "工程名-Swift.h"
 
 @interface StatusDetailViewController ()<UITableViewDelegate,UITableViewDataSource,CommentCellDelegate,UIAlertViewDelegate>
@@ -320,22 +319,7 @@
     [v presentFromImageView:fromView toContainer:self.navigationController.view animated:YES completion:nil];
 }
 
-//- (void)onImgEntryBtnClick{
-//    [super onImgEntryBtnClick];
-//    
-//    if ([[AssetPickerManager manager] authorizationStatusNotDetermined] || [[AssetPickerManager manager] authorizationStatusAuthorized]) {
-//        AssetPickerController *photoPickerVc = [[AssetPickerController alloc] init];
-//        CBNavigationController *nav = [[CBNavigationController alloc]initWithRootViewController:photoPickerVc];
-//        [nav setNavigationBarWithType:CBNavigationBarTypeWhiteOpaque];
-//        [nav setStatusBarWithStyle:UIStatusBarStyleDefault];
-//        [self presentViewController:nav animated:YES completion:nil];
-//        
-//    } else {
-//        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"未开启相册权限，是否去设置中开启？" message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"去设置", nil];
-//        [alert show];
-//    }
-//    
-//}
+
 
 #pragma mark - CommentCellDelegate
 

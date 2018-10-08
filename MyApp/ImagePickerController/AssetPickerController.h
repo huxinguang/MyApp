@@ -20,18 +20,26 @@
 #define kTitleViewArrowSize CGSizeMake(7.0, 7.0)                                                                      //三角图片大小
 #define kTitleViewTitleFont [UIFont boldSystemFontOfSize:16]                                                          //标题字体大小
 
+@class AlbumModel;
+@class NavTitleView;
+@class AssetModel;
+@protocol AssetPickerControllerDelegate;
+
+@interface AssetPickerController : RootViewController
+
+@property (nonatomic, weak) id<AssetPickerControllerDelegate> delegate;
+@property (nonatomic, assign) BOOL allowPickingVideo;
+@property (nonatomic, assign) NSInteger maxAssetsCount;
+
+-(instancetype)initWithMaxAssetsCount:(NSInteger)maxAssetsCount delegate:(id<AssetPickerControllerDelegate>)delegate;
+
+@end
 
 @protocol AssetPickerControllerDelegate <NSObject>
 @optional
 
-
-@end
-
-
-@class AlbumModel;
-@class NavTitleView;
-@class AssetModel;
-@interface AssetPickerController : RootViewController
+- (void)assetPickerController:(AssetPickerController *)picker didFinishPickingAssets:(NSArray<AssetModel *> *)assets;
+- (void)assetPickerControllerDidCancel:(AssetPickerController *)picker;
 
 @end
 

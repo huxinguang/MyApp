@@ -16,8 +16,8 @@
 
 @interface AssetPickerController ()<UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDelegate,UITableViewDataSource,UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 @property (nonatomic, strong)UICollectionView *collectionView;
-@property (nonatomic, strong)NSMutableArray<AssetModel *> *photoArr;
-@property (nonatomic, strong)NSMutableArray<AssetModel *> *selectedPhotoArr;
+@property (nonatomic, strong)NSMutableArray<AssetModel *> *assetArr;
+@property (nonatomic, strong)NSMutableArray<AssetModel *> *selectedassetArr;
 @property (nonatomic, strong)UIButton *bottomConfirmBtn;
 @property (nonatomic, strong)UITableView *albumTableView;
 @property (nonatomic, strong)UIView *containerView;
@@ -26,13 +26,13 @@
 @property (nonatomic, strong)NavTitleView *ntView;
 @property (nonatomic, assign)CGFloat containerViewHeight;
 @property (nonatomic, strong)NSIndexPath *currentAlbumIndexpath;
-@property (nonatomic, strong)AssetModel *placeholderModel;//相机占位model
+@property (nonatomic, strong)AssetModel *placeholderModel; //相机占位model
 @property (nonatomic, strong)NSMutableArray<NSIndexPath *> *albumSelectedIndexpaths;
 
 @end
 
 @implementation AssetPickerController
-@synthesize photoArr = _photoArr;//同时重写setter/getter方法需要这样
+@synthesize assetArr = _assetArr;//同时重写setter/getter方法需要这样
 
 -(AssetModel *)placeholderModel{
     if (_placeholderModel == nil) {
@@ -47,9 +47,9 @@
     return _albumArr;
 }
 
--(NSMutableArray<AssetModel *> *)photoArr{
-    if (_photoArr == nil) _photoArr = [NSMutableArray array];
-    return _photoArr;
+-(NSMutableArray<AssetModel *> *)assetArr{
+    if (_assetArr == nil) _assetArr = [NSMutableArray array];
+    return _assetArr;
 }
 
 - (NSMutableArray<NSIndexPath *> *)albumSelectedIndexpaths{
@@ -57,17 +57,26 @@
     return _albumSelectedIndexpaths;
 }
 
--(void)setPhotoArr:(NSMutableArray<AssetModel *> *)photoArr{
-    _photoArr = photoArr;
+-(void)setAssetArr:(NSMutableArray<AssetModel *> *)assetArr{
+    _assetArr = assetArr;
     //插入相机占位
-    if (![_photoArr containsObject:self.placeholderModel]) {
-        [_photoArr insertObject:self.placeholderModel atIndex:0];
+    if (![_assetArr containsObject:self.placeholderModel]) {
+        [_assetArr insertObject:self.placeholderModel atIndex:0];
     }
 }
 
-- (NSMutableArray<AssetModel *> *)selectedPhotoArr{
-    if (_selectedPhotoArr == nil) _selectedPhotoArr = [NSMutableArray array];
-    return _selectedPhotoArr;
+- (NSMutableArray<AssetModel *> *)selectedassetArr{
+    if (_selectedassetArr == nil) _selectedassetArr = [NSMutableArray array];
+    return _selectedassetArr;
+}
+
+
+-(instancetype)initWithMaxAssetsCount:(NSInteger)maxAssetsCount delegate:(id<AssetPickerControllerDelegate>)delegate{
+    if (self = [super init]) {
+        self.maxAssetsCount = maxAssetsCount;
+        self.delegate = delegate;
+    }
+    return self;
 }
 
 - (void)viewDidLoad {
@@ -84,12 +93,13 @@
         [self.ntView.titleBtn setTitle:self.albumArr[0].name forState:UIControlStateNormal];
         self.ntView.titleBtnWidth = [self.albumArr[0].name widthForFont:kTitleViewTitleFont] + kTitleViewTextImageDistance + kTitleViewArrowSize.width;
         self.currentAlbumIndexpath = [NSIndexPath indexPathForRow:0 inSection:0];
-        self.photoArr = self.albumArr[0].assetArray;
+        self.assetArr = self.albumArr[0].assetArray;
         [self configCollectionView];
+        [self configBottomConfirmBtn];
         [self.collectionView reloadData];
         [self configAlbumTableView];
         [self.albumTableView reloadData];
-        [self configBottomConfirmBtn];
+        
     }];
 }
 
@@ -136,7 +146,7 @@
 }
 
 - (void)onRightBarButtonClick{
-    [self.selectedPhotoArr removeAllObjects];
+    [self.selectedassetArr removeAllObjects];
     NSArray *indexPaths = [self.albumSelectedIndexpaths copy];
     [self.albumSelectedIndexpaths removeAllObjects];
     for (AlbumModel *album in self.albumArr) {
@@ -191,7 +201,7 @@
     self.bottomConfirmBtn.backgroundColor = [UIColor whiteColor];
     self.bottomConfirmBtn.titleLabel.font = [UIFont boldSystemFontOfSize:kBottomConfirmBtnTitleFontSize];
     [self.bottomConfirmBtn addTarget:self action:@selector(onConfirmBtnClick) forControlEvents:UIControlEventTouchUpInside];
-    [self.bottomConfirmBtn setTitle:@"确定(0/9)" forState:UIControlStateNormal];
+    [self.bottomConfirmBtn setTitle:[NSString stringWithFormat:@"确定(0/%ld)",self.maxAssetsCount] forState:UIControlStateNormal];
     [self.bottomConfirmBtn setTitleColor:kAppThemeColor forState:UIControlStateNormal];
     [self.bottomConfirmBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
     self.bottomConfirmBtn.enabled = NO;
@@ -199,7 +209,9 @@
 }
 
 - (void)onConfirmBtnClick {
-
+    if (self.delegate && [self.delegate respondsToSelector:@selector(assetPickerController:didFinishPickingAssets:)]) {
+//        [self.delegate assetPickerController:self didFinishPickingAssets:<#(NSArray<AssetModel *> *)#>]
+    }
 }
 
 - (void)onTitleBtnClick:(UIButton *)btn{
@@ -238,12 +250,12 @@
 #pragma mark - UICollectionViewDataSource && Delegate
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return self.photoArr.count;
+    return self.assetArr.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     AssetCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"AssetCell" forIndexPath:indexPath];
-    AssetModel *model = self.photoArr[indexPath.row];
+    AssetModel *model = self.assetArr[indexPath.row];
     cell.model = model;
     __weak typeof(cell) weakCell = cell;
     cell.didSelectPhotoBlock = ^(BOOL isSelected) {
@@ -251,31 +263,31 @@
             // 1. 取消选择
             weakCell.selectPhotoButton.selected = NO;
             model.isSelected = NO;
-            [self.selectedPhotoArr removeObject:model];
+            [self.selectedassetArr removeObject:model];
             weakCell.numberLabel.text = @"";
             self.albumArr[self.currentAlbumIndexpath.row].selectedCount --;
         } else {
             // 2. 选择照片,检查是否超过了最大个数的限制
-            if (self.selectedPhotoArr.count < 9) {
+            if (self.selectedassetArr.count < self.maxAssetsCount) {
                 weakCell.selectPhotoButton.selected = YES;
                 model.isSelected = YES;
-                [self.selectedPhotoArr addObject:model];
+                [self.selectedassetArr addObject:model];
                 self.albumArr[self.currentAlbumIndexpath.row].selectedCount ++;
-                weakCell.numberLabel.text = [NSString stringWithFormat:@"%ld",self.selectedPhotoArr.count];
+                weakCell.numberLabel.text = [NSString stringWithFormat:@"%ld",self.selectedassetArr.count];
             } else {
                 MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
                 hud.mode = MBProgressHUDModeText;
-                hud.label.text = @"最多选择9张照片";
+                hud.label.text = [NSString stringWithFormat:@"最多选择%ld张照片",self.maxAssetsCount];
                 [hud hideAnimated:YES afterDelay:1.5f];
             }
         }
-        for (int i=0; i<self.selectedPhotoArr.count; i++) {
-            AssetModel *selectedModel = self.selectedPhotoArr[i];
+        for (int i=0; i<self.selectedassetArr.count; i++) {
+            AssetModel *selectedModel = self.selectedassetArr[i];
             selectedModel.number = i+1;
         }
        
         [self.albumSelectedIndexpaths removeAllObjects];
-        for (AssetModel *am in self.selectedPhotoArr) {
+        for (AssetModel *am in self.selectedassetArr) {
             if ([self.albumArr[self.currentAlbumIndexpath.row].assetArray containsObject:am]) {
                 NSUInteger indexAtCurrentAlbum = [self.albumArr[self.currentAlbumIndexpath.row].assetArray indexOfObject:am];
                 [self.albumSelectedIndexpaths addObject:[NSIndexPath indexPathForItem:indexAtCurrentAlbum inSection:0]];
@@ -297,7 +309,7 @@
         //打开相机
         [self openCamera];
     }else{
-        AssetModel *model = self.photoArr[indexPath.row];
+        AssetModel *model = self.assetArr[indexPath.row];
     }
 }
 
@@ -324,7 +336,7 @@
     self.albumArr[indexPath.row].isSelected = YES;
     [self.ntView.titleBtn setTitle:self.albumArr[indexPath.row].name forState:UIControlStateNormal];
     self.ntView.titleBtnWidth = [self.albumArr[indexPath.row].name widthForFont:kTitleViewTitleFont] + kTitleViewTextImageDistance + kTitleViewArrowSize.width;
-    self.photoArr = self.albumArr[indexPath.row].assetArray;
+    self.assetArr = self.albumArr[indexPath.row].assetArray;
     if (indexPath != self.currentAlbumIndexpath) {
         [self.collectionView reloadData];
         [self onTitleBtnClick:self.ntView.titleBtn];
@@ -337,7 +349,7 @@
 
 - (void)refreshNavRightBtn{
     CBBarButton *btn = (CBBarButton *)self.navigationItem.rightBarButtonItem.customView;
-    if (self.selectedPhotoArr.count > 0) {
+    if (self.selectedassetArr.count > 0) {
         btn.enabled = YES;
     }else{
         btn.enabled = NO;
@@ -345,12 +357,12 @@
 }
 
 - (void)refreshBottomConfirmBtn {
-    if (self.selectedPhotoArr.count > 0) {
+    if (self.selectedassetArr.count > 0) {
         self.bottomConfirmBtn.enabled = YES;
     }else{
         self.bottomConfirmBtn.enabled = NO;
     }
-    [self.bottomConfirmBtn setTitle:[NSString stringWithFormat:@"确定(%ld/9)",self.selectedPhotoArr.count] forState:UIControlStateNormal];
+    [self.bottomConfirmBtn setTitle:[NSString stringWithFormat:@"确定(%ld/%ld)",self.selectedassetArr.count,self.maxAssetsCount] forState:UIControlStateNormal];
 }
 
 - (void)openCamera{

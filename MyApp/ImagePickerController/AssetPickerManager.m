@@ -110,7 +110,7 @@
 
 // 获得照片数组
 - (void)getAssetsFromFetchResult:(id)result allowPickingVideo:(BOOL)allowPickingVideo completion:(void (^)(NSArray<AssetModel *> *))completion {
-    NSMutableArray *photoArr = [NSMutableArray array];
+    NSMutableArray *assetArr = [NSMutableArray array];
     if ([result isKindOfClass:[PHFetchResult class]]) {
         for (PHAsset *asset in result) {
             AssetModelMediaType type = AssetModelMediaTypePhoto;
@@ -121,19 +121,19 @@
             }
             NSString *timeLength = type == AssetModelMediaTypeVideo ? [NSString stringWithFormat:@"%0.0f",asset.duration] : @"";
             timeLength = [self getNewTimeFromDurationSecond:timeLength.integerValue];
-            [photoArr addObject:[AssetModel modelWithAsset:asset type:type timeLength:timeLength]];
+            [assetArr addObject:[AssetModel modelWithAsset:asset type:type timeLength:timeLength]];
         }
-        if (completion) completion(photoArr);
+        if (completion) completion(assetArr);
     } else if ([result isKindOfClass:[ALAssetsGroup class]]) {
         ALAssetsGroup *gruop = (ALAssetsGroup *)result;
         if (!allowPickingVideo) [gruop setAssetsFilter:[ALAssetsFilter allPhotos]];
         [gruop enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
             if (result == nil) {
-                if (completion) completion(photoArr);
+                if (completion) completion(assetArr);
             }
             AssetModelMediaType type = AssetModelMediaTypePhoto;
             if (!allowPickingVideo){
-                [photoArr addObject:[AssetModel modelWithAsset:result type:type]];
+                [assetArr addObject:[AssetModel modelWithAsset:result type:type]];
                 return;
             }
             /// Allow picking video
@@ -142,9 +142,9 @@
                 NSTimeInterval duration = [[result valueForProperty:ALAssetPropertyDuration] integerValue];
                 NSString *timeLength = [NSString stringWithFormat:@"%0.0f",duration];
                 timeLength = [self getNewTimeFromDurationSecond:timeLength.integerValue];
-                [photoArr addObject:[AssetModel modelWithAsset:result type:type timeLength:timeLength]];
+                [assetArr addObject:[AssetModel modelWithAsset:result type:type timeLength:timeLength]];
             } else {
-                [photoArr addObject:[AssetModel modelWithAsset:result type:type]];
+                [assetArr addObject:[AssetModel modelWithAsset:result type:type]];
             }
         }];
     }
@@ -281,7 +281,7 @@
         model.count = [gruop numberOfAssets];
     }
     
-    NSMutableArray *photoArr = [NSMutableArray array];
+    NSMutableArray *assetArr = [NSMutableArray array];
     if ([result isKindOfClass:[PHFetchResult class]]) {
         for (PHAsset *asset in result) {
             AssetModelMediaType type = AssetModelMediaTypePhoto;
@@ -292,7 +292,7 @@
             }
             NSString *timeLength = type == AssetModelMediaTypeVideo ? [NSString stringWithFormat:@"%0.0f",asset.duration] : @"";
             timeLength = [self getNewTimeFromDurationSecond:timeLength.integerValue];
-            [photoArr addObject:[AssetModel modelWithAsset:asset type:type timeLength:timeLength]];
+            [assetArr addObject:[AssetModel modelWithAsset:asset type:type timeLength:timeLength]];
         }
     } else if ([result isKindOfClass:[ALAssetsGroup class]]) {
         ALAssetsGroup *gruop = (ALAssetsGroup *)result;
@@ -300,7 +300,7 @@
         [gruop enumerateAssetsUsingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
             AssetModelMediaType type = AssetModelMediaTypePhoto;
             if (!allowPickingVideo){
-                [photoArr addObject:[AssetModel modelWithAsset:result type:type]];
+                [assetArr addObject:[AssetModel modelWithAsset:result type:type]];
                 return;
             }
             /// Allow picking video
@@ -309,14 +309,14 @@
                 NSTimeInterval duration = [[result valueForProperty:ALAssetPropertyDuration] integerValue];
                 NSString *timeLength = [NSString stringWithFormat:@"%0.0f",duration];
                 timeLength = [self getNewTimeFromDurationSecond:timeLength.integerValue];
-                [photoArr addObject:[AssetModel modelWithAsset:result type:type timeLength:timeLength]];
+                [assetArr addObject:[AssetModel modelWithAsset:result type:type timeLength:timeLength]];
             } else {
-                [photoArr addObject:[AssetModel modelWithAsset:result type:type]];
+                [assetArr addObject:[AssetModel modelWithAsset:result type:type]];
             }
         }];
     }
     
-    model.assetArray = photoArr;
+    model.assetArray = assetArr;
     return model;
 }
 
