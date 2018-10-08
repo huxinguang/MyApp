@@ -41,7 +41,7 @@
                     <view alpha="0.80000000000000004" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="a4Q-ox-UyB" userLabel="VideoView">
                         <rect key="frame" x="0.0" y="63" width="80" height="17"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="VideoSendIcon" translatesAutoresizingMaskIntoConstraints="NO" id="N0z-qh-hcG">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="picker_video" translatesAutoresizingMaskIntoConstraints="NO" id="N0z-qh-hcG">
                                 <rect key="frame" x="8" y="0.0" width="17" height="17"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="17" id="1p5-vb-QAu"/>
@@ -104,7 +104,7 @@
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="VideoSendIcon" width="27" height="27"/>
         <image name="picker_unselected" width="16" height="16"/>
+        <image name="picker_video" width="16" height="16"/>
     </resources>
 </document>

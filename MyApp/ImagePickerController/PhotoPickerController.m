@@ -43,23 +43,17 @@
 }
 
 -(NSMutableArray<AlbumModel *> *)albumArr{
-    if (_albumArr == nil) {
-        _albumArr = [NSMutableArray array];
-    }
+    if (_albumArr == nil) _albumArr = [NSMutableArray array];
     return _albumArr;
 }
 
 -(NSMutableArray<AssetModel *> *)photoArr{
-    if (_photoArr == nil) {
-        _photoArr = [NSMutableArray array];
-    }
+    if (_photoArr == nil) _photoArr = [NSMutableArray array];
     return _photoArr;
 }
 
 - (NSMutableArray<NSIndexPath *> *)albumSelectedIndexpaths{
-    if (_albumSelectedIndexpaths == nil) {
-        _albumSelectedIndexpaths = [NSMutableArray array];
-    }
+    if (_albumSelectedIndexpaths == nil) _albumSelectedIndexpaths = [NSMutableArray array];
     return _albumSelectedIndexpaths;
 }
 
@@ -72,9 +66,7 @@
 }
 
 - (NSMutableArray<AssetModel *> *)selectedPhotoArr{
-    if (_selectedPhotoArr == nil){
-        _selectedPhotoArr = [NSMutableArray array];
-    }
+    if (_selectedPhotoArr == nil) _selectedPhotoArr = [NSMutableArray array];
     return _selectedPhotoArr;
 }
 
