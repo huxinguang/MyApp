@@ -70,6 +70,9 @@
     return _selectedAssetArr;
 }
 
+-(void)dealloc{
+    NSLog(@"++++");
+}
 
 -(instancetype)initWithMaxAssetsCount:(NSInteger)maxAssetsCount delegate:(id<AssetPickerControllerDelegate>)delegate{
     if (self = [super init]) {
@@ -107,6 +110,7 @@
     self.mask = [UIControl new];
     self.mask.frame = CGRectMake(0, 0, self.view.width, self.view.height);
     self.mask.backgroundColor = [UIColor clearColor];
+    self.mask.userInteractionEnabled = NO;
     [self.view addSubview:self.mask];
     [self.mask addTarget:self action:@selector(onClickMask) forControlEvents:UIControlEventTouchUpInside];
 }
@@ -213,16 +217,21 @@
 }
 
 - (void)onConfirmBtnClick {
-    [self dismissViewControllerAnimated:YES completion:nil];
-    if (self.delegate && [self.delegate respondsToSelector:@selector(assetPickerController:didFinishPickingAssets:)]) {
-        [self.delegate assetPickerController:self didFinishPickingAssets:self.selectedAssetArr];
-    }
+    [self dismissViewControllerAnimated:YES completion:^{
+        if (self.delegate && [self.delegate respondsToSelector:@selector(assetPickerController:didFinishPickingAssets:)]) {
+            [self.delegate assetPickerController:self didFinishPickingAssets:[self.selectedAssetArr copy]];
+        }
+    }];
+    
 }
 
 - (void)onTitleBtnClick:(UIButton *)btn{
     btn.selected = !btn.selected;
     if (btn.selected) {
         [self.view insertSubview:self.mask belowSubview:self.containerView];
+        self.mask.userInteractionEnabled = YES;
+    }else{
+        self.mask.userInteractionEnabled = NO;
     }
     [self.albumTableView reloadData];
     [self.albumTableView scrollToRowAtIndexPath:self.currentAlbumIndexpath atScrollPosition:UITableViewScrollPositionTop animated:NO];
@@ -263,7 +272,10 @@
     AssetModel *model = self.assetArr[indexPath.row];
     cell.model = model;
     __weak typeof(cell) weakCell = cell;
+    @weakify(self)
     cell.didSelectPhotoBlock = ^(BOOL isSelected) {
+        @strongify(self)
+        if (!self) return;
         if (isSelected) {
             // 1. 取消选择
             weakCell.selectPhotoButton.selected = NO;

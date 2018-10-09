@@ -11,7 +11,7 @@
 #import "AssetPickerManager.h"
 
 
-@interface RootViewController ()<CBDefaultPageViewDelegate,AssetPickerControllerDelegate>
+@interface RootViewController ()<CBDefaultPageViewDelegate,AssetPickerControllerDelegate,UIAlertViewDelegate>
 
 @end
 
@@ -151,17 +151,33 @@
 
 -(void)onImgEntryBtnClick{
     [self hideKeyboard];
-    if ([[AssetPickerManager manager] authorizationStatusNotDetermined] || [[AssetPickerManager manager] authorizationStatusAuthorized]) {
-        AssetPickerController *photoPickerVc = [[AssetPickerController alloc] initWithMaxAssetsCount:3 delegate:self];
-        CBNavigationController *nav = [[CBNavigationController alloc]initWithRootViewController:photoPickerVc];
-        [nav setNavigationBarWithType:CBNavigationBarTypeWhiteOpaque];
-        [nav setStatusBarWithStyle:UIStatusBarStyleDefault];
-        [self presentViewController:nav animated:YES completion:nil];
-    } else {
-        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"未开启相册权限，是否去设置中开启？" message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"去设置", nil];
-        [alert show];
-    }
+    @weakify(self)
+    [[AssetPickerManager manager] handleAuthorizationWithCompletion:^(AuthorizationStatus aStatus) {
+        @strongify(self)
+        if (!self) return;
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            if (aStatus == AuthorizationStatusAuthorized) {
+                [self showAssetPickerController];
+            }else{
+                [self showAlert];
+            }
+        });
+    }];
 }
+
+- (void)showAssetPickerController{
+    AssetPickerController *photoPickerVc = [[AssetPickerController alloc] initWithMaxAssetsCount:3 delegate:self];
+    CBNavigationController *nav = [[CBNavigationController alloc]initWithRootViewController:photoPickerVc];
+    [nav setNavigationBarWithType:CBNavigationBarTypeWhiteOpaque];
+    [nav setStatusBarWithStyle:UIStatusBarStyleDefault];
+    [self presentViewController:nav animated:YES completion:nil];
+}
+
+- (void)showAlert{
+    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"未开启相册权限，是否去设置中开启？" message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"去设置", nil];
+    [alert show];
+}
+
 
 - (void)refreshKeyboardStatusWithRect:(CGRect)rect duration:(double)duration hide:(BOOL)hide{
     if (self == self.currentVC) {
@@ -207,6 +223,18 @@
         [_inputToolbar setNeedsUpdateConstraints];
         _maskView.marginBottom = self.currentKeyboardHeight + _inputToolbar.inputToolBarHeight;
         [_maskView setNeedsUpdateConstraints];  
+    }
+}
+#pragma mark - UIAlertViewDelegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (buttonIndex == 0) {
+        //取消
+    }else{
+        //去设置
+        NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+        if ([[UIApplication sharedApplication] canOpenURL:url]) {
+            [[UIApplication sharedApplication] openURL:url];
+        }
     }
 }
 

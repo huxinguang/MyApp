@@ -9,15 +9,27 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
+#import <AssetsLibrary/AssetsLibrary.h>
+#import <Photos/Photos.h>
 
 #define iOS7Later ([UIDevice currentDevice].systemVersion.floatValue >= 7.0f)
 #define iOS8Later ([UIDevice currentDevice].systemVersion.floatValue >= 8.0f)
 #define iOS9Later ([UIDevice currentDevice].systemVersion.floatValue >= 9.0f)
 
+typedef NS_ENUM(NSUInteger,AuthorizationStatus) {
+    AuthorizationStatusNotDetermined = 0,
+    AuthorizationStatusRestricted,
+    AuthorizationStatusDenied,
+    AuthorizationStatusAuthorized
+};
+
 @class AlbumModel,AssetModel;
 @interface AssetPickerManager : NSObject
 
 + (instancetype)manager;
+
+
+- (void)handleAuthorizationWithCompletion:(void (^)(AuthorizationStatus aStatus))completion;
 
 - (BOOL)authorizationStatusNotDetermined;
 

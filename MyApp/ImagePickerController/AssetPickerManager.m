@@ -32,6 +32,54 @@
     return _assetLibrary;
 }
 
+- (void)handleAuthorizationWithCompletion:(void (^)(AuthorizationStatus aStatus))completion{
+    if (iOS8Later) {
+        [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
+            switch (status) {
+                case PHAuthorizationStatusNotDetermined:{
+                    completion(AuthorizationStatusNotDetermined);
+                }
+                    break;
+                case PHAuthorizationStatusRestricted:{
+                    completion(AuthorizationStatusRestricted);
+                }
+                    break;
+                case PHAuthorizationStatusDenied:{
+                    completion(AuthorizationStatusDenied);
+                }
+                    break;
+                case PHAuthorizationStatusAuthorized:{
+                    completion(AuthorizationStatusAuthorized);
+                }
+                    break;
+                default:
+                    break;
+            }
+        }];
+    }else{
+        switch ([ALAssetsLibrary authorizationStatus]) {
+            case ALAuthorizationStatusNotDetermined:{
+                completion(AuthorizationStatusNotDetermined);
+            }
+                break;
+            case ALAuthorizationStatusRestricted:{
+                completion(AuthorizationStatusRestricted);
+            }
+                break;
+            case ALAuthorizationStatusDenied:{
+                completion(AuthorizationStatusDenied);
+            }
+                break;
+            case ALAuthorizationStatusAuthorized:{
+                completion(AuthorizationStatusAuthorized);
+            }
+                break;
+            default:
+                break;
+        }
+    }
+}
+
 - (BOOL)authorizationStatusNotDetermined{
     if (iOS8Later) {
         if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined) return YES;
@@ -58,13 +106,23 @@
     if (iOS8Later) {
         PHFetchOptions *option = [[PHFetchOptions alloc] init];
         if (!allowPickingVideo) option.predicate = [NSPredicate predicateWithFormat:@"mediaType == %ld", PHAssetMediaTypeImage];
-        option.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:YES]];
+        option.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]];
         
-        PHAssetCollectionSubtype smartAlbumSubtype = PHAssetCollectionSubtypeSmartAlbumUserLibrary | PHAssetCollectionSubtypeSmartAlbumRecentlyAdded | PHAssetCollectionSubtypeSmartAlbumVideos;
-        // For iOS 9, We need to show ScreenShots Album（屏幕快照） && SelfPortraits Album
-        if (iOS9Later) {
-            smartAlbumSubtype = PHAssetCollectionSubtypeSmartAlbumUserLibrary | PHAssetCollectionSubtypeSmartAlbumRecentlyAdded | PHAssetCollectionSubtypeSmartAlbumScreenshots | PHAssetCollectionSubtypeSmartAlbumSelfPortraits | PHAssetCollectionSubtypeSmartAlbumVideos;
+        PHAssetCollectionSubtype smartAlbumSubtype = PHAssetCollectionSubtypeSmartAlbumGeneric | PHAssetCollectionSubtypeSmartAlbumPanoramas | PHAssetCollectionSubtypeSmartAlbumVideos | PHAssetCollectionSubtypeSmartAlbumFavorites | PHAssetCollectionSubtypeSmartAlbumTimelapses | PHAssetCollectionSubtypeSmartAlbumAllHidden | PHAssetCollectionSubtypeSmartAlbumRecentlyAdded | PHAssetCollectionSubtypeSmartAlbumBursts | PHAssetCollectionSubtypeSmartAlbumSlomoVideos |PHAssetCollectionSubtypeSmartAlbumUserLibrary;
+        if (@available(iOS 9.0, *)) {
+            smartAlbumSubtype = PHAssetCollectionSubtypeSmartAlbumGeneric | PHAssetCollectionSubtypeSmartAlbumPanoramas | PHAssetCollectionSubtypeSmartAlbumVideos | PHAssetCollectionSubtypeSmartAlbumFavorites | PHAssetCollectionSubtypeSmartAlbumTimelapses | PHAssetCollectionSubtypeSmartAlbumAllHidden | PHAssetCollectionSubtypeSmartAlbumRecentlyAdded | PHAssetCollectionSubtypeSmartAlbumBursts | PHAssetCollectionSubtypeSmartAlbumSlomoVideos |PHAssetCollectionSubtypeSmartAlbumUserLibrary | PHAssetCollectionSubtypeSmartAlbumSelfPortraits | PHAssetCollectionSubtypeSmartAlbumScreenshots;
         }
+        if (@available(iOS 10.2, *)) {
+            smartAlbumSubtype = PHAssetCollectionSubtypeSmartAlbumGeneric | PHAssetCollectionSubtypeSmartAlbumPanoramas | PHAssetCollectionSubtypeSmartAlbumVideos | PHAssetCollectionSubtypeSmartAlbumFavorites | PHAssetCollectionSubtypeSmartAlbumTimelapses | PHAssetCollectionSubtypeSmartAlbumAllHidden | PHAssetCollectionSubtypeSmartAlbumRecentlyAdded | PHAssetCollectionSubtypeSmartAlbumBursts | PHAssetCollectionSubtypeSmartAlbumSlomoVideos |PHAssetCollectionSubtypeSmartAlbumUserLibrary | PHAssetCollectionSubtypeSmartAlbumSelfPortraits | PHAssetCollectionSubtypeSmartAlbumScreenshots | PHAssetCollectionSubtypeSmartAlbumDepthEffect;
+        }
+        
+        if (@available(iOS 10.3, *)) {
+            smartAlbumSubtype = PHAssetCollectionSubtypeSmartAlbumGeneric | PHAssetCollectionSubtypeSmartAlbumPanoramas | PHAssetCollectionSubtypeSmartAlbumVideos | PHAssetCollectionSubtypeSmartAlbumFavorites | PHAssetCollectionSubtypeSmartAlbumTimelapses | PHAssetCollectionSubtypeSmartAlbumAllHidden | PHAssetCollectionSubtypeSmartAlbumRecentlyAdded | PHAssetCollectionSubtypeSmartAlbumBursts | PHAssetCollectionSubtypeSmartAlbumSlomoVideos |PHAssetCollectionSubtypeSmartAlbumUserLibrary | PHAssetCollectionSubtypeSmartAlbumSelfPortraits | PHAssetCollectionSubtypeSmartAlbumScreenshots | PHAssetCollectionSubtypeSmartAlbumDepthEffect | PHAssetCollectionSubtypeSmartAlbumLivePhotos;
+        }
+        if (@available(iOS 11.0, *)) {
+            smartAlbumSubtype = PHAssetCollectionSubtypeSmartAlbumGeneric | PHAssetCollectionSubtypeSmartAlbumPanoramas | PHAssetCollectionSubtypeSmartAlbumVideos | PHAssetCollectionSubtypeSmartAlbumFavorites | PHAssetCollectionSubtypeSmartAlbumTimelapses | PHAssetCollectionSubtypeSmartAlbumAllHidden | PHAssetCollectionSubtypeSmartAlbumRecentlyAdded | PHAssetCollectionSubtypeSmartAlbumBursts | PHAssetCollectionSubtypeSmartAlbumSlomoVideos |PHAssetCollectionSubtypeSmartAlbumUserLibrary | PHAssetCollectionSubtypeSmartAlbumSelfPortraits | PHAssetCollectionSubtypeSmartAlbumScreenshots | PHAssetCollectionSubtypeSmartAlbumDepthEffect | PHAssetCollectionSubtypeSmartAlbumLivePhotos | PHAssetCollectionSubtypeSmartAlbumAnimated | PHAssetCollectionSubtypeSmartAlbumLongExposures;
+        }
+        
         PHFetchResult *smartAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:smartAlbumSubtype options:nil];
         for (PHAssetCollection *collection in smartAlbums) {
             PHFetchResult *fetchResult = [PHAsset fetchAssetsInAssetCollection:collection options:option];
@@ -323,12 +381,15 @@
 - (NSString *)getNewAlbumName:(NSString *)name {
     if (iOS8Later) {
         NSString *newName;
-        if ([name containsString:@"Roll"])         newName = @"相机胶卷";
-        else if ([name containsString:@"Stream"])  newName = @"我的照片流";
-        else if ([name containsString:@"Added"])   newName = @"最近添加";
-        else if ([name containsString:@"Selfies"]) newName = @"自拍";
-        else if ([name containsString:@"shots"])   newName = @"截屏";
-        else if ([name containsString:@"Videos"])  newName = @"视频";
+        if ([name isEqualToString:@"Camera Roll"]) newName = @"相机胶卷";
+        else if ([name isEqualToString:@"Favorites"]) newName = @"个人收藏";
+        else if ([name isEqualToString:@"Videos"]) newName = @"视频";
+        else if ([name isEqualToString:@"Selfies"]) newName = @"自拍";
+        else if ([name isEqualToString:@"Live Photos"]) newName = @"实况照片";
+        else if ([name isEqualToString:@"Panoramas"]) newName = @"全景照片";
+        else if ([name isEqualToString:@"Screenshots"]) newName = @"屏幕快照";
+        else if ([name isEqualToString:@"Animated"]) newName = @"动图";
+        else if ([name isEqualToString:@"Recently Added"]) newName = @"最近添加";
         else newName = name;
         return newName;
     } else {
