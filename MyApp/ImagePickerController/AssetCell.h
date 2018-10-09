@@ -28,10 +28,3 @@ typedef enum : NSUInteger {
 @end
 
 
-@class AlbumModel;
-
-@interface TZAlbumCell : UITableViewCell
-
-@property (nonatomic, strong) AlbumModel *model;
-
-@end
