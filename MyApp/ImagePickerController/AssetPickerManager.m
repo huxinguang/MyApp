@@ -80,15 +80,6 @@
     }
 }
 
-- (BOOL)authorizationStatusNotDetermined{
-    if (iOS8Later) {
-        if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined) return YES;
-    } else {
-        if ([ALAssetsLibrary authorizationStatus] == ALAuthorizationStatusNotDetermined) return YES;
-    }
-    return NO;
-}
-
 // 如果得到了授权返回YES
 - (BOOL)authorizationStatusAuthorized {
     if (iOS8Later) {

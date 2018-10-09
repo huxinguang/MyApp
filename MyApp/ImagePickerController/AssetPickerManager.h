@@ -31,8 +31,6 @@ typedef NS_ENUM(NSUInteger,AuthorizationStatus) {
 
 - (void)handleAuthorizationWithCompletion:(void (^)(AuthorizationStatus aStatus))completion;
 
-- (BOOL)authorizationStatusNotDetermined;
-
 /// Return YES if Authorized 返回YES如果得到了授权
 - (BOOL)authorizationStatusAuthorized;
 
