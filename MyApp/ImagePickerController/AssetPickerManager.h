@@ -12,10 +12,6 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <Photos/Photos.h>
 
-#define iOS7Later ([UIDevice currentDevice].systemVersion.floatValue >= 7.0f)
-#define iOS8Later ([UIDevice currentDevice].systemVersion.floatValue >= 8.0f)
-#define iOS9Later ([UIDevice currentDevice].systemVersion.floatValue >= 9.0f)
-
 typedef NS_ENUM(NSUInteger,AuthorizationStatus) {
     AuthorizationStatusNotDetermined = 0,
     AuthorizationStatusRestricted,

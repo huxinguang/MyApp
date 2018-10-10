@@ -386,7 +386,7 @@
     UIImagePickerController *picker = [[UIImagePickerController alloc] init];
     picker.sourceType = UIImagePickerControllerSourceTypeCamera;
     picker.delegate = self;
-    if (iOS7Later) {
+    if (kiOS7Later) {
         picker.navigationBar.barTintColor = self.navigationController.navigationBar.barTintColor;
     }
     // 设置导航默认标题的颜色及字体大小
