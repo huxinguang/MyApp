@@ -18,9 +18,9 @@
 
 - (void)setModel:(AlbumModel *)model{
     _model = model;
-    self.albumNameLabel.text = [NSString stringWithFormat:@"%@(%ld)",model.name,model.count];
+    self.albumNameLabel.text = [NSString stringWithFormat:@"%@(%ld)",model.name,model.result.count];
     self.selectedCountLabel.text = model.selectedCount > 0 ? [NSString stringWithFormat:@"已选%ld",model.selectedCount] : @"";
-    if (model.count > 0) {
+    if (model.result.count > 0) {
         [[AssetPickerManager manager] getPostImageWithAlbumModel:model completion:^(UIImage *postImage) {
             self.imgView.image = postImage;
         }];

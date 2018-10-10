@@ -166,7 +166,10 @@
 }
 
 - (void)showAssetPickerController{
-    AssetPickerController *photoPickerVc = [[AssetPickerController alloc] initWithMaxAssetsCount:3 delegate:self];
+    AssetPickerOptions *options = [[AssetPickerOptions alloc]init];
+    options.maxAssetsCount = 9;
+    options.videoPickable = NO;
+    AssetPickerController *photoPickerVc = [[AssetPickerController alloc] initWithOptions:options delegate:self];
     CBNavigationController *nav = [[CBNavigationController alloc]initWithRootViewController:photoPickerVc];
     [nav setNavigationBarWithType:CBNavigationBarTypeWhiteOpaque];
     [nav setStatusBarWithStyle:UIStatusBarStyleDefault];

@@ -24,14 +24,14 @@
 @class NavTitleView;
 @class AssetModel;
 @protocol AssetPickerControllerDelegate;
+@class AssetPickerOptions;
 
 @interface AssetPickerController : RootViewController
 
 @property (nonatomic, weak) id<AssetPickerControllerDelegate> delegate;
-@property (nonatomic, assign) BOOL allowPickingVideo;
-@property (nonatomic, assign) NSInteger maxAssetsCount;
+@property (nonatomic, strong) AssetPickerOptions *pickerOptions;
 
--(instancetype)initWithMaxAssetsCount:(NSInteger)maxAssetsCount delegate:(id<AssetPickerControllerDelegate>)delegate;
+-(instancetype)initWithOptions:(AssetPickerOptions *)options delegate:(id<AssetPickerControllerDelegate>)delegate;
 
 @end
 
@@ -42,6 +42,12 @@
 - (void)assetPickerControllerDidCancel:(AssetPickerController *)picker;
 
 @end
+
+@interface AssetPickerOptions: NSObject
+@property (nonatomic, assign)NSInteger maxAssetsCount;  //最大可选数量
+@property (nonatomic, assign)BOOL videoPickable;        //是否可选视频
+@end
+
 
 @interface NavTitleView : UIView
 @property (nonatomic, strong)UIButton *titleBtn;

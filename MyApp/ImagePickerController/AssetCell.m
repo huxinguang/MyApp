@@ -28,32 +28,33 @@
 
 - (void)setModel:(AssetModel *)model {
     _model = model;
-    switch (model.type) {
-        case AssetModelMediaTypePhoto:
-            self.type = AssetCellTypePhoto;
-            break;
-        case AssetModelMediaTypeLivePhoto:
-            self.type = AssetCellTypeLivePhoto;
-            break;
-        case AssetModelMediaTypeVideo:
-            self.type = AssetCellTypeVideo;
-            self.timeLength.text = model.timeLength;
-            break;
-        case AssetModelMediaTypeAudio:
-            self.type = AssetCellTypeAudio;
-            break;
-        case AssetModelMediaTypeCamera:
-            self.type = AssetCellTypeCamera;
-            break;
-        default:
-            break;
+    if (model.isPlaceholder) {
+        self.type = AssetCellTypeCamera;
+    }else{
+        switch (model.asset.mediaType) {
+            case PHAssetMediaTypeUnknown:
+                self.type = AssetCellTypeUnknown;
+                break;
+            case PHAssetMediaTypeImage:
+                self.type = AssetCellTypeImage;
+                break;
+            case PHAssetMediaTypeVideo:
+                self.type = AssetCellTypeVideo;
+                break;
+            case PHAssetMediaTypeAudio:
+                self.type = AssetCellTypeAudio;
+                break;
+            default:
+                break;
+        }
     }
+
     if (self.type != AssetCellTypeCamera) {
         [[AssetPickerManager manager] getPhotoWithAsset:model.asset photoWidth:self.width completion:^(UIImage *photo, NSDictionary *info) {
             self.imageView.image = photo;
         }];
-        self.selectPhotoButton.selected = model.isSelected;
-        self.selectImageView.image = model.isSelected ? [UIImage imageNamed:@"picker_selected"] : [UIImage imageNamed:@"picker_unselected"];
+        self.selectPhotoButton.selected = model.picked;
+        self.selectImageView.image = model.picked ? [UIImage imageNamed:@"picker_selected"] : [UIImage imageNamed:@"picker_unselected"];
         self.numberLabel.text = self.selectPhotoButton.selected ? [NSString stringWithFormat:@"%d",self.model.number] : @"";
         self.numberLabel.hidden = NO;
     }else{
@@ -65,7 +66,7 @@
 
 - (void)setType:(AssetCellType)type {
     _type = type;
-    if (type == AssetCellTypePhoto || type == AssetCellTypeLivePhoto) {
+    if (type == AssetCellTypeImage || type == AssetCellTypeVideo) {
         _selectImageView.hidden = NO;
         _selectPhotoButton.hidden = NO;
         _bottomView.hidden = YES;

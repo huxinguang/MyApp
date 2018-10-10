@@ -10,19 +10,14 @@
 
 @implementation AssetModel
 
-+ (instancetype)modelWithAsset:(id)asset type:(AssetModelMediaType)type{
++ (instancetype)modelWithAsset:(PHAsset *)asset{
     AssetModel *model = [[AssetModel alloc] init];
     model.asset = asset;
-    model.isSelected = NO;
-    model.type = type;
+    model.picked = NO;
+    model.number = 0;
     return model;
 }
 
-+ (instancetype)modelWithAsset:(id)asset type:(AssetModelMediaType)type timeLength:(NSString *)timeLength {
-    AssetModel *model = [self modelWithAsset:asset type:type];
-    model.timeLength = timeLength;
-    return model;
-}
 
 @end
 

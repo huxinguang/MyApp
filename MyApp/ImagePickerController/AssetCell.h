@@ -8,13 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
-typedef enum : NSUInteger {
-    AssetCellTypePhoto = 0,
-    AssetCellTypeLivePhoto,
-    AssetCellTypeVideo,
-    AssetCellTypeAudio,
-    AssetCellTypeCamera
-} AssetCellType;
+typedef NS_ENUM(NSUInteger, AssetCellType) {
+    AssetCellTypeUnknown = 0,
+    AssetCellTypeImage   = 1,
+    AssetCellTypeVideo   = 2,
+    AssetCellTypeAudio   = 3,
+    AssetCellTypeCamera  = 4  //相机占位
+};
+
 
 @class AssetModel;
 @interface AssetCell : UICollectionViewCell

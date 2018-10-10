@@ -14,6 +14,7 @@
 #import "CBBarButton.h"
 #import "AlbumCell.h"
 
+
 @interface AssetPickerController ()<UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDelegate,UITableViewDataSource,UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 @property (nonatomic, strong)UICollectionView *collectionView;
 @property (nonatomic, strong)NSMutableArray<AssetModel *> *assetArr;
@@ -37,7 +38,7 @@
 -(AssetModel *)placeholderModel{
     if (_placeholderModel == nil) {
         _placeholderModel = [[AssetModel alloc]init];
-        _placeholderModel.type = AssetModelMediaTypeCamera;
+        _placeholderModel.isPlaceholder = YES;
     }
     return _placeholderModel;
 }
@@ -74,9 +75,9 @@
     NSLog(@"++++");
 }
 
--(instancetype)initWithMaxAssetsCount:(NSInteger)maxAssetsCount delegate:(id<AssetPickerControllerDelegate>)delegate{
+-(instancetype)initWithOptions:(AssetPickerOptions *)options delegate:(id<AssetPickerControllerDelegate>)delegate{
     if (self = [super init]) {
-        self.maxAssetsCount = maxAssetsCount;
+        self.pickerOptions = options;
         self.delegate = delegate;
     }
     return self;
@@ -88,7 +89,7 @@
     [self configMask];
     
     @weakify(self)
-    [[AssetPickerManager manager] getAllAlbums:YES completion:^(NSArray<AlbumModel *> *models) {
+    [[AssetPickerManager manager] getAllAlbums:self.pickerOptions.videoPickable completion:^(NSArray<AlbumModel *> *models) {
         @strongify(self)
         if (!self) return;
         self.albumArr = [NSMutableArray arrayWithArray:models];
@@ -160,7 +161,7 @@
     for (AlbumModel *album in self.albumArr) {
         album.selectedCount = 0;
         for (AssetModel *asset in album.assetArray) {
-            asset.isSelected = NO;
+            asset.picked = NO;
             asset.number = 0;
         }
     }
@@ -209,7 +210,7 @@
     self.bottomConfirmBtn.backgroundColor = [UIColor whiteColor];
     self.bottomConfirmBtn.titleLabel.font = [UIFont boldSystemFontOfSize:kBottomConfirmBtnTitleFontSize];
     [self.bottomConfirmBtn addTarget:self action:@selector(onConfirmBtnClick) forControlEvents:UIControlEventTouchUpInside];
-    [self.bottomConfirmBtn setTitle:[NSString stringWithFormat:@"确定(0/%ld)",self.maxAssetsCount] forState:UIControlStateNormal];
+    [self.bottomConfirmBtn setTitle:[NSString stringWithFormat:@"确定(0/%ld)",self.pickerOptions.maxAssetsCount] forState:UIControlStateNormal];
     [self.bottomConfirmBtn setTitleColor:kAppThemeColor forState:UIControlStateNormal];
     [self.bottomConfirmBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
     self.bottomConfirmBtn.enabled = NO;
@@ -279,22 +280,22 @@
         if (isSelected) {
             // 1. 取消选择
             weakCell.selectPhotoButton.selected = NO;
-            model.isSelected = NO;
+            model.picked = NO;
             [self.selectedAssetArr removeObject:model];
             weakCell.numberLabel.text = @"";
             self.albumArr[self.currentAlbumIndexpath.row].selectedCount --;
         } else {
             // 2. 选择照片,检查是否超过了最大个数的限制
-            if (self.selectedAssetArr.count < self.maxAssetsCount) {
+            if (self.selectedAssetArr.count < self.pickerOptions.maxAssetsCount) {
                 weakCell.selectPhotoButton.selected = YES;
-                model.isSelected = YES;
+                model.picked = YES;
                 [self.selectedAssetArr addObject:model];
                 self.albumArr[self.currentAlbumIndexpath.row].selectedCount ++;
                 weakCell.numberLabel.text = [NSString stringWithFormat:@"%ld",self.selectedAssetArr.count];
             } else {
                 MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
                 hud.mode = MBProgressHUDModeText;
-                hud.label.text = [NSString stringWithFormat:@"最多选择%ld张照片",self.maxAssetsCount];
+                hud.label.text = [NSString stringWithFormat:@"最多选择%ld张照片",self.pickerOptions.maxAssetsCount];
                 [hud hideAnimated:YES afterDelay:1.5f];
             }
         }
@@ -379,7 +380,7 @@
     }else{
         self.bottomConfirmBtn.enabled = NO;
     }
-    [self.bottomConfirmBtn setTitle:[NSString stringWithFormat:@"确定(%ld/%ld)",self.selectedAssetArr.count,self.maxAssetsCount] forState:UIControlStateNormal];
+    [self.bottomConfirmBtn setTitle:[NSString stringWithFormat:@"确定(%ld/%ld)",self.selectedAssetArr.count,self.pickerOptions.maxAssetsCount] forState:UIControlStateNormal];
 }
 
 - (void)openCamera{
@@ -457,6 +458,10 @@
     [self setNeedsUpdateConstraints];
 }
 
+
+@end
+
+@implementation AssetPickerOptions
 
 @end
 
