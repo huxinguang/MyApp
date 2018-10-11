@@ -317,6 +317,7 @@
             // 1. 取消选择
             weakCell.selectPhotoButton.selected = NO;
             model.picked = NO;
+            model.number = 0;
             for (AssetModel *am in [self.pickerOptions.pickedAssetModels copy]) {
                 if ([am.asset.localIdentifier isEqualToString:model.asset.localIdentifier]) {
                     am.number = 0;
@@ -331,7 +332,6 @@
             if (self.pickerOptions.pickedAssetModels.count < self.pickerOptions.maxAssetsCount) {
                 weakCell.selectPhotoButton.selected = YES;
                 model.picked = YES;
-//                [self.selectedAssetArr addObject:model];
                 [self.pickerOptions.pickedAssetModels addObject:model];
                 weakCell.numberLabel.text = [NSString stringWithFormat:@"%ld",self.pickerOptions.pickedAssetModels.count];
             } else {
@@ -341,24 +341,7 @@
                 [hud hideAnimated:YES afterDelay:1.5f];
             }
         }
-        for (int i=0; i<self.pickerOptions.pickedAssetModels.count; i++) {
-            AssetModel *pam = self.pickerOptions.pickedAssetModels[i];
-            pam.number = i+1;
-            for (AssetModel *item in self.assetArr) {
-                if ([item.asset.localIdentifier isEqualToString:pam.asset.localIdentifier]) {
-                    item.number = i+1;
-                }
-            }
-        }
-       
-        [self.albumSelectedIndexpaths removeAllObjects];
-        for (AssetModel *item in self.pickerOptions.pickedAssetModels) {
-            AssetModel *am = [self getAssetModelAtCurrentAlbumWithIdentifier:item.asset.localIdentifier];
-            if (am) {
-                NSUInteger indexAtCurrentAlbum = [self.albumArr[self.currentAlbumIndexpath.row].assetArray indexOfObject:am];
-                [self.albumSelectedIndexpaths addObject:[NSIndexPath indexPathForItem:indexAtCurrentAlbum inSection:0]];
-            }
-        }
+        [self refreshAlbumAssetsStatus];
         //取消选择的时候才刷新所有选中的item
         if (self.albumSelectedIndexpaths.count > 0 && isSelected) {
             [collectionView reloadItemsAtIndexPaths:self.albumSelectedIndexpaths];
@@ -404,19 +387,7 @@
     self.ntView.titleBtnWidth = [self.albumArr[indexPath.row].name widthForFont:kTitleViewTitleFont] + kTitleViewTextImageDistance + kTitleViewArrowSize.width;
     self.assetArr = self.albumArr[indexPath.row].assetArray;
     if (indexPath != self.currentAlbumIndexpath) {
-        [self.albumSelectedIndexpaths removeAllObjects];
-        for (int i=1; i<self.assetArr.count; i++) {//第1个为相机占位
-            AssetModel *am = self.assetArr[i];
-            for (int j=0; j<self.pickerOptions.pickedAssetModels.count; j++) {
-                AssetModel *pam = self.pickerOptions.pickedAssetModels[j];
-                if ([am.asset.localIdentifier isEqualToString:pam.asset.localIdentifier]) {
-                    am.picked = YES;
-                    am.number = j+1;
-                    [self.albumSelectedIndexpaths addObject:[NSIndexPath indexPathForItem:i inSection:0]];
-                }
-            }
-        }
-        
+        [self refreshAlbumAssetsStatus];
         [self.collectionView reloadData];
         [self onTitleBtnClick:self.ntView.titleBtn];
     }else{
@@ -424,6 +395,23 @@
     }
     self.currentAlbumIndexpath = indexPath;
     
+}
+
+- (void)refreshAlbumAssetsStatus{
+    [self.albumSelectedIndexpaths removeAllObjects];
+    for (int i=1; i<self.assetArr.count; i++) {//第1个为相机占位
+        AssetModel *am = self.assetArr[i];
+        am.picked = NO;
+        am.number = 0;
+        for (int j=0; j<self.pickerOptions.pickedAssetModels.count; j++) {
+            AssetModel *pam = self.pickerOptions.pickedAssetModels[j];
+            if ([am.asset.localIdentifier isEqualToString:pam.asset.localIdentifier]) {
+                am.picked = YES;
+                am.number = j+1;
+                [self.albumSelectedIndexpaths addObject:[NSIndexPath indexPathForItem:i inSection:0]];
+            }
+        }
+    }
 }
 
 - (void)refreshNavRightBtn{
