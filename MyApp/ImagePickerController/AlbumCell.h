@@ -12,6 +12,6 @@
 @interface AlbumCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *imgView;
 @property (weak, nonatomic) IBOutlet UILabel *albumNameLabel;
-@property (weak, nonatomic) IBOutlet UILabel *selectedCountLabel;
+
 @property (nonatomic, strong) AlbumModel *model;
 @end

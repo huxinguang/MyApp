@@ -25,6 +25,11 @@
     return self;
 }
 
+-(NSArray<AssetModel *> *)assets{
+    if (_assets == nil) _assets = @[];
+    return _assets;
+}
+
 -(SelectedAssetsContainer *)assetsContainer{
     if (_assetsContainer == nil) {
         _assetsContainer = [[SelectedAssetsContainer alloc]init];

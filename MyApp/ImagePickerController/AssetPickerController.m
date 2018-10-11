@@ -18,7 +18,6 @@
 @interface AssetPickerController ()<UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDelegate,UITableViewDataSource,UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 @property (nonatomic, strong)UICollectionView *collectionView;
 @property (nonatomic, strong)NSMutableArray<AssetModel *> *assetArr;
-@property (nonatomic, strong)NSMutableArray<AssetModel *> *selectedAssetArr;
 @property (nonatomic, strong)UIButton *bottomConfirmBtn;
 @property (nonatomic, strong)UITableView *albumTableView;
 @property (nonatomic, strong)UIView *containerView;
@@ -66,10 +65,29 @@
     }
 }
 
-- (NSMutableArray<AssetModel *> *)selectedAssetArr{
-    if (_selectedAssetArr == nil) _selectedAssetArr = [NSMutableArray array];
-    return _selectedAssetArr;
+- (AssetModel *)getAssetModelAtCurrentAlbumWithIdentifier:(NSString *)identifier{
+    AssetModel *model = nil;
+    for (AssetModel *am in self.albumArr[self.currentAlbumIndexpath.row].assetArray) {
+        if ([am.asset.localIdentifier isEqualToString:identifier]) {
+            model = am;
+        }
+    }
+    return model;
 }
+
+- (AssetModel *)getAssetModelAtAllAlbumsWithIdentifier:(NSString *)identifier{
+    AssetModel *model = nil;
+    for (AlbumModel *albumItem in self.albumArr) {
+        for (AssetModel *assetItem in albumItem.assetArray) {
+            if ([assetItem.asset.localIdentifier isEqualToString:identifier]) {
+                model = assetItem;
+            }
+        }
+    }
+    return model;
+}
+
+
 
 -(void)dealloc{
     NSLog(@"++++");
@@ -98,9 +116,23 @@
         self.ntView.titleBtnWidth = [self.albumArr[0].name widthForFont:kTitleViewTitleFont] + kTitleViewTextImageDistance + kTitleViewArrowSize.width;
         self.currentAlbumIndexpath = [NSIndexPath indexPathForRow:0 inSection:0];
         self.assetArr = self.albumArr[0].assetArray;
+        
+        for (int i=1; i<self.assetArr.count; i++) {//第1个为相机占位
+            AssetModel *am = self.assetArr[i];
+            for (int j=0; j<self.pickerOptions.pickedAssetModels.count; j++) {
+                AssetModel *pam = self.pickerOptions.pickedAssetModels[j];
+                if ([am.asset.localIdentifier isEqualToString:pam.asset.localIdentifier]) {
+                    am.picked = YES;
+                    am.number = j+1;
+                    [self.albumSelectedIndexpaths addObject:[NSIndexPath indexPathForItem:i inSection:0]];
+                }
+            }
+        }
+        
         [self configCollectionView];
         [self configBottomConfirmBtn];
         [self.collectionView reloadData];
+        [self refreshNavRightBtn];
         [self configAlbumTableView];
         [self.albumTableView reloadData];
         
@@ -155,11 +187,11 @@
 }
 
 - (void)onRightBarButtonClick{
-    [self.selectedAssetArr removeAllObjects];
+    [self.pickerOptions.pickedAssetModels removeAllObjects];
     NSArray *indexPaths = [self.albumSelectedIndexpaths copy];
     [self.albumSelectedIndexpaths removeAllObjects];
+    [self.pickerOptions.pickedAssetModels removeAllObjects];
     for (AlbumModel *album in self.albumArr) {
-        album.selectedCount = 0;
         for (AssetModel *asset in album.assetArray) {
             asset.picked = NO;
             asset.number = 0;
@@ -210,17 +242,21 @@
     self.bottomConfirmBtn.backgroundColor = [UIColor whiteColor];
     self.bottomConfirmBtn.titleLabel.font = [UIFont boldSystemFontOfSize:kBottomConfirmBtnTitleFontSize];
     [self.bottomConfirmBtn addTarget:self action:@selector(onConfirmBtnClick) forControlEvents:UIControlEventTouchUpInside];
-    [self.bottomConfirmBtn setTitle:[NSString stringWithFormat:@"确定(0/%ld)",self.pickerOptions.maxAssetsCount] forState:UIControlStateNormal];
+    [self.bottomConfirmBtn setTitle:[NSString stringWithFormat:@"确定(%ld/%ld)",self.pickerOptions.pickedAssetModels.count,self.pickerOptions.maxAssetsCount] forState:UIControlStateNormal];
     [self.bottomConfirmBtn setTitleColor:kAppThemeColor forState:UIControlStateNormal];
     [self.bottomConfirmBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
-    self.bottomConfirmBtn.enabled = NO;
+    if (self.pickerOptions.pickedAssetModels.count > 0) {
+        self.bottomConfirmBtn.enabled = YES;
+    }else{
+        self.bottomConfirmBtn.enabled = NO;
+    }
     [self.view addSubview:self.bottomConfirmBtn];
 }
 
 - (void)onConfirmBtnClick {
     [self dismissViewControllerAnimated:YES completion:^{
         if (self.delegate && [self.delegate respondsToSelector:@selector(assetPickerController:didFinishPickingAssets:)]) {
-            [self.delegate assetPickerController:self didFinishPickingAssets:[self.selectedAssetArr copy]];
+            [self.delegate assetPickerController:self didFinishPickingAssets:[self.pickerOptions.pickedAssetModels copy]];
         }
     }];
     
@@ -281,17 +317,23 @@
             // 1. 取消选择
             weakCell.selectPhotoButton.selected = NO;
             model.picked = NO;
-            [self.selectedAssetArr removeObject:model];
+            for (AssetModel *am in [self.pickerOptions.pickedAssetModels copy]) {
+                if ([am.asset.localIdentifier isEqualToString:model.asset.localIdentifier]) {
+                    am.number = 0;
+                    am.picked = NO;
+                    [self.pickerOptions.pickedAssetModels removeObject:am];
+                }
+            }
             weakCell.numberLabel.text = @"";
-            self.albumArr[self.currentAlbumIndexpath.row].selectedCount --;
+            
         } else {
             // 2. 选择照片,检查是否超过了最大个数的限制
-            if (self.selectedAssetArr.count < self.pickerOptions.maxAssetsCount) {
+            if (self.pickerOptions.pickedAssetModels.count < self.pickerOptions.maxAssetsCount) {
                 weakCell.selectPhotoButton.selected = YES;
                 model.picked = YES;
-                [self.selectedAssetArr addObject:model];
-                self.albumArr[self.currentAlbumIndexpath.row].selectedCount ++;
-                weakCell.numberLabel.text = [NSString stringWithFormat:@"%ld",self.selectedAssetArr.count];
+//                [self.selectedAssetArr addObject:model];
+                [self.pickerOptions.pickedAssetModels addObject:model];
+                weakCell.numberLabel.text = [NSString stringWithFormat:@"%ld",self.pickerOptions.pickedAssetModels.count];
             } else {
                 MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
                 hud.mode = MBProgressHUDModeText;
@@ -299,14 +341,20 @@
                 [hud hideAnimated:YES afterDelay:1.5f];
             }
         }
-        for (int i=0; i<self.selectedAssetArr.count; i++) {
-            AssetModel *selectedModel = self.selectedAssetArr[i];
-            selectedModel.number = i+1;
+        for (int i=0; i<self.pickerOptions.pickedAssetModels.count; i++) {
+            AssetModel *pam = self.pickerOptions.pickedAssetModels[i];
+            pam.number = i+1;
+            for (AssetModel *item in self.assetArr) {
+                if ([item.asset.localIdentifier isEqualToString:pam.asset.localIdentifier]) {
+                    item.number = i+1;
+                }
+            }
         }
        
         [self.albumSelectedIndexpaths removeAllObjects];
-        for (AssetModel *am in self.selectedAssetArr) {
-            if ([self.albumArr[self.currentAlbumIndexpath.row].assetArray containsObject:am]) {
+        for (AssetModel *item in self.pickerOptions.pickedAssetModels) {
+            AssetModel *am = [self getAssetModelAtCurrentAlbumWithIdentifier:item.asset.localIdentifier];
+            if (am) {
                 NSUInteger indexAtCurrentAlbum = [self.albumArr[self.currentAlbumIndexpath.row].assetArray indexOfObject:am];
                 [self.albumSelectedIndexpaths addObject:[NSIndexPath indexPathForItem:indexAtCurrentAlbum inSection:0]];
             }
@@ -356,6 +404,19 @@
     self.ntView.titleBtnWidth = [self.albumArr[indexPath.row].name widthForFont:kTitleViewTitleFont] + kTitleViewTextImageDistance + kTitleViewArrowSize.width;
     self.assetArr = self.albumArr[indexPath.row].assetArray;
     if (indexPath != self.currentAlbumIndexpath) {
+        [self.albumSelectedIndexpaths removeAllObjects];
+        for (int i=1; i<self.assetArr.count; i++) {//第1个为相机占位
+            AssetModel *am = self.assetArr[i];
+            for (int j=0; j<self.pickerOptions.pickedAssetModels.count; j++) {
+                AssetModel *pam = self.pickerOptions.pickedAssetModels[j];
+                if ([am.asset.localIdentifier isEqualToString:pam.asset.localIdentifier]) {
+                    am.picked = YES;
+                    am.number = j+1;
+                    [self.albumSelectedIndexpaths addObject:[NSIndexPath indexPathForItem:i inSection:0]];
+                }
+            }
+        }
+        
         [self.collectionView reloadData];
         [self onTitleBtnClick:self.ntView.titleBtn];
     }else{
@@ -367,7 +428,7 @@
 
 - (void)refreshNavRightBtn{
     CBBarButton *btn = (CBBarButton *)self.navigationItem.rightBarButtonItem.customView;
-    if (self.selectedAssetArr.count > 0) {
+    if (self.pickerOptions.pickedAssetModels.count > 0) {
         btn.enabled = YES;
     }else{
         btn.enabled = NO;
@@ -375,12 +436,12 @@
 }
 
 - (void)refreshBottomConfirmBtn {
-    if (self.selectedAssetArr.count > 0) {
+    if (self.pickerOptions.pickedAssetModels.count > 0) {
         self.bottomConfirmBtn.enabled = YES;
     }else{
         self.bottomConfirmBtn.enabled = NO;
     }
-    [self.bottomConfirmBtn setTitle:[NSString stringWithFormat:@"确定(%ld/%ld)",self.selectedAssetArr.count,self.pickerOptions.maxAssetsCount] forState:UIControlStateNormal];
+    [self.bottomConfirmBtn setTitle:[NSString stringWithFormat:@"确定(%ld/%ld)",self.pickerOptions.pickedAssetModels.count,self.pickerOptions.maxAssetsCount] forState:UIControlStateNormal];
 }
 
 - (void)openCamera{
@@ -462,6 +523,11 @@
 @end
 
 @implementation AssetPickerOptions
+
+-(NSMutableArray<AssetModel *> *)pickedAssetModels{
+    if(_pickedAssetModels == nil)  _pickedAssetModels = [NSMutableArray array];
+    return _pickedAssetModels;
+}
 
 @end
 

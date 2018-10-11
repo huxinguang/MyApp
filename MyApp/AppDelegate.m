@@ -40,6 +40,8 @@
     [self.window makeKeyAndVisible];
     
     [self configKeyboard];
+
+    
     
     
     return YES;

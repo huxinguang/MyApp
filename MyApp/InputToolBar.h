@@ -18,7 +18,7 @@
 #define kInputBarMaxlHeight  90                                                     //输入框最大高度
 #define kAssetsContainerHeight 100                                                  //图片容器高度
 
-
+@class AssetModel;
 @class SelectedAssetsContainer;
 
 @interface InputToolBar : UIView
@@ -26,12 +26,11 @@
 @property (nonatomic, strong)UIButton *voiceEntryBtn;
 @property (nonatomic, strong)UIButton *imgEntryBtn;
 @property (nonatomic, strong)SelectedAssetsContainer *assetsContainer;
+@property (nonatomic, strong)NSArray<AssetModel *> *assets;
 @property (nonatomic, assign)CGFloat inputToolBarHeight;
 @property (nonatomic, assign)CGFloat containerHeight;
 
 @end
-
-@class AssetModel;
 
 @interface SelectedAssetsContainer: UIView
 @property (nonatomic, strong)NSArray<AssetModel *> *assets;

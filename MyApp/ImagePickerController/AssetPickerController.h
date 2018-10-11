@@ -31,6 +31,7 @@
 @property (nonatomic, weak) id<AssetPickerControllerDelegate> delegate;
 @property (nonatomic, strong) AssetPickerOptions *pickerOptions;
 
+
 -(instancetype)initWithOptions:(AssetPickerOptions *)options delegate:(id<AssetPickerControllerDelegate>)delegate;
 
 @end
@@ -44,8 +45,9 @@
 @end
 
 @interface AssetPickerOptions: NSObject
-@property (nonatomic, assign)NSInteger maxAssetsCount;  //最大可选数量
-@property (nonatomic, assign)BOOL videoPickable;        //是否可选视频
+@property (nonatomic, assign)NSInteger maxAssetsCount;                              //最大可选数量
+@property (nonatomic, assign)BOOL videoPickable;                                    //是否可选视频
+@property (nonatomic, strong)NSMutableArray<AssetModel *> *pickedAssetModels;       //已选asset
 @end
 
 

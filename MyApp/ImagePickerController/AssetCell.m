@@ -12,7 +12,7 @@
 #import "AssetPickerManager.h"
 
 @interface AssetCell ()
-@property (weak, nonatomic) IBOutlet UIImageView *imageView;       // 照片
+@property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIImageView *selectImageView;
 @property (weak, nonatomic) IBOutlet UIView *bottomView;
 @property (weak, nonatomic) IBOutlet UILabel *timeLength;

@@ -9,6 +9,7 @@
 #import "RootViewController.h"
 #import "AssetPickerController.h"
 #import "AssetPickerManager.h"
+#import "AssetModel.h"
 
 
 @interface RootViewController ()<CBDefaultPageViewDelegate,AssetPickerControllerDelegate,UIAlertViewDelegate>
@@ -169,6 +170,7 @@
     AssetPickerOptions *options = [[AssetPickerOptions alloc]init];
     options.maxAssetsCount = 9;
     options.videoPickable = NO;
+    options.pickedAssetModels = [_inputToolbar.assets mutableCopy];
     AssetPickerController *photoPickerVc = [[AssetPickerController alloc] initWithOptions:options delegate:self];
     CBNavigationController *nav = [[CBNavigationController alloc]initWithRootViewController:photoPickerVc];
     [nav setNavigationBarWithType:CBNavigationBarTypeWhiteOpaque];
@@ -258,6 +260,7 @@
                 [_inputToolbar setNeedsUpdateConstraints];
             }
         }
+        _inputToolbar.assets = assets;
         _inputToolbar.assetsContainer.assets = assets;
     }
     

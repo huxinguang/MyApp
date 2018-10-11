@@ -8,8 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import <Photos/Photos.h>
 
-@class PHAsset;
 @interface AssetModel : NSObject
 @property (nonatomic, strong)PHAsset *asset;            // PHAsset
 @property (nonatomic, getter=isPicked)BOOL picked;      // 选中状态 默认NO
