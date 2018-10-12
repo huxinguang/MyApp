@@ -14,7 +14,7 @@
 #import "CBBarButton.h"
 #import "AlbumCell.h"
 
-@interface AssetPickerController ()<UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDelegate,UITableViewDataSource,UINavigationControllerDelegate, UIImagePickerControllerDelegate>
+@interface AssetPickerController ()<UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDelegate,UITableViewDataSource,UINavigationControllerDelegate, UIImagePickerControllerDelegate,PHPhotoLibraryChangeObserver>
 @property (nonatomic, strong)UICollectionView *collectionView;
 @property (nonatomic, strong)NSMutableArray<AssetModel *> *assetArr;
 @property (nonatomic, strong)UIButton *bottomConfirmBtn;
@@ -244,7 +244,6 @@
             [self.delegate assetPickerController:self didFinishPickingAssets:[self.pickerOptions.pickedAssetModels copy]];
         }
     }];
-    
 }
 
 - (void)onTitleBtnClick:(UIButton *)btn{
@@ -311,7 +310,6 @@
                 }
             }
             weakCell.numberLabel.text = @"";
-            
         } else {
             // 2. 选择照片,检查是否超过了最大个数的限制
             if (self.pickerOptions.pickedAssetModels.count < self.pickerOptions.maxAssetsCount) {
@@ -420,6 +418,11 @@
 - (void)openCamera{
     UIImagePickerController *picker = [[UIImagePickerController alloc] init];
     picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+    if (self.pickerOptions.videoPickable) {
+        NSString *mediaTypeImage = (NSString *)kUTTypeImage;
+        NSString *mediaTypeMovie = (NSString *)kUTTypeMovie;
+        picker.mediaTypes = @[mediaTypeImage,mediaTypeMovie];
+    }
     picker.delegate = self;
     if (kiOS7Later) {
         picker.navigationBar.barTintColor = self.navigationController.navigationBar.barTintColor;
@@ -431,10 +434,47 @@
     
 }
 
+#pragma mark - PHPhotoLibraryChangeObserver
+- (void)photoLibraryDidChange:(PHChange *)changeInstance{
+    @weakify(self)
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        @strongify(self)
+        if (!self) return;
+        for (AlbumModel *album in self.albumArr) {
+            PHFetchResultChangeDetails *changeDetails = [changeInstance changeDetailsForFetchResult:album.result];
+            if (changeDetails) {
+                NSArray *originalAssets = [album.assetArray copy];
+                [album.assetArray removeAllObjects];
+                album.result = changeDetails.fetchResultAfterChanges;
+                for (PHAsset *asset in album.result) {
+                    AssetModel *model = [AssetModel modelWithAsset:asset];
+                    for (AssetModel *am in originalAssets) {
+                        if ([model.asset.localIdentifier isEqualToString:am.asset.localIdentifier]) {
+                            model.picked = am.picked;
+                            model.number = am.number;
+                        }
+                    }
+                    [album.assetArray addObject:model];
+                }
+            }
+        }
+        self.assetArr = self.albumArr[self.currentAlbumIndexpath.row].assetArray;
+        [self refreshAlbumAssetsStatus];
+        [self.collectionView reloadData];
+    });
+    
+}
+
+
+
 #pragma mark - UIImagePickerControllerDelegate
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info{
+//    if (picker.sourceType == ) {
+//        <#statements#>
+//    }
 //    UIImage *image = info[UIImagePickerControllerOriginalImage];
-//    NSData *data = UIImagePNGRepresentation(image);
+    
+    
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -468,7 +508,7 @@
     return YES;
 }
 
--(void)updateConstraints{
+- (void)updateConstraints{
     @weakify(self)
     [self.titleBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
         @strongify(self)
