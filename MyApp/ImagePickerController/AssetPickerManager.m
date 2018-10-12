@@ -148,7 +148,7 @@
 }
 
 - (void)getPostImageWithAlbumModel:(AlbumModel *)model completion:(void (^)(UIImage *))completion {
-    [[AssetPickerManager manager] getPhotoWithAsset:[model.result lastObject] photoWidth:60 completion:^(UIImage *photo, NSDictionary *info) {
+    [[AssetPickerManager manager] getPhotoWithAsset:[model.result firstObject] photoWidth:60 completion:^(UIImage *photo, NSDictionary *info) {
         if (completion) completion(photo);
     }];
 }

@@ -14,7 +14,6 @@
 #import "CBBarButton.h"
 #import "AlbumCell.h"
 
-
 @interface AssetPickerController ()<UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDelegate,UITableViewDataSource,UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 @property (nonatomic, strong)UICollectionView *collectionView;
 @property (nonatomic, strong)NSMutableArray<AssetModel *> *assetArr;
@@ -87,8 +86,6 @@
     return model;
 }
 
-
-
 -(void)dealloc{
     NSLog(@"++++");
 }
@@ -116,19 +113,7 @@
         self.ntView.titleBtnWidth = [self.albumArr[0].name widthForFont:kTitleViewTitleFont] + kTitleViewTextImageDistance + kTitleViewArrowSize.width;
         self.currentAlbumIndexpath = [NSIndexPath indexPathForRow:0 inSection:0];
         self.assetArr = self.albumArr[0].assetArray;
-        
-        for (int i=1; i<self.assetArr.count; i++) {//第1个为相机占位
-            AssetModel *am = self.assetArr[i];
-            for (int j=0; j<self.pickerOptions.pickedAssetModels.count; j++) {
-                AssetModel *pam = self.pickerOptions.pickedAssetModels[j];
-                if ([am.asset.localIdentifier isEqualToString:pam.asset.localIdentifier]) {
-                    am.picked = YES;
-                    am.number = j+1;
-                    [self.albumSelectedIndexpaths addObject:[NSIndexPath indexPathForItem:i inSection:0]];
-                }
-            }
-        }
-        
+        [self refreshAlbumAssetsStatus];
         [self configCollectionView];
         [self configBottomConfirmBtn];
         [self.collectionView reloadData];
