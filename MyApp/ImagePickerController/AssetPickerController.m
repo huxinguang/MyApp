@@ -140,6 +140,7 @@
         self.assetArr = self.albumArr[self.currentAlbumIndexpath.row].assetArray;
         [self refreshAlbumAssetsStatus];
         [self refreshNavRightBtn];
+        [self refreshBottomConfirmBtn];
         [self.albumTableView reloadData];
     }];
 }
@@ -473,11 +474,9 @@
     [self.ntView.titleBtn setTitle:self.albumArr[0].name forState:UIControlStateNormal];
     self.ntView.titleBtnWidth = [self.albumArr[0].name widthForFont:kTitleViewTitleFont] + kTitleViewTextImageDistance + kTitleViewArrowSize.width;
     self.assetArr = self.albumArr[0].assetArray;
-    if (self.currentAlbumIndexpath.row != 0) {
-        [self refreshAlbumAssetsStatus];
-        [self.collectionView reloadData];
-        [self.albumTableView reloadData];
-    }
+    [self refreshAlbumAssetsStatus];
+    [self.collectionView reloadData];
+    [self.albumTableView reloadData];
     self.currentAlbumIndexpath = [NSIndexPath indexPathForRow:0 inSection:0];
 }
 
@@ -534,8 +533,6 @@
     });
     
 }
-
-
 
 #pragma mark - UIImagePickerControllerDelegate
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info{
