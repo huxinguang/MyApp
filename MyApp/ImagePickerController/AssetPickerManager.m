@@ -25,6 +25,16 @@
     return manager;
 }
 
+-(PHFetchResult<PHAssetCollection *> *)smartAlbums{
+    if (!_smartAlbums) _smartAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeAlbumRegular options:nil];
+    return _smartAlbums;
+}
+
+- (PHFetchResult<PHCollection *> *)userCollections{
+    if (!_userCollections) _userCollections = [PHCollectionList fetchTopLevelUserCollectionsWithOptions:nil];
+    return _userCollections;
+}
+
 - (void)handleAuthorizationWithCompletion:(void (^)(AuthorizationStatus aStatus))completion{
     [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
         switch (status) {
@@ -54,23 +64,31 @@
 
 - (void)getAllAlbums:(BOOL)videoPickable completion:(void (^)(NSArray<AlbumModel *> *))completion{
     NSMutableArray *albumArr = [NSMutableArray array];
-    PHFetchResult<PHAssetCollection *> *smartAlbums = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeSmartAlbum subtype:PHAssetCollectionSubtypeAlbumRegular options:nil];
     PHFetchOptions *option = [[PHFetchOptions alloc] init];
     if (!videoPickable) option.predicate = [NSPredicate predicateWithFormat:@"mediaType == %ld", PHAssetMediaTypeImage];
     option.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]];
-    [smartAlbums enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        PHAssetCollection *collection = (PHAssetCollection *)obj;
+    // smartAlbums
+    [self.smartAlbums enumerateObjectsUsingBlock:^(PHAssetCollection * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         //不同相册的同一张照片，所对应的PHAsset实例的localIdentifier是一样的，但对应的PHAsset实例并不是同一个
-        PHFetchResult<PHAsset *> *fetchResult = [PHAsset fetchAssetsInAssetCollection:collection options:option];
+        PHFetchResult<PHAsset *> *fetchResult = [PHAsset fetchAssetsInAssetCollection:obj options:option];
         if (fetchResult.count > 0) {
             //把“相机胶卷”放在第一位
-            if ([collection.localizedTitle isEqualToString:@"Camera Roll"]) {
-                [albumArr insertObject:[self modelWithResult:fetchResult name:collection.localizedTitle videoPickable:videoPickable] atIndex:0];
+            if ([obj.localizedTitle isEqualToString:@"Camera Roll"]) {
+                [albumArr insertObject:[self modelWithResult:fetchResult name:obj.localizedTitle videoPickable:videoPickable] atIndex:0];
             }else{
-                [albumArr addObject:[self modelWithResult:fetchResult name:collection.localizedTitle videoPickable:videoPickable]];
+                [albumArr addObject:[self modelWithResult:fetchResult name:obj.localizedTitle videoPickable:videoPickable]];
             }
         }
     }];
+    // userCollections
+    [self.userCollections enumerateObjectsUsingBlock:^(PHCollection * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        PHAssetCollection *collection = (PHAssetCollection *)obj;
+        PHFetchResult<PHAsset *> *fetchResult = [PHAsset fetchAssetsInAssetCollection:collection options:option];
+        if (fetchResult.count > 0) {
+            [albumArr addObject:[self modelWithResult:fetchResult name:obj.localizedTitle videoPickable:videoPickable]];
+        }
+    }];
+    
     if (completion) completion(albumArr);
 }
 

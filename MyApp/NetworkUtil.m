@@ -8,7 +8,7 @@
 
 #import "NetworkUtil.h"
 
-static NSString *const baseReleaseUrl = @"http://8629892d.ngrok.io/";
+static NSString *const baseReleaseUrl = @"http://a2a944e5.ngrok.io/";
 static NSString *const baseDebugUrl = @"http://127.0.0.1:8080/";
 
 @implementation NetworkUtil

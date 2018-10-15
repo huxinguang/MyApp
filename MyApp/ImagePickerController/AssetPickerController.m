@@ -87,7 +87,7 @@
 }
 
 -(void)dealloc{
-    NSLog(@"++++");
+    [[PHPhotoLibrary sharedPhotoLibrary] unregisterChangeObserver:self];
 }
 
 -(instancetype)initWithOptions:(AssetPickerOptions *)options delegate:(id<AssetPickerControllerDelegate>)delegate{
@@ -101,8 +101,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
+    [[PHPhotoLibrary sharedPhotoLibrary] registerChangeObserver:self];
     [self configMask];
+    [self getAlbums];
     
+}
+
+- (void)getAlbums{
     @weakify(self)
     [[AssetPickerManager manager] getAllAlbums:self.pickerOptions.videoPickable completion:^(NSArray<AlbumModel *> *models) {
         @strongify(self)
@@ -120,7 +125,22 @@
         [self refreshNavRightBtn];
         [self configAlbumTableView];
         [self.albumTableView reloadData];
-        
+    }];
+}
+
+- (void)resetAlbums{
+    @weakify(self)
+    [[AssetPickerManager manager] getAllAlbums:self.pickerOptions.videoPickable completion:^(NSArray<AlbumModel *> *models) {
+        @strongify(self)
+        if (!self) return;
+        self.albumArr = [NSMutableArray arrayWithArray:models];
+        self.albumArr[self.currentAlbumIndexpath.row].isSelected = YES;
+        [self.ntView.titleBtn setTitle:self.albumArr[self.currentAlbumIndexpath.row].name forState:UIControlStateNormal];
+        self.ntView.titleBtnWidth = [self.albumArr[self.currentAlbumIndexpath.row].name widthForFont:kTitleViewTitleFont] + kTitleViewTextImageDistance + kTitleViewArrowSize.width;
+        self.assetArr = self.albumArr[self.currentAlbumIndexpath.row].assetArray;
+        [self refreshAlbumAssetsStatus];
+        [self refreshNavRightBtn];
+        [self.albumTableView reloadData];
     }];
 }
 
@@ -189,53 +209,60 @@
 }
 
 - (void)configCollectionView {
-    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-    CGFloat itemWH = (self.view.width - (kItemsAtEachLine-1)*kItemMargin)/kItemsAtEachLine;
-    layout.itemSize = CGSizeMake(itemWH, itemWH);
-    layout.minimumInteritemSpacing = kItemMargin;
-    layout.minimumLineSpacing = kItemMargin;
-    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, kAppScreenWidth, kAppScreenHeight-kAppStatusBarAndNavigationBarHeight-kBottomConfirmBtnHeight-kAppTabbarSafeBottomMargin) collectionViewLayout:layout];
-    self.collectionView.backgroundColor = [UIColor whiteColor];
-    self.collectionView.dataSource = self;
-    self.collectionView.delegate = self;
-    self.collectionView.alwaysBounceVertical = YES;
-    [self.view addSubview:self.collectionView];
-    [self.collectionView registerNib:[UINib nibWithNibName:@"AssetCell" bundle:nil] forCellWithReuseIdentifier:@"AssetCell"];
+    if (!self.collectionView) {
+        UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+        CGFloat itemWH = (self.view.width - (kItemsAtEachLine-1)*kItemMargin)/kItemsAtEachLine;
+        layout.itemSize = CGSizeMake(itemWH, itemWH);
+        layout.minimumInteritemSpacing = kItemMargin;
+        layout.minimumLineSpacing = kItemMargin;
+        self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, kAppScreenWidth, kAppScreenHeight-kAppStatusBarAndNavigationBarHeight-kBottomConfirmBtnHeight-kAppTabbarSafeBottomMargin) collectionViewLayout:layout];
+        self.collectionView.backgroundColor = [UIColor whiteColor];
+        self.collectionView.dataSource = self;
+        self.collectionView.delegate = self;
+        self.collectionView.alwaysBounceVertical = YES;
+        [self.view addSubview:self.collectionView];
+        [self.collectionView registerNib:[UINib nibWithNibName:@"AssetCell" bundle:nil] forCellWithReuseIdentifier:@"AssetCell"];
+    }
 }
 
 - (void)configAlbumTableView{
-    CGFloat height = kAlbumTableViewMarginTopBottom*2 + kAlbumTableViewRowHeight*self.albumArr.count;
-    self.containerViewHeight = height > kContainerViewMaxHeight ? kContainerViewMaxHeight : height;
-    
-    self.containerView = [UIView new];
-    self.containerView.backgroundColor = [UIColor whiteColor];
-    self.containerView.frame = CGRectMake(0, -self.containerViewHeight, kAppScreenWidth, self.containerViewHeight);
-    [self.view addSubview:self.containerView];
-    
-    CGFloat albumTableViewHeight = self.containerViewHeight - 2*kAlbumTableViewMarginTopBottom;
-    self.albumTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, kAlbumTableViewMarginTopBottom, kAppScreenWidth, albumTableViewHeight) style:UITableViewStylePlain];
-    self.albumTableView.delegate = self;
-    self.albumTableView.dataSource = self;
-    self.albumTableView.rowHeight = kAlbumTableViewRowHeight;
-    self.albumTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    [self.containerView addSubview:self.albumTableView];
+    if (!self.albumTableView) {
+        CGFloat height = kAlbumTableViewMarginTopBottom*2 + kAlbumTableViewRowHeight*self.albumArr.count;
+        self.containerViewHeight = height > kContainerViewMaxHeight ? kContainerViewMaxHeight : height;
+        
+        self.containerView = [UIView new];
+        self.containerView.backgroundColor = [UIColor whiteColor];
+        self.containerView.frame = CGRectMake(0, -self.containerViewHeight, kAppScreenWidth, self.containerViewHeight);
+        [self.view addSubview:self.containerView];
+        
+        CGFloat albumTableViewHeight = self.containerViewHeight - 2*kAlbumTableViewMarginTopBottom;
+        self.albumTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, kAlbumTableViewMarginTopBottom, kAppScreenWidth, albumTableViewHeight) style:UITableViewStylePlain];
+        self.albumTableView.delegate = self;
+        self.albumTableView.dataSource = self;
+        self.albumTableView.rowHeight = kAlbumTableViewRowHeight;
+        self.albumTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        [self.containerView addSubview:self.albumTableView];
+    }
 }
 
 - (void)configBottomConfirmBtn {
-    self.bottomConfirmBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.bottomConfirmBtn.frame = CGRectMake(0, kAppScreenHeight - kBottomConfirmBtnHeight - kAppStatusBarAndNavigationBarHeight - kAppTabbarSafeBottomMargin, kAppScreenWidth, kBottomConfirmBtnHeight);
-    self.bottomConfirmBtn.backgroundColor = [UIColor whiteColor];
-    self.bottomConfirmBtn.titleLabel.font = [UIFont boldSystemFontOfSize:kBottomConfirmBtnTitleFontSize];
-    [self.bottomConfirmBtn addTarget:self action:@selector(onConfirmBtnClick) forControlEvents:UIControlEventTouchUpInside];
-    [self.bottomConfirmBtn setTitle:[NSString stringWithFormat:@"确定(%ld/%ld)",self.pickerOptions.pickedAssetModels.count,self.pickerOptions.maxAssetsCount] forState:UIControlStateNormal];
-    [self.bottomConfirmBtn setTitleColor:kAppThemeColor forState:UIControlStateNormal];
-    [self.bottomConfirmBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
-    if (self.pickerOptions.pickedAssetModels.count > 0) {
-        self.bottomConfirmBtn.enabled = YES;
-    }else{
-        self.bottomConfirmBtn.enabled = NO;
+    if (!self.bottomConfirmBtn) {
+        self.bottomConfirmBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        self.bottomConfirmBtn.frame = CGRectMake(0, kAppScreenHeight - kBottomConfirmBtnHeight - kAppStatusBarAndNavigationBarHeight - kAppTabbarSafeBottomMargin, kAppScreenWidth, kBottomConfirmBtnHeight);
+        self.bottomConfirmBtn.backgroundColor = [UIColor whiteColor];
+        self.bottomConfirmBtn.titleLabel.font = [UIFont boldSystemFontOfSize:kBottomConfirmBtnTitleFontSize];
+        [self.bottomConfirmBtn addTarget:self action:@selector(onConfirmBtnClick) forControlEvents:UIControlEventTouchUpInside];
+        [self.bottomConfirmBtn setTitle:[NSString stringWithFormat:@"确定(%ld/%ld)",self.pickerOptions.pickedAssetModels.count,self.pickerOptions.maxAssetsCount] forState:UIControlStateNormal];
+        [self.bottomConfirmBtn setTitleColor:kAppThemeColor forState:UIControlStateNormal];
+        [self.bottomConfirmBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
+        if (self.pickerOptions.pickedAssetModels.count > 0) {
+            self.bottomConfirmBtn.enabled = YES;
+        }else{
+            self.bottomConfirmBtn.enabled = NO;
+        }
+        [self.view addSubview:self.bottomConfirmBtn];
     }
-    [self.view addSubview:self.bottomConfirmBtn];
+    
 }
 
 - (void)onConfirmBtnClick {
@@ -318,10 +345,7 @@
                 [self.pickerOptions.pickedAssetModels addObject:model];
                 weakCell.numberLabel.text = [NSString stringWithFormat:@"%ld",self.pickerOptions.pickedAssetModels.count];
             } else {
-                MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-                hud.mode = MBProgressHUDModeText;
-                hud.label.text = [NSString stringWithFormat:@"最多选择%ld张照片",self.pickerOptions.maxAssetsCount];
-                [hud hideAnimated:YES afterDelay:1.5f];
+                [self showHud];
             }
         }
         [self refreshAlbumAssetsStatus];
@@ -339,7 +363,11 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.item == 0) {
         //打开相机
-        [self openCamera];
+        if (self.pickerOptions.pickedAssetModels.count < self.pickerOptions.maxAssetsCount) {
+            [self openCamera];
+        }else{
+            [self showHud];
+        }
     }else{
         AssetModel *model = self.assetArr[indexPath.row];
     }
@@ -377,7 +405,6 @@
         [self onTitleBtnClick:self.ntView.titleBtn];
     }
     self.currentAlbumIndexpath = indexPath;
-    
 }
 
 - (void)refreshAlbumAssetsStatus{
@@ -415,6 +442,13 @@
     [self.bottomConfirmBtn setTitle:[NSString stringWithFormat:@"确定(%ld/%ld)",self.pickerOptions.pickedAssetModels.count,self.pickerOptions.maxAssetsCount] forState:UIControlStateNormal];
 }
 
+- (void)showHud{
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    hud.mode = MBProgressHUDModeText;
+    hud.label.text = [NSString stringWithFormat:@"最多选择%ld张照片",self.pickerOptions.maxAssetsCount];
+    [hud hideAnimated:YES afterDelay:1.5f];
+}
+
 - (void)openCamera{
     UIImagePickerController *picker = [[UIImagePickerController alloc] init];
     picker.sourceType = UIImagePickerControllerSourceTypeCamera;
@@ -424,14 +458,27 @@
         picker.mediaTypes = @[mediaTypeImage,mediaTypeMovie];
     }
     picker.delegate = self;
-    if (kiOS7Later) {
-        picker.navigationBar.barTintColor = self.navigationController.navigationBar.barTintColor;
-    }
-    // 设置导航默认标题的颜色及字体大小
+    picker.navigationBar.barTintColor = self.navigationController.navigationBar.barTintColor;
     picker.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName: [UIColor whiteColor],
                                                  NSFontAttributeName : [UIFont boldSystemFontOfSize:18]};
     [self presentViewController:picker animated:YES completion:nil];
     
+}
+
+- (void)switchToCameraRoll{
+    for (AlbumModel *album in self.albumArr) {
+        album.isSelected = NO;
+    }
+    self.albumArr[0].isSelected = YES;
+    [self.ntView.titleBtn setTitle:self.albumArr[0].name forState:UIControlStateNormal];
+    self.ntView.titleBtnWidth = [self.albumArr[0].name widthForFont:kTitleViewTitleFont] + kTitleViewTextImageDistance + kTitleViewArrowSize.width;
+    self.assetArr = self.albumArr[0].assetArray;
+    if (self.currentAlbumIndexpath.row != 0) {
+        [self refreshAlbumAssetsStatus];
+        [self.collectionView reloadData];
+        [self.albumTableView reloadData];
+    }
+    self.currentAlbumIndexpath = [NSIndexPath indexPathForRow:0 inSection:0];
 }
 
 #pragma mark - PHPhotoLibraryChangeObserver
@@ -440,27 +487,50 @@
     dispatch_sync(dispatch_get_main_queue(), ^{
         @strongify(self)
         if (!self) return;
-        for (AlbumModel *album in self.albumArr) {
-            PHFetchResultChangeDetails *changeDetails = [changeInstance changeDetailsForFetchResult:album.result];
-            if (changeDetails) {
-                NSArray *originalAssets = [album.assetArray copy];
-                [album.assetArray removeAllObjects];
-                album.result = changeDetails.fetchResultAfterChanges;
-                for (PHAsset *asset in album.result) {
-                    AssetModel *model = [AssetModel modelWithAsset:asset];
-                    for (AssetModel *am in originalAssets) {
-                        if ([model.asset.localIdentifier isEqualToString:am.asset.localIdentifier]) {
-                            model.picked = am.picked;
-                            model.number = am.number;
+        //相册添加照片所产生的change(这里只对app内调用相机拍照后点击“use photo（使用照片）”按钮后所产生的change)
+        AlbumModel *currentAlbum = self.albumArr[0];
+        PHFetchResultChangeDetails *changes = [changeInstance changeDetailsForFetchResult:currentAlbum.result];
+        if (changes) {
+            currentAlbum.result = [changes fetchResultAfterChanges];
+            if (changes.hasIncrementalChanges) {
+                if (self.collectionView) {
+                    NSArray<PHAsset *> *insertItems = changes.insertedObjects;
+                    NSMutableArray *indexPaths = @[].mutableCopy;
+                    if (insertItems && insertItems.count > 0) {
+                        for (int i=0; i<insertItems.count; i++) {
+                            AssetModel *model = [[AssetModel alloc] init];
+                            model.asset = insertItems[i];
+                            if (self.pickerOptions.pickedAssetModels.count < self.pickerOptions.maxAssetsCount) {
+                                model.picked = YES;
+                                model.number = (int)self.pickerOptions.pickedAssetModels.count + 1;
+                                [self.pickerOptions.pickedAssetModels addObject:model];
+                            }else{
+                                model.picked = NO;
+                                model.number = 0;
+                            }
+                            [currentAlbum.assetArray insertObject:model atIndex:1];
+                            [indexPaths addObject:[NSIndexPath indexPathForItem:i+1 inSection:0]];
                         }
                     }
-                    [album.assetArray addObject:model];
+
+                    [self.collectionView performBatchUpdates:^{
+                        NSArray<PHAsset *> *insertItems = changes.insertedObjects;
+                        if (insertItems && insertItems.count > 0) {
+                            [self.collectionView insertItemsAtIndexPaths:indexPaths];
+                            [changes enumerateMovesWithBlock:^(NSUInteger fromIndex, NSUInteger toIndex) {
+                                [self.collectionView moveItemAtIndexPath:[NSIndexPath indexPathForItem:fromIndex inSection:0] toIndexPath:[NSIndexPath indexPathForItem:toIndex inSection:0]];
+                            }];
+                            [self.collectionView reloadItemsAtIndexPaths:indexPaths];
+                        }
+                    } completion:^(BOOL finished) {
+                        [self resetAlbums];
+                    }];
+
                 }
+
             }
         }
-        self.assetArr = self.albumArr[self.currentAlbumIndexpath.row].assetArray;
-        [self refreshAlbumAssetsStatus];
-        [self.collectionView reloadData];
+        
     });
     
 }
@@ -469,17 +539,33 @@
 
 #pragma mark - UIImagePickerControllerDelegate
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info{
-//    if (picker.sourceType == ) {
-//        <#statements#>
-//    }
-//    UIImage *image = info[UIImagePickerControllerOriginalImage];
-    
-    
+    NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
+    if ([mediaType isEqualToString:(NSString *)kUTTypeImage]) {
+        UIImage *image = info[UIImagePickerControllerOriginalImage];
+        UIImageWriteToSavedPhotosAlbum(image, self, @selector(image: didFinishSavingWithError: contextInfo:), nil);
+    }else{
+        NSURL *url = [info objectForKey:UIImagePickerControllerMediaURL];
+        NSString *urlStr = [url path];
+        if (UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(urlStr)) {
+            UISaveVideoAtPathToSavedPhotosAlbum(urlStr, self, @selector(video:didFinishSavingWithError:contextInfo:), nil);
+        }
+    }
+    if (self.currentAlbumIndexpath.row != 0) {
+        [self switchToCameraRoll];
+    }
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker{
     [picker dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo{
+
+}
+
+- (void)video:(NSString *)videoPath didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo{
+    
 }
 
 @end
