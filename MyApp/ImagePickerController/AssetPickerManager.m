@@ -73,7 +73,7 @@
         PHFetchResult<PHAsset *> *fetchResult = [PHAsset fetchAssetsInAssetCollection:obj options:option];
         if (fetchResult.count > 0) {
             //把“相机胶卷”放在第一位
-            if ([obj.localizedTitle isEqualToString:@"Camera Roll"]) {
+            if ([obj.localizedTitle isEqualToString:@"相机胶卷"]) {
                 [albumArr insertObject:[self modelWithResult:fetchResult name:obj.localizedTitle videoPickable:videoPickable] atIndex:0];
             }else{
                 [albumArr addObject:[self modelWithResult:fetchResult name:obj.localizedTitle videoPickable:videoPickable]];
@@ -184,7 +184,7 @@
 - (AlbumModel *)modelWithResult:(PHFetchResult *)result name:(NSString *)name videoPickable:(BOOL)videoPickable{
     AlbumModel *model = [[AlbumModel alloc] init];
     model.result = result;
-    model.name = [self getNewAlbumName:name];
+    model.name = name;
     
     NSMutableArray *assetArr = [NSMutableArray array];
     for (PHAsset *asset in result) {
@@ -194,27 +194,6 @@
     return model;
 }
 
-- (NSString *)getNewAlbumName:(NSString *)name {
-    NSString *newName;
-    if ([name isEqualToString:@"Camera Roll"]) newName = @"相机胶卷";
-    else if ([name isEqualToString:@"Recently Added"]) newName = @"最近添加";
-    else if ([name isEqualToString:@"Favorites"]) newName = @"个人收藏";
-    else if ([name isEqualToString:@"Videos"]) newName = @"视频";
-    else if ([name isEqualToString:@"Selfies"]) newName = @"自拍";
-    else if ([name isEqualToString:@"Live Photos"]) newName = @"实况照片";
-    else if ([name isEqualToString:@"Panoramas"]) newName = @"全景照片";
-    else if ([name isEqualToString:@"Screenshots"]) newName = @"屏幕快照";
-    else if ([name isEqualToString:@"Animated"]) newName = @"动图";
-    else if ([name isEqualToString:@"Recently Deleted"]) newName = @"最近删除";
-    else if ([name isEqualToString:@"Long Exposure"]) newName = @"长曝光";
-    else if ([name isEqualToString:@"Bursts"]) newName = @"连拍快照";
-    else if ([name isEqualToString:@"Slo-mo"]) newName = @"慢动作";
-    else if ([name isEqualToString:@"Time-lapse"]) newName = @"延时摄影";
-    else if ([name isEqualToString:@"Hidden"]) newName = @"隐藏";
-    else if ([name isEqualToString:@"Portrait"]) newName = @"人像";
-    else newName = name;
-    return newName;
-}
 
 @end
 
