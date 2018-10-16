@@ -29,27 +29,44 @@
 - (void)setModel:(AssetModel *)model {
     _model = model;
     if (model.isPlaceholder) {
-        self.type = AssetCellTypeCamera;
+        _selectImageView.hidden = YES;
+        _selectPhotoButton.hidden = YES;
+        _bottomView.hidden = YES;
+        
+        self.imageView.image = [UIImage imageNamed:@"picker_camera"];
+        self.numberLabel.hidden = YES;
     }else{
         switch (model.asset.mediaType) {
             case PHAssetMediaTypeUnknown:
-                self.type = AssetCellTypeUnknown;
+                _selectImageView.hidden = YES;
+                _selectPhotoButton.hidden = YES;
+                _bottomView.hidden = YES;
                 break;
             case PHAssetMediaTypeImage:
-                self.type = AssetCellTypeImage;
+                _selectImageView.hidden = NO;
+                _selectPhotoButton.hidden = NO;
+                _bottomView.hidden = YES;
                 break;
             case PHAssetMediaTypeVideo:
-                self.type = AssetCellTypeVideo;
+                if (model.selectable) {
+                    _selectImageView.hidden = NO;
+                    _selectPhotoButton.hidden = NO;
+                }else{
+                    _selectImageView.hidden = YES;
+                    _selectPhotoButton.hidden = YES;
+                }
+                _bottomView.hidden = NO;
+                _timeLength.text = [self getNewTimeFromDurationSecond:(NSInteger)model.asset.duration];
                 break;
             case PHAssetMediaTypeAudio:
-                self.type = AssetCellTypeAudio;
+                _selectImageView.hidden = YES;
+                _selectPhotoButton.hidden = YES;
+                _bottomView.hidden = YES;
                 break;
             default:
                 break;
         }
-    }
-
-    if (self.type != AssetCellTypeCamera) {
+        
         [[AssetPickerManager manager] getPhotoWithAsset:model.asset photoWidth:self.width completion:^(UIImage *photo, NSDictionary *info) {
             self.imageView.image = photo;
         }];
@@ -57,28 +74,25 @@
         self.selectImageView.image = model.picked ? [UIImage imageNamed:@"picker_selected"] : [UIImage imageNamed:@"picker_unselected"];
         self.numberLabel.text = self.selectPhotoButton.selected ? [NSString stringWithFormat:@"%d",self.model.number] : @"";
         self.numberLabel.hidden = NO;
-    }else{
-        self.imageView.image = [UIImage imageNamed:@"picker_camera"];
-        self.numberLabel.hidden = YES;
     }
-    
 }
 
-- (void)setType:(AssetCellType)type {
-    _type = type;
-    if (type == AssetCellTypeImage || type == AssetCellTypeVideo) {
-        _selectImageView.hidden = NO;
-        _selectPhotoButton.hidden = NO;
-        _bottomView.hidden = YES;
+- (NSString *)getNewTimeFromDurationSecond:(NSInteger)duration {
+    NSString *newTime;
+    if (duration < 10) {
+        newTime = [NSString stringWithFormat:@"0:0%zd",duration];
+    } else if (duration < 60) {
+        newTime = [NSString stringWithFormat:@"0:%zd",duration];
     } else {
-        _selectImageView.hidden = YES;
-        _selectPhotoButton.hidden = YES;
-        if (type == AssetCellTypeCamera) {
-            _bottomView.hidden = YES;
-        }else{
-            _bottomView.hidden = NO;
+        NSInteger min = duration / 60;
+        NSInteger sec = duration - (min * 60);
+        if (sec < 10) {
+            newTime = [NSString stringWithFormat:@"%zd:0%zd",min,sec];
+        } else {
+            newTime = [NSString stringWithFormat:@"%zd:%zd",min,sec];
         }
     }
+    return newTime;
 }
 
 - (IBAction)selectPhotoButtonClick:(UIButton *)sender {

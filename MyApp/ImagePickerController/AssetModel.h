@@ -17,7 +17,7 @@
 @property (nonatomic, assign)BOOL isPlaceholder;        // 是否为相机占位
 @property (nonatomic, assign)BOOL selectable;           // 是否可以被选中
 
-+ (instancetype)modelWithAsset:(PHAsset *)asset;
++ (instancetype)modelWithAsset:(PHAsset *)asset videoPickable:(BOOL)videoPickable;
 
 
 @end

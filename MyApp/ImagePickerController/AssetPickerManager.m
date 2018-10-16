@@ -97,7 +97,7 @@
 - (void)getAssetsFromFetchResult:(id)result allowPickingVideo:(BOOL)allowPickingVideo completion:(void (^)(NSArray<AssetModel *> *))completion {
     NSMutableArray *assetArr = [NSMutableArray array];
     for (PHAsset *asset in result) {
-        [assetArr addObject:[AssetModel modelWithAsset:asset]];
+        [assetArr addObject:[AssetModel modelWithAsset:asset videoPickable:allowPickingVideo]];
     }
     if (completion) completion(assetArr);
 }
@@ -188,7 +188,7 @@
     
     NSMutableArray *assetArr = [NSMutableArray array];
     for (PHAsset *asset in result) {
-        [assetArr addObject:[AssetModel modelWithAsset:asset]];
+        [assetArr addObject:[AssetModel modelWithAsset:asset videoPickable:videoPickable]];
     }
     model.assetArray = assetArr;
     return model;

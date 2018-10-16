@@ -8,15 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-typedef NS_ENUM(NSUInteger, AssetCellType) {
-    AssetCellTypeUnknown = 0,
-    AssetCellTypeImage   = 1,
-    AssetCellTypeVideo   = 2,
-    AssetCellTypeAudio   = 3,
-    AssetCellTypeCamera  = 4  //相机占位
-};
-
-
 @class AssetModel;
 @interface AssetCell : UICollectionViewCell
 
@@ -24,7 +15,6 @@ typedef NS_ENUM(NSUInteger, AssetCellType) {
 @property (weak, nonatomic) IBOutlet UILabel *numberLabel;
 @property (nonatomic, strong) AssetModel *model;
 @property (nonatomic, copy) void (^didSelectPhotoBlock)(BOOL);
-@property (nonatomic, assign) AssetCellType type;
 
 @end
 

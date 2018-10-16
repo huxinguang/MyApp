@@ -169,7 +169,7 @@
 - (void)showAssetPickerController{
     AssetPickerOptions *options = [[AssetPickerOptions alloc]init];
     options.maxAssetsCount = 9;
-    options.videoPickable = YES;
+    options.videoPickable = NO;
     options.pickedAssetModels = [_inputToolbar.assets mutableCopy];
     AssetPickerController *photoPickerVc = [[AssetPickerController alloc] initWithOptions:options delegate:self];
     CBNavigationController *nav = [[CBNavigationController alloc]initWithRootViewController:photoPickerVc];
