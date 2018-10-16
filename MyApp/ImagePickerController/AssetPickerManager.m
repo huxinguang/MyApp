@@ -73,7 +73,8 @@
         PHFetchResult<PHAsset *> *fetchResult = [PHAsset fetchAssetsInAssetCollection:obj options:option];
         if (fetchResult.count > 0) {
             //把“相机胶卷”放在第一位
-            if ([obj.localizedTitle isEqualToString:@"相机胶卷"]) {
+            //Project中如果添加了Chinese（simplified）,那么在真机（语言为中文）运行时，localizedTitle就是中文
+            if ([obj.localizedTitle isEqualToString:@"相机胶卷"] || [obj.localizedTitle isEqualToString:@"Camera Roll"]) {
                 [albumArr insertObject:[self modelWithResult:fetchResult name:obj.localizedTitle videoPickable:videoPickable] atIndex:0];
             }else{
                 [albumArr addObject:[self modelWithResult:fetchResult name:obj.localizedTitle videoPickable:videoPickable]];
@@ -100,24 +101,6 @@
         [assetArr addObject:[AssetModel modelWithAsset:asset videoPickable:allowPickingVideo]];
     }
     if (completion) completion(assetArr);
-}
-
-- (NSString *)getNewTimeFromDurationSecond:(NSInteger)duration {
-    NSString *newTime;
-    if (duration < 10) {
-        newTime = [NSString stringWithFormat:@"0:0%zd",duration];
-    } else if (duration < 60) {
-        newTime = [NSString stringWithFormat:@"0:%zd",duration];
-    } else {
-        NSInteger min = duration / 60;
-        NSInteger sec = duration - (min * 60);
-        if (sec < 10) {
-            newTime = [NSString stringWithFormat:@"%zd:0%zd",min,sec];
-        } else {
-            newTime = [NSString stringWithFormat:@"%zd:%zd",min,sec];
-        }
-    }
-    return newTime;
 }
 
 - (void)getPhotosBytesWithArray:(NSArray *)photos completion:(void (^)(NSString *totalBytes))completion {

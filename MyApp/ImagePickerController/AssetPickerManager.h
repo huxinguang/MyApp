@@ -24,9 +24,7 @@ typedef NS_ENUM(NSUInteger,AuthorizationStatus) {
 @property(nonatomic, strong) PHFetchResult<PHAssetCollection *> *smartAlbums;   //系统自带相册
 @property(nonatomic, strong) PHFetchResult<PHCollection *> *userCollections;    //其他app相册或用户创建的相册
 
-
 + (instancetype)manager;
-
 
 - (void)handleAuthorizationWithCompletion:(void (^)(AuthorizationStatus aStatus))completion;
 
