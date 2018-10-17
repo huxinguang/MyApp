@@ -136,12 +136,32 @@
 @end
 
 
-@interface SelectedAssetsContainer()<UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout>
+@interface SelectedAssetsContainer()<UICollectionViewDataSource,UICollectionViewDelegate>
 
 @end
 
 @implementation SelectedAssetsContainer
 @synthesize assets = _assets;
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc]init];
+        layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+        layout.itemSize = kSelectedAssetItemSize;
+        layout.minimumLineSpacing = kSelectedAssetItemSpacing;
+        self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectZero collectionViewLayout:layout];
+        self.collectionView.dataSource = self;
+        self.collectionView.delegate = self;
+        self.collectionView.backgroundColor = [UIColor whiteColor];
+        self.collectionView.alwaysBounceHorizontal = YES;
+        self.collectionView.showsHorizontalScrollIndicator = NO;
+        [self addSubview:self.collectionView];
+        [self.collectionView registerClass:[SelectedAssetCell class] forCellWithReuseIdentifier:NSStringFromClass([SelectedAssetCell class])];
+    }
+    return self;
+}
 
 -(NSArray<AssetModel *> *)assets{
     if (_assets == nil) _assets = @[];
@@ -150,40 +170,26 @@
 
 -(void)setAssets:(NSArray<AssetModel *> *)assets{
     _assets = assets;
+    [self setNeedsUpdateConstraints];
     [self.collectionView reloadData];
 }
 
--(UICollectionView *)collectionView{
-    if (!_collectionView) {
-        UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc]init];
-        layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-        layout.itemSize = kSelectedAssetItemSize;
-        layout.minimumLineSpacing = kSelectedAssetItemSpacing;
-        _collectionView = [[UICollectionView alloc]initWithFrame:CGRectZero collectionViewLayout:layout];
-        _collectionView.dataSource = self;
-        _collectionView.delegate = self;
-        _collectionView.backgroundColor = [UIColor whiteColor];
-        _collectionView.alwaysBounceHorizontal = YES;
-        _collectionView.showsHorizontalScrollIndicator = NO;
-        [self addSubview:_collectionView];
-        [_collectionView registerClass:[SelectedAssetCell class] forCellWithReuseIdentifier:NSStringFromClass([SelectedAssetCell class])];
-        @weakify(self)
-        [_collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-            @strongify(self)
-            if (!self) return;
-            make.edges.equalTo(self);
-        }];
-        _collectionView.layer.shadowColor = [UIColor redColor].CGColor;
-        _collectionView.layer.shadowOffset = CGSizeMake(30, 10);
-    }
-    return _collectionView;
+// tell UIKit that you are using AutoLayout
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+- (void)updateConstraints{
+    @weakify(self)
+    [self.collectionView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        @strongify(self)
+        if (!self) return;
+        make.edges.equalTo(self);
+    }];
+    [super updateConstraints];
 }
 
 #pragma mark - UICollectionViewDataSource
-
--(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
-    return 1;
-}
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
     return self.assets.count;
@@ -248,7 +254,7 @@
 }
 
 /*
- 使用Masonry自动布局的View，在添加/更新约束后并不能获取到其frame，所以设置圆角无效，需要调用layoutIfNeeded后才能获取到frame
+ 使用Masonry自动布局的View，在添加/更新约束后并不能获取到其frame，所以设置圆角无效，需要调用layoutIfNeeded后才能立即获取frame
  
  Masonry is a wrapper for autolayouts, and autolayouts calculate itself frame in - (void)layoutSubviews; method, and only after that u can get frames of all views.
  

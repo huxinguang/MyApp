@@ -25,7 +25,7 @@ const char kProcessedImage;
 
 @implementation UIImageView (CornerRadius)
 /**
- * @brief init the Rounding UIImageView, no off-screen-rendered
+ * 初始化圆形UIImageView,无离屏渲染
  */
 - (instancetype)initWithRoundingRectImageView {
     self = [super init];
@@ -36,7 +36,7 @@ const char kProcessedImage;
 }
 
 /**
- * @brief init the UIImageView with cornerRadius, no off-screen-rendered
+ * 初始化带圆角的UIImageView（四个角可任意组合）,无离屏渲染
  */
 - (instancetype)initWithCornerRadiusAdvance:(CGFloat)cornerRadius rectCornerType:(UIRectCorner)rectCornerType {
     self = [super init];
@@ -47,7 +47,7 @@ const char kProcessedImage;
 }
 
 /**
- * @brief attach border for UIImageView with width & color
+ * 给UIImageView的border添加width & color
  */
 - (void)xg_attachBorderWidth:(CGFloat)width color:(UIColor *)color {
     self.xgBorderWidth = width;
@@ -56,7 +56,7 @@ const char kProcessedImage;
 
 #pragma mark - Kernel
 /**
- * @brief clip the cornerRadius with image, UIImageView must be setFrame before, no off-screen-rendered
+ * 用image切圆角,UIImageView必须先设置frame,无离屏渲染
  */
 - (void)xg_cornerRadiusWithImage:(UIImage *)image cornerRadius:(CGFloat)cornerRadius rectCornerType:(UIRectCorner)rectCornerType {
     CGSize size = self.bounds.size;
@@ -81,7 +81,7 @@ const char kProcessedImage;
 }
 
 /**
- * @brief clip the cornerRadius with image, draw the backgroundColor you want, UIImageView must be setFrame before, no off-screen-rendered, no Color Blended layers
+ * 对image切圆角,设置背景色,UIImageView必须先设置frame,无离屏渲染,无颜色混合层
  */
 - (void)xg_cornerRadiusWithImage:(UIImage *)image cornerRadius:(CGFloat)cornerRadius rectCornerType:(UIRectCorner)rectCornerType backgroundColor:(UIColor *)backgroundColor {
     CGSize size = self.bounds.size;
@@ -109,7 +109,7 @@ const char kProcessedImage;
 }
 
 /**
- * @brief set cornerRadius for UIImageView, no off-screen-rendered
+ * 为UIImageView设置圆角, 无离屏渲染
  */
 - (void)xg_cornerRadiusAdvance:(CGFloat)cornerRadius rectCornerType:(UIRectCorner)rectCornerType {
     self.xgRadius = cornerRadius;
@@ -124,9 +124,6 @@ const char kProcessedImage;
     [self layoutIfNeeded];
 }
 
-/**
- * @brief become Rounding UIImageView, no off-screen-rendered
- */
 - (void)xg_cornerRadiusRoundingRect {
     self.xgIsRounding = YES;
     if (!self.xgHadAddObserver) {
@@ -259,12 +256,3 @@ const char kProcessedImage;
 
 @end
 
-
-
-
-
-
-
-
-//xgCornerRadius is available under the MIT license.
-//Please visit https://github.com/liuzhiyi1992/xgCornerRadius for details.
