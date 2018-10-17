@@ -162,16 +162,19 @@
         _collectionView = [[UICollectionView alloc]initWithFrame:CGRectZero collectionViewLayout:layout];
         _collectionView.dataSource = self;
         _collectionView.delegate = self;
-        _collectionView.backgroundColor = [UIColor lightGrayColor];
+        _collectionView.backgroundColor = [UIColor whiteColor];
         _collectionView.alwaysBounceHorizontal = YES;
+        _collectionView.showsHorizontalScrollIndicator = NO;
         [self addSubview:_collectionView];
         [_collectionView registerClass:[SelectedAssetCell class] forCellWithReuseIdentifier:NSStringFromClass([SelectedAssetCell class])];
+        @weakify(self)
         [_collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.mas_top);
-            make.left.equalTo(self.mas_left);
-            make.right.equalTo(self.mas_right);
-            make.bottom.equalTo(self.mas_bottom);
+            @strongify(self)
+            if (!self) return;
+            make.edges.equalTo(self);
         }];
+        _collectionView.layer.shadowColor = [UIColor redColor].CGColor;
+        _collectionView.layer.shadowOffset = CGSizeMake(30, 10);
     }
     return _collectionView;
 }
@@ -189,6 +192,9 @@
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
     SelectedAssetCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([SelectedAssetCell class]) forIndexPath:indexPath];
     cell.numberLabel.text = [NSString stringWithFormat:@"%ld",indexPath.row+1];
+    [cell setNeedsUpdateConstraints];
+    //对使用Masonry的控件设置圆角，此步很关键
+    [cell layoutIfNeeded];
     return cell;
 }
 
@@ -196,8 +202,6 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
     NSLog(@"%ld",indexPath.item);
 }
-
-
 
 
 @end
@@ -209,15 +213,6 @@
         self.imgView = [[UIImageView alloc]initWithCornerRadiusAdvance:kSelectedAssetItemCornerRadius rectCornerType:UIRectCornerAllCorners];
         self.imgView.backgroundColor = [UIColor greenColor];
         [self.contentView addSubview:self.imgView];
-        @weakify(self)
-        [self.imgView mas_makeConstraints:^(MASConstraintMaker *make) {
-            @strongify(self)
-            if (!self) return;
-            make.top.equalTo(self.mas_top);
-            make.left.equalTo(self.mas_left);
-            make.bottom.equalTo(self.mas_bottom);
-            make.right.equalTo(self.mas_right);
-        }];
         
         self.numberLabel = [UILabel new];
         self.numberLabel.backgroundColor = [UIColor colorWithWhite:0.4 alpha:0.6];
@@ -225,17 +220,53 @@
         self.numberLabel.textColor = [UIColor whiteColor];
         self.numberLabel.font = [UIFont systemFontOfSize:11];
         [self.contentView addSubview:self.numberLabel];
-        [self.numberLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            @strongify(self)
-            if (!self) return;
-            make.right.equalTo(self.mas_right);
-            make.bottom.equalTo(self.mas_bottom);
-            make.size.mas_equalTo(CGSizeMake(15, 15));
-        }];
     }
     return self;
 }
 
+// tell UIKit that you are using AutoLayout
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+- (void)updateConstraints{
+    @weakify(self)
+    [self.imgView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        @strongify(self)
+        if (!self) return;
+        make.edges.equalTo(self);
+    }];
+    
+    [self.numberLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        @strongify(self)
+        if (!self) return;
+        make.right.and.bottom.equalTo(self);
+        make.size.mas_equalTo(CGSizeMake(15, 15));
+    }];
+    [super updateConstraints];
+    
+}
+
+/*
+ 使用Masonry自动布局的View，在添加/更新约束后并不能获取到其frame，所以设置圆角无效，需要调用layoutIfNeeded后才能获取到frame
+ 
+ Masonry is a wrapper for autolayouts, and autolayouts calculate itself frame in - (void)layoutSubviews; method, and only after that u can get frames of all views.
+ 
+ masonry methods mas_makeConstraints and similar just setups Constraints no more.
+ 
+ And if you need update constraints you must call mas_remakeConstraints: its just update constraits, for update Frames of views, we must call method setNeedsLayout for setup a flag about recalculation in next Display cycle, and if we want update frames immediately we must call layoutIfNeeded method.
+ */
+
+-(void)layoutIfNeeded{
+    [super layoutIfNeeded];
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.numberLabel.bounds
+                                                   byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerBottomRight)
+                                                         cornerRadii:CGSizeMake(3.0f, 3.0f)];
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    maskLayer.frame = self.numberLabel.bounds;
+    maskLayer.path = maskPath.CGPath;
+    self.numberLabel.layer.mask = maskLayer;
+}
 
 @end
 
