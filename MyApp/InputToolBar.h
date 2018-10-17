@@ -17,6 +17,9 @@
 #define kTextViewMaginTopBottom (kInputBarOriginalHeight-kTextViewOriginalHeight)/2 //输入框顶部、底部边距
 #define kInputBarMaxlHeight  90                                                     //输入框最大高度
 #define kAssetsContainerHeight 100                                                  //图片容器高度
+#define kSelectedAssetItemSize CGSizeMake(70, 70)                                   //选中图片的size
+#define kSelectedAssetItemSpacing 15                                                //选中图片间距
+#define kSelectedAssetItemCornerRadius 3                                            //圆角半径
 
 @class AssetModel;
 @class SelectedAssetsContainer;
@@ -30,10 +33,17 @@
 @property (nonatomic, assign)CGFloat inputToolBarHeight;
 @property (nonatomic, assign)CGFloat containerHeight;
 
+
 @end
 
 @interface SelectedAssetsContainer: UIView
 @property (nonatomic, strong)NSArray<AssetModel *> *assets;
+@property (nonatomic, strong)UICollectionView *collectionView;
+@end
+
+@interface SelectedAssetCell: UICollectionViewCell
+@property (nonatomic, strong)UIImageView *imgView;
+@property (nonatomic, strong)UILabel *numberLabel;
 
 @end
 

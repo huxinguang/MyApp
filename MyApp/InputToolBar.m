@@ -7,6 +7,7 @@
 //
 
 #import "InputToolBar.h"
+#import "UIImageView+CornerRadius.h"
 
 @interface InputToolBar()
 @property (nonatomic, strong)UIView *topLine;
@@ -83,7 +84,7 @@
     }];
     
     self.inputView = [[InputTextView alloc]init];
-    self.inputView.pLabel.text = @"皮一下，很开心";
+    self.inputView.pLabel.text = @"评一下，看看谁最皮";
     self.inputView.layer.cornerRadius = kTextViewOriginalHeight/2;
     [self addSubview:self.inputView];
     [self.inputView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -134,11 +135,105 @@
 
 @end
 
+
+@interface SelectedAssetsContainer()<UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout>
+
+@end
+
 @implementation SelectedAssetsContainer
+@synthesize assets = _assets;
 
 -(NSArray<AssetModel *> *)assets{
     if (_assets == nil) _assets = @[];
     return _assets;
+}
+
+-(void)setAssets:(NSArray<AssetModel *> *)assets{
+    _assets = assets;
+    [self.collectionView reloadData];
+}
+
+-(UICollectionView *)collectionView{
+    if (!_collectionView) {
+        UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc]init];
+        layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+        layout.itemSize = kSelectedAssetItemSize;
+        layout.minimumLineSpacing = kSelectedAssetItemSpacing;
+        _collectionView = [[UICollectionView alloc]initWithFrame:CGRectZero collectionViewLayout:layout];
+        _collectionView.dataSource = self;
+        _collectionView.delegate = self;
+        _collectionView.backgroundColor = [UIColor lightGrayColor];
+        _collectionView.alwaysBounceHorizontal = YES;
+        [self addSubview:_collectionView];
+        [_collectionView registerClass:[SelectedAssetCell class] forCellWithReuseIdentifier:NSStringFromClass([SelectedAssetCell class])];
+        [_collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.mas_top);
+            make.left.equalTo(self.mas_left);
+            make.right.equalTo(self.mas_right);
+            make.bottom.equalTo(self.mas_bottom);
+        }];
+    }
+    return _collectionView;
+}
+
+#pragma mark - UICollectionViewDataSource
+
+-(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView{
+    return 1;
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
+    return self.assets.count;
+}
+
+- (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
+    SelectedAssetCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([SelectedAssetCell class]) forIndexPath:indexPath];
+    cell.numberLabel.text = [NSString stringWithFormat:@"%ld",indexPath.row+1];
+    return cell;
+}
+
+#pragma mark - UICollectionViewDelegate
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath{
+    NSLog(@"%ld",indexPath.item);
+}
+
+
+
+
+@end
+
+@implementation SelectedAssetCell
+//代码自定义 UICollectionViewCell,只能重写initWithFrame方法，而不能重写init方法
+-(instancetype)initWithFrame:(CGRect)frame{
+    if (self = [super initWithFrame:frame]) {
+        self.imgView = [[UIImageView alloc]initWithCornerRadiusAdvance:kSelectedAssetItemCornerRadius rectCornerType:UIRectCornerAllCorners];
+        self.imgView.backgroundColor = [UIColor greenColor];
+        [self.contentView addSubview:self.imgView];
+        @weakify(self)
+        [self.imgView mas_makeConstraints:^(MASConstraintMaker *make) {
+            @strongify(self)
+            if (!self) return;
+            make.top.equalTo(self.mas_top);
+            make.left.equalTo(self.mas_left);
+            make.bottom.equalTo(self.mas_bottom);
+            make.right.equalTo(self.mas_right);
+        }];
+        
+        self.numberLabel = [UILabel new];
+        self.numberLabel.backgroundColor = [UIColor colorWithWhite:0.4 alpha:0.6];
+        self.numberLabel.textAlignment = NSTextAlignmentCenter;
+        self.numberLabel.textColor = [UIColor whiteColor];
+        self.numberLabel.font = [UIFont systemFontOfSize:11];
+        [self.contentView addSubview:self.numberLabel];
+        [self.numberLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            @strongify(self)
+            if (!self) return;
+            make.right.equalTo(self.mas_right);
+            make.bottom.equalTo(self.mas_bottom);
+            make.size.mas_equalTo(CGSizeMake(15, 15));
+        }];
+    }
+    return self;
 }
 
 

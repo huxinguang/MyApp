@@ -346,7 +346,7 @@
                 [self.pickerOptions.pickedAssetModels addObject:model];
                 weakCell.numberLabel.text = [NSString stringWithFormat:@"%ld",self.pickerOptions.pickedAssetModels.count];
             } else {
-                [self showHud];
+                [self showHudWithString:[NSString stringWithFormat:@"最多选择%ld张照片",self.pickerOptions.maxAssetsCount]];
             }
         }
         [self refreshAlbumAssetsStatus];
@@ -365,9 +365,13 @@
     if (indexPath.item == 0) {
         //打开相机
         if (self.pickerOptions.pickedAssetModels.count < self.pickerOptions.maxAssetsCount) {
+#if TARGET_IPHONE_SIMULATOR
+            [self showHudWithString:@"模拟器不支持相机"];
+#elif TARGET_OS_IPHONE
             [self openCamera];
+#endif
         }else{
-            [self showHud];
+            [self showHudWithString:[NSString stringWithFormat:@"最多选择%ld张照片",self.pickerOptions.maxAssetsCount]];
         }
     }else{
         AssetModel *model = self.assetArr[indexPath.row];
@@ -443,10 +447,10 @@
     [self.bottomConfirmBtn setTitle:[NSString stringWithFormat:@"确定(%ld/%ld)",self.pickerOptions.pickedAssetModels.count,self.pickerOptions.maxAssetsCount] forState:UIControlStateNormal];
 }
 
-- (void)showHud{
+- (void)showHudWithString:(NSString *)string{
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.mode = MBProgressHUDModeText;
-    hud.label.text = [NSString stringWithFormat:@"最多选择%ld张照片",self.pickerOptions.maxAssetsCount];
+    hud.label.text = string;
     [hud hideAnimated:YES afterDelay:1.5f];
 }
 

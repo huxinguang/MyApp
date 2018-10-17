@@ -35,7 +35,7 @@
         self.pLabel = [UILabel new];
         self.pLabel.textAlignment = NSTextAlignmentLeft;
         self.pLabel.font = [UIFont systemFontOfSize:InputTextViewFontSize];
-        self.pLabel.textColor = [UIColor redColor];
+        self.pLabel.textColor = [UIColor colorWithRGB:0x999999];
         [self addSubview:self.pLabel];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updatePLabel) name:UITextViewTextDidChangeNotification object:self];
     }
