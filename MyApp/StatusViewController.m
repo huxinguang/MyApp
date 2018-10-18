@@ -261,7 +261,7 @@
 - (void)clickImage:(UIButton *)btn{
     StatusCell *cell = btn.paramDic[@"cell"];
     int index = [btn.paramDic[@"pic_index"] intValue];
-    NSMutableArray *items = [NSMutableArray new];
+    NSMutableArray *items = @[].mutableCopy;
     NSArray<Media *> *medias = nil;
     if ([btn.paramDic[@"container_type"] isEqualToString:@"pics"]) {
         medias = cell.picsContainer.pics;

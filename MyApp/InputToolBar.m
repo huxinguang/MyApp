@@ -39,9 +39,7 @@
         @weakify(self)
         [_assetsContainer mas_makeConstraints:^(MASConstraintMaker *make) {
             @strongify(self)
-            make.top.equalTo(self.mas_top);
-            make.left.equalTo(self.mas_left);
-            make.right.equalTo(self.mas_right);
+            make.top.and.left.and.right.equalTo(self);
             make.height.mas_equalTo(kAssetsContainerHeight);
         }];
     }
@@ -56,9 +54,7 @@
     [self.topLine mas_makeConstraints:^(MASConstraintMaker *make) {
         @strongify(self)
         if (!self) return;
-        make.top.equalTo(self.mas_top);
-        make.left.equalTo(self.mas_left);
-        make.right.equalTo(self.mas_right);
+        make.top.and.left.and.right.equalTo(self);
         make.height.mas_equalTo(CGFloatFromPixel(1));
     }];
     
@@ -84,7 +80,7 @@
     }];
     
     self.inputView = [[InputTextView alloc]init];
-    self.inputView.pLabel.text = @"评一下，看看谁最皮";
+    self.inputView.pLabel.text = @"评一评，看看谁最皮";
     self.inputView.layer.cornerRadius = kTextViewOriginalHeight/2;
     [self addSubview:self.inputView];
     [self.inputView mas_makeConstraints:^(MASConstraintMaker *make) {

@@ -225,7 +225,7 @@
 @property (nonatomic, weak) UIView *toContainerView;
 
 @property (nonatomic, strong) UIImage *snapshotImage;
-@property (nonatomic, strong) UIImage *snapshorImageHideFromView;
+@property (nonatomic, strong) UIImage *snapshotImageHideFromView;
 
 @property (nonatomic, strong) UIImageView *background;
 @property (nonatomic, strong) UIImageView *blurBackground;
@@ -250,7 +250,9 @@
     self = [super init];
     if (groupItems.count == 0) return nil;
     _groupItems = groupItems.copy;
-    _blurEffectBackground = YES;
+    //如果为YES,会在当前界面截图，并在截图前隐藏当前选中的图片，然后对截图进行高斯模糊处理
+    //如果是NO,则会创建一个黑色的image
+    _blurEffectBackground = NO;
     
     NSString *model = [UIDevice currentDevice].machineModel;
     static NSMutableSet *oldDevices;
@@ -306,7 +308,7 @@
     press.delegate = self;
     [self addGestureRecognizer:press];
     
-    if (kSystemVersion >= 7) {
+    if (kiOS7Later) {
         UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
         [self addGestureRecognizer:pan];
         _panGesture = pan;
@@ -379,12 +381,12 @@
     _snapshotImage = [_toContainerView snapshotImageAfterScreenUpdates:NO];
     BOOL fromViewHidden = fromView.hidden;
     fromView.hidden = YES;
-    _snapshorImageHideFromView = [_toContainerView snapshotImage];
+    _snapshotImageHideFromView = [_toContainerView snapshotImage];
     fromView.hidden = fromViewHidden;
     
-    _background.image = _snapshorImageHideFromView;
+    _background.image = _snapshotImageHideFromView;
     if (_blurEffectBackground) {
-        _blurBackground.image = [_snapshorImageHideFromView imageByBlurDark]; //Same to UIBlurEffectStyleDark
+        _blurBackground.image = [_snapshotImageHideFromView imageByBlurDark]; //Same to UIBlurEffectStyleDark
     } else {
         _blurBackground.image = [UIImage imageWithColor:[UIColor blackColor]];
     }
@@ -398,6 +400,7 @@
     
     _scrollView.contentSize = CGSizeMake(_scrollView.width * self.groupItems.count, _scrollView.height);
     [_scrollView scrollRectToVisible:CGRectMake(_scrollView.width * _pager.currentPage, 0, _scrollView.width, _scrollView.height) animated:NO];
+    //手动调用，用于创建cell
     [self scrollViewDidScroll:_scrollView];
     
     [UIView setAnimationsEnabled:YES];
@@ -532,7 +535,7 @@
         _background.image = _snapshotImage;
         [_background.layer addFadeAnimationWithDuration:0.25 curve:UIViewAnimationCurveEaseOut];
     } else {
-        _background.image = _snapshorImageHideFromView;
+        _background.image = _snapshotImageHideFromView;
     }
 
     
@@ -590,7 +593,7 @@
     CGFloat floatPage = _scrollView.contentOffset.x / _scrollView.width;
     NSInteger page = _scrollView.contentOffset.x / _scrollView.width + 0.5;
     
-    for (NSInteger i = page - 1; i <= page + 1; i++) { // preload left and right cell
+    for (NSInteger i = page - 1; i <= page + 1; i++) { // 预加载左边和右边的cell
         if (i >= 0 && i < self.groupItems.count) {
             YYPhotoGroupCell *cell = [self cellForPage:i];
             if (!cell) {
