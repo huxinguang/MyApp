@@ -25,25 +25,25 @@
 @class SelectedAssetsContainer;
 
 @interface InputToolBar : UIView
-@property (nonatomic, strong)InputTextView *inputView;
-@property (nonatomic, strong)UIButton *voiceEntryBtn;
-@property (nonatomic, strong)UIButton *imgEntryBtn;
-@property (nonatomic, strong)SelectedAssetsContainer *assetsContainer;
-@property (nonatomic, strong)NSArray<AssetModel *> *assets;
-@property (nonatomic, assign)CGFloat inputToolBarHeight;
-@property (nonatomic, assign)CGFloat containerHeight;
+@property (nonatomic, strong) InputTextView *inputView;
+@property (nonatomic, strong) UIButton *voiceEntryBtn;
+@property (nonatomic, strong) UIButton *imgEntryBtn;
+@property (nonatomic, strong) SelectedAssetsContainer *assetsContainer;
+@property (nonatomic, strong) NSArray<AssetModel *> *assets;
+@property (nonatomic, assign) CGFloat inputToolBarHeight;
+@property (nonatomic, assign) CGFloat containerHeight;
 
 
 @end
 
 @interface SelectedAssetsContainer: UIView
-@property (nonatomic, strong)NSArray<AssetModel *> *assets;
-@property (nonatomic, strong)UICollectionView *collectionView;
+@property (nonatomic, strong) NSArray<AssetModel *> *assets;
+@property (nonatomic, strong) UICollectionView *collectionView;
 @end
 
 @interface SelectedAssetCell: UICollectionViewCell
-@property (nonatomic, strong)UIImageView *imgView;
-@property (nonatomic, strong)UILabel *numberLabel;
+@property (nonatomic, strong) UIImageView *imgView;
+@property (nonatomic, strong) UILabel *numberLabel;
 
 @end
 

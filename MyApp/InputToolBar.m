@@ -10,7 +10,7 @@
 #import "UIImageView+CornerRadius.h"
 
 @interface InputToolBar()
-@property (nonatomic, strong)UIView *topLine;
+@property (nonatomic, strong) UIView *topLine;
 @end
 
 @implementation InputToolBar

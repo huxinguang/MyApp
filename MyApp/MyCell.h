@@ -9,9 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface MyCell : UITableViewCell
-@property (nonatomic, strong)UIImageView *iconView;
-@property (nonatomic, strong)UILabel *titleLabel;
-@property (nonatomic, strong)UILabel *countLabel;
-@property (nonatomic, strong)UIImageView *arrowView;
-@property (nonatomic, strong)UIView *thinLine;
+@property (nonatomic, strong) UIImageView *iconView;
+@property (nonatomic, strong) UILabel *titleLabel;
+@property (nonatomic, strong) UILabel *countLabel;
+@property (nonatomic, strong) UIImageView *arrowView;
+@property (nonatomic, strong) UIView *thinLine;
 @end

@@ -10,6 +10,6 @@
 
 @interface InputTextView : UITextView
 
-@property (nonatomic, strong)UILabel *pLabel;
+@property (nonatomic, strong) UILabel *pLabel;
 
 @end

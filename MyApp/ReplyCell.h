@@ -12,6 +12,6 @@
 
 @interface ReplyCell : BaseCell
 
-@property (nonatomic,strong)UILabel *timeLabel;     //时间
+@property (nonatomic,strong) UILabel *timeLabel;     //时间
 
 @end

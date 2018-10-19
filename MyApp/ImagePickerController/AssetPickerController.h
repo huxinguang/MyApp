@@ -45,17 +45,17 @@
 @end
 
 @interface AssetPickerOptions: NSObject
-@property (nonatomic, assign)NSInteger maxAssetsCount;                              //最大可选数量
-@property (nonatomic, assign)BOOL videoPickable;                                    //是否可选视频
-@property (nonatomic, strong)NSMutableArray<AssetModel *> *pickedAssetModels;       //已选asset
+@property (nonatomic, assign) NSInteger maxAssetsCount;                              //最大可选数量
+@property (nonatomic, assign) BOOL videoPickable;                                    //是否可选视频
+@property (nonatomic, strong) NSMutableArray<AssetModel *> *pickedAssetModels;       //已选asset
 @end
 
 
 @interface NavTitleView : UIView
-@property (nonatomic, strong)UIButton *titleBtn;
-@property (nonatomic, strong)UIImageView *arrowView;
-@property (nonatomic, assign)CGFloat titleBtnWidth;
-@property (nonatomic, assign)CGSize intrinsicContentSize;
+@property (nonatomic, strong) UIButton *titleBtn;
+@property (nonatomic, strong) UIImageView *arrowView;
+@property (nonatomic, assign) CGFloat titleBtnWidth;
+@property (nonatomic, assign) CGSize intrinsicContentSize;
 
 @end
 

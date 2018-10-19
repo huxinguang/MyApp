@@ -11,11 +11,11 @@
 #import <Photos/Photos.h>
 
 @interface AssetModel : NSObject
-@property (nonatomic, strong)PHAsset *asset;            // PHAsset
-@property (nonatomic, getter=isPicked)BOOL picked;      // 选中状态 默认NO
-@property (nonatomic, assign)int number;                // 数字
-@property (nonatomic, assign)BOOL isPlaceholder;        // 是否为相机占位
-@property (nonatomic, assign)BOOL selectable;           // 是否可以被选中
+@property (nonatomic, strong) PHAsset *asset;            // PHAsset
+@property (nonatomic, getter=isPicked) BOOL picked;      // 选中状态 默认NO
+@property (nonatomic, assign) int number;                // 数字
+@property (nonatomic, assign) BOOL isPlaceholder;        // 是否为相机占位
+@property (nonatomic, assign) BOOL selectable;           // 是否可以被选中
 
 + (instancetype)modelWithAsset:(PHAsset *)asset videoPickable:(BOOL)videoPickable;
 

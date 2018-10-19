@@ -67,9 +67,9 @@ typedef NS_ENUM(NSUInteger, PicsContainerType) {
 
 @interface PicsContainerView : UIView
 
-@property (nonatomic, assign)PicsContainerType type;
-@property (nonatomic, strong)NSArray <Media *> *pics;
-@property (nonatomic, strong)NSArray <UIButton *> *picViews;
+@property (nonatomic, assign) PicsContainerType type;
+@property (nonatomic, strong) NSArray <Media *> *pics;
+@property (nonatomic, strong) NSArray <UIButton *> *picViews;
 
 
 @end

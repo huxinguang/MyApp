@@ -11,7 +11,7 @@
 
 
 @interface ResumeViewController ()<WKNavigationDelegate,WKUIDelegate>
-@property (nonatomic, strong)WKWebView *webView;
+@property (nonatomic, strong) WKWebView *webView;
 
 @end
 

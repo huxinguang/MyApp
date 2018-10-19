@@ -16,7 +16,7 @@ static NSString *const baseDebugUrl = @"http://127.0.0.1:8080/";
 + (NSString *)getBaseUrl{
 #if TARGET_IPHONE_SIMULATOR //模拟器
     return baseDebugUrl;
-#elif TARGET_OS_IPHONE //真机
+#elif TARGET_OS_IPHONE      //真机
     return baseReleaseUrl;
 #endif
 }
