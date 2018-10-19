@@ -109,9 +109,7 @@
     [self.bottomLine mas_remakeConstraints:^(MASConstraintMaker *make) {
         @strongify(self)
         if (!self) return;
-        make.bottom.equalTo(self.contentView.mas_bottom);
-        make.left.equalTo(self.contentView.mas_left);
-        make.right.equalTo(self.contentView.mas_right);
+        make.left.and.bottom.and.right.equalTo(self.contentView);
         make.height.mas_equalTo(kCommentCellBottomLineHeight);
     }];
     

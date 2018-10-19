@@ -67,8 +67,7 @@
     [self.thinLine mas_makeConstraints:^(MASConstraintMaker *make) {
         @strongify(self);
         make.left.equalTo(self.titleLabel.mas_left);
-        make.right.equalTo(self.contentView.mas_right);
-        make.bottom.equalTo(self.contentView.mas_bottom);
+        make.right.and.bottom.equalTo(self.contentView);
         make.height.mas_equalTo(CGFloatFromPixel(1));
     }];
     

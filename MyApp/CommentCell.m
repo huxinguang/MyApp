@@ -39,23 +39,23 @@
     _replyBgView.layer.masksToBounds = YES;
     [self.contentView addSubview:_replyBgView];
     
-    _replayLabel1 = [YYLabel new];
-    _replayLabel1.font = [UIFont systemFontOfSize:kReplyLabelFont];
-    _replayLabel1.numberOfLines = 0;
-    _replayLabel1.preferredMaxLayoutWidth = kAppScreenWidth - 2*kCommentCellPaddingLeftRight - kCommentAvatarViewSize.width - kCommentNameMarginLeft - 2*kStatusCommentBackgroundPadding;
-    _replayLabel1.lineBreakMode = NSLineBreakByCharWrapping;
-    [self.contentView addSubview:_replayLabel1];
+    _replyLabel1 = [YYLabel new];
+    _replyLabel1.font = [UIFont systemFontOfSize:kReplyLabelFont];
+    _replyLabel1.numberOfLines = 0;
+    _replyLabel1.preferredMaxLayoutWidth = kAppScreenWidth - 2*kCommentCellPaddingLeftRight - kCommentAvatarViewSize.width - kCommentNameMarginLeft - 2*kStatusCommentBackgroundPadding;
+    _replyLabel1.lineBreakMode = NSLineBreakByCharWrapping;
+    [self.contentView addSubview:_replyLabel1];
 
-    _replayLabel2 = [YYLabel new];
-    _replayLabel2.font = [UIFont systemFontOfSize:kReplyLabelFont];
-    _replayLabel2.numberOfLines = 0;
-    _replayLabel2.preferredMaxLayoutWidth = kAppScreenWidth - 2*kCommentCellPaddingLeftRight - kCommentAvatarViewSize.width - kCommentNameMarginLeft - 2*kStatusCommentBackgroundPadding;
-    _replayLabel2.lineBreakMode = NSLineBreakByCharWrapping;
-    [self.contentView addSubview:_replayLabel2];
+    _replyLabel2 = [YYLabel new];
+    _replyLabel2.font = [UIFont systemFontOfSize:kReplyLabelFont];
+    _replyLabel2.numberOfLines = 0;
+    _replyLabel2.preferredMaxLayoutWidth = kAppScreenWidth - 2*kCommentCellPaddingLeftRight - kCommentAvatarViewSize.width - kCommentNameMarginLeft - 2*kStatusCommentBackgroundPadding;
+    _replyLabel2.lineBreakMode = NSLineBreakByCharWrapping;
+    [self.contentView addSubview:_replyLabel2];
 
-    _replayLabel3 = [YYLabel new];
-    _replayLabel3.font = [UIFont systemFontOfSize:kReplyLabelFont];
-    [self.contentView addSubview:_replayLabel3];
+    _replyLabel3 = [YYLabel new];
+    _replyLabel3.font = [UIFont systemFontOfSize:kReplyLabelFont];
+    [self.contentView addSubview:_replyLabel3];
     
 //    [self.likeBtn setImage:[UIImage imageNamed:@"dislike"] forState:UIControlStateNormal];
 //    self.likeBtn.transform = CGAffineTransformMakeRotation(-M_PI);
@@ -97,7 +97,7 @@
             NSLog(@"+++++++++++reply1_username");
         }];
 
-        self.replayLabel1.attributedText = reply1_text;
+        self.replyLabel1.attributedText = reply1_text;
 
 
         Status *reply2 = status.replies[1];
@@ -114,7 +114,7 @@
             NSLog(@"+++++++++++reply2_username");
         }];
         
-        self.replayLabel2.attributedText = reply2_text;
+        self.replyLabel2.attributedText = reply2_text;
 
 
         NSMutableAttributedString *reply3_text = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"查看%d条评论",status.replies_count]];
@@ -128,7 +128,7 @@
                 [self.delegate clickMoreReplyBtnAction:status];
             }
         }];
-        self.replayLabel3.attributedText = reply3_text;
+        self.replyLabel3.attributedText = reply3_text;
 
     }else if (status.replies_count == 2){
         Status *reply1 = status.replies[0];
@@ -145,7 +145,7 @@
             NSLog(@"+++++++++++reply1_username");
         }];
         
-        self.replayLabel1.attributedText = reply1_text;
+        self.replyLabel1.attributedText = reply1_text;
         
         
         Status *reply2 = status.replies[1];
@@ -162,7 +162,7 @@
             NSLog(@"+++++++++++reply2_username");
         }];
         
-        self.replayLabel2.attributedText = reply2_text;
+        self.replyLabel2.attributedText = reply2_text;
         
     }else if (status.replies_count == 1){
         Status *reply1 = status.replies[0];
@@ -179,7 +179,7 @@
             NSLog(@"+++++++++++reply1_username");
         }];
         
-        self.replayLabel1.attributedText = reply1_text;
+        self.replyLabel1.attributedText = reply1_text;
         
     }else{
 
@@ -241,13 +241,12 @@
         @strongify(self)
         if (!self) return;
         make.bottom.equalTo(self.contentView.mas_bottom).with.offset(-kCommentCellPaddingBottom);
-        make.left.equalTo(self.picsContainer.mas_left);
-        make.right.equalTo(self.picsContainer.mas_right);
+        make.left.and.right.equalTo(self.picsContainer);
         make.height.mas_equalTo(self.sts.commentBgHeight);
     }];
 
     if (self.sts.replies_count > 2) {
-        [self.replayLabel1 mas_remakeConstraints:^(MASConstraintMaker *make) {
+        [self.replyLabel1 mas_remakeConstraints:^(MASConstraintMaker *make) {
             @strongify(self)
             if (!self) return;
             make.top.equalTo(self.replyBgView.mas_top).with.offset(kReplyBackgroundPadding);
@@ -255,42 +254,40 @@
             make.right.equalTo(self.replyBgView.mas_right).with.offset(-kReplyBackgroundPadding);
         }];
 
-        [self.replayLabel2 mas_remakeConstraints:^(MASConstraintMaker *make) {
+        [self.replyLabel2 mas_remakeConstraints:^(MASConstraintMaker *make) {
             @strongify(self)
             if (!self) return;
-            make.top.equalTo(self.replayLabel1.mas_bottom).with.offset(kReplyLabelDistance);
-            make.left.equalTo(self.replayLabel1.mas_left);
-            make.right.equalTo(self.replayLabel1.mas_right);
+            make.top.equalTo(self.replyLabel1.mas_bottom).with.offset(kReplyLabelDistance);
+            make.left.and.right.equalTo(self.replyLabel1);
         }];
 
-        [self.replayLabel3 mas_remakeConstraints:^(MASConstraintMaker *make) {
+        [self.replyLabel3 mas_remakeConstraints:^(MASConstraintMaker *make) {
             @strongify(self)
             if (!self) return;
-            make.top.equalTo(self.replayLabel2.mas_bottom).with.offset(kReplyLabelDistance);
-            make.left.equalTo(self.replayLabel2.mas_left);
-            make.right.equalTo(self.replayLabel2.mas_right);
+            make.top.equalTo(self.replyLabel2.mas_bottom).with.offset(kReplyLabelDistance);
+            make.left.and.right.equalTo(self.replyLabel2);
         }];
 
 
     }else if (self.sts.replies_count == 2){
-        [self.replayLabel1 mas_remakeConstraints:^(MASConstraintMaker *make) {
+        [self.replyLabel1 mas_remakeConstraints:^(MASConstraintMaker *make) {
             @strongify(self)
             if (!self) return;
+            
             make.top.equalTo(self.replyBgView.mas_top).with.offset(kReplyBackgroundPadding);
             make.left.equalTo(self.replyBgView.mas_left).with.offset(kReplyBackgroundPadding);
             make.right.equalTo(self.replyBgView.mas_right).with.offset(-kReplyBackgroundPadding);
         }];
 
-        [self.replayLabel2 mas_remakeConstraints:^(MASConstraintMaker *make) {
+        [self.replyLabel2 mas_remakeConstraints:^(MASConstraintMaker *make) {
             @strongify(self)
             if (!self) return;
-            make.top.equalTo(self.replayLabel1.mas_bottom).with.offset(kReplyLabelDistance);
-            make.left.equalTo(self.replayLabel1.mas_left);
-            make.right.equalTo(self.replayLabel1.mas_right);
+            make.top.equalTo(self.replyLabel1.mas_bottom).with.offset(kReplyLabelDistance);
+            make.left.and.right.equalTo(self.replyLabel1);
         }];
 
     }else if (self.sts.replies_count == 1){
-        [self.replayLabel1 mas_remakeConstraints:^(MASConstraintMaker *make) {
+        [self.replyLabel1 mas_remakeConstraints:^(MASConstraintMaker *make) {
             @strongify(self)
             if (!self) return;
             make.top.equalTo(self.replyBgView.mas_top).with.offset(kReplyBackgroundPadding);
@@ -304,9 +301,7 @@
     [self.bottomLine mas_remakeConstraints:^(MASConstraintMaker *make) {
         @strongify(self)
         if (!self) return;
-        make.bottom.equalTo(self.contentView.mas_bottom);
-        make.left.equalTo(self.contentView.mas_left);
-        make.right.equalTo(self.contentView.mas_right);
+        make.left.and.bottom.and.right.equalTo(self.contentView);
         make.height.mas_equalTo(kCommentCellBottomLineHeight);
     }];
 
@@ -315,26 +310,26 @@
 
 - (void)layoutSubviews{
     if (self.sts.replies_count > 2) {
-        self.replayLabel1.hidden = NO;
-        self.replayLabel2.hidden = NO;
-        self.replayLabel3.hidden = NO;
+        self.replyLabel1.hidden = NO;
+        self.replyLabel2.hidden = NO;
+        self.replyLabel3.hidden = NO;
         self.replyBgView.hidden = NO;
 
     }else if (self.sts.replies_count == 2){
-        self.replayLabel1.hidden = NO;
-        self.replayLabel2.hidden = NO;
-        self.replayLabel3.hidden = YES;
+        self.replyLabel1.hidden = NO;
+        self.replyLabel2.hidden = NO;
+        self.replyLabel3.hidden = YES;
         self.replyBgView.hidden = NO;
 
     }else if (self.sts.replies_count == 1){
-        self.replayLabel1.hidden = NO;
-        self.replayLabel2.hidden = YES;
-        self.replayLabel3.hidden = YES;
+        self.replyLabel1.hidden = NO;
+        self.replyLabel2.hidden = YES;
+        self.replyLabel3.hidden = YES;
         self.replyBgView.hidden = NO;
     }else{
-        self.replayLabel1.hidden = YES;
-        self.replayLabel2.hidden = YES;
-        self.replayLabel3.hidden = YES;
+        self.replyLabel1.hidden = YES;
+        self.replyLabel2.hidden = YES;
+        self.replyLabel3.hidden = YES;
         self.replyBgView.hidden = YES;
     }
 

@@ -43,8 +43,7 @@
         @strongify(self)
         if (!self) return;
         make.top.equalTo(self.view.mas_top).with.offset(kAppStatusBarAndNavigationBarHeight);
-        make.left.equalTo(self.view.mas_left);
-        make.right.equalTo(self.view.mas_right);
+        make.left.and.right.equalTo(self.view);
         make.bottom.equalTo(self.inputToolbar.mas_top);
     }];
     
@@ -136,13 +135,11 @@
         //评论图片容器高度计算
         CGFloat commentImageContainerHeight = 0;
         switch (status.medias.count) {
-            case 0:
-            {
+            case 0:{
                 commentImageContainerHeight = 0;
             }
                 break;
-            default:
-            {
+            default:{
                 int lineCount = (int)((status.medias.count - 1)/3) + 1;
                 commentImageContainerHeight = lineCount*kCommentPicHW + (lineCount-1)*kStatusCellPaddingPic;
             }

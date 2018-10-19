@@ -54,8 +54,7 @@
         @strongify(self)
         if (!self) return;
         make.top.equalTo(self.view.mas_top).with.offset(kAppStatusBarAndNavigationBarHeight);
-        make.left.equalTo(self.view.mas_left);
-        make.right.equalTo(self.view.mas_right);
+        make.left.and.right.equalTo(self.view);
         make.bottom.equalTo(self.inputToolbar.mas_top);
     }];
     

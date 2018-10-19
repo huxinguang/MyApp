@@ -124,8 +124,7 @@
             @strongify(self)
             if (!self) return;
             make.bottom.equalTo(self.view.mas_bottom).with.offset(-kAppTabbarSafeBottomMargin);
-            make.left.equalTo(self.view.mas_left);
-            make.right.equalTo(self.view.mas_right);
+            make.left.and.right.equalTo(self.view);
             make.height.mas_equalTo(self->_inputToolbar.inputToolBarHeight);//不使用self.inputToolbar避免死循环
         }];
         [_inputToolbar.imgEntryBtn addTarget:self action:@selector(onImgEntryBtnClick) forControlEvents:UIControlEventTouchUpInside];
@@ -141,10 +140,7 @@
         UIWindow *window = [UIApplication sharedApplication].keyWindow;
         [window addSubview:_maskView];
         [_maskView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(window.mas_top);
-            make.left.equalTo(window.mas_left);
-            make.right.equalTo(window.mas_right);
-            make.bottom.equalTo(window.mas_bottom);
+            make.edges.equalTo(window);
         }];
     }
     return _maskView;
