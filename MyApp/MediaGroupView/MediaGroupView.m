@@ -1,22 +1,23 @@
 //
-//  YYPhotoGroupView.m
+//  MediaGroupView.m
+//  MyApp
 //
 //  Created by ibireme on 14/3/9.
 //  Copyright (C) 2014 ibireme. All rights reserved.
 //
 
-#import "YYPhotoGroupView.h"
+#import "MediaGroupView.h"
 
 #define kPadding 20
 #define kHiColor [UIColor colorWithRGBHex:0x2dd6b8]
 
 
-@interface YYPhotoGroupItem()<NSCopying>
+@interface MediaGroupItem()<NSCopying>
 @property (nonatomic, readonly) UIImage *thumbImage;
 @property (nonatomic, readonly) BOOL thumbClippedToTop;
 - (BOOL)shouldClipToTop:(CGSize)imageSize forView:(UIView *)view;
 @end
-@implementation YYPhotoGroupItem
+@implementation MediaGroupItem
 
 - (UIImage *)thumbImage {
     if ([_thumbView respondsToSelector:@selector(image)]) {
@@ -41,14 +42,14 @@
 }
 
 - (id)copyWithZone:(NSZone *)zone {
-    YYPhotoGroupItem *item = [self.class new];
+    MediaGroupItem *item = [self.class new];
     return item;
 }
 @end
 
 
 
-@interface YYPhotoGroupCell : UIScrollView <UIScrollViewDelegate>
+@interface MediaGroupCell : UIScrollView <UIScrollViewDelegate>
 @property (nonatomic, strong) UIView *imageContainerView;
 @property (nonatomic, strong) YYAnimatedImageView *imageView;
 @property (nonatomic, assign) NSInteger page;
@@ -57,12 +58,12 @@
 @property (nonatomic, assign) CGFloat progress;
 @property (nonatomic, strong) CAShapeLayer *progressLayer;
 
-@property (nonatomic, strong) YYPhotoGroupItem *item;
+@property (nonatomic, strong) MediaGroupItem *item;
 @property (nonatomic, readonly) BOOL itemDidLoad;
 - (void)resizeSubviewSize;
 @end
 
-@implementation YYPhotoGroupCell
+@implementation MediaGroupCell
 
 - (instancetype)init {
     self = super.init;
@@ -107,7 +108,7 @@
     _progressLayer.center = CGPointMake(self.width / 2, self.height / 2);
 }
 
-- (void)setItem:(YYPhotoGroupItem *)item {
+- (void)setItem:(MediaGroupItem *)item {
     if (_item == item) return;
     _item = item;
     _itemDidLoad = NO;
@@ -132,7 +133,7 @@
     }
     
     @weakify(self)
-    [_imageView setImageWithURL:item.largeImageURL placeholder:item.thumbImage options:kNilOptions progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+    [_imageView setImageWithURL:item.largeMediaURL placeholder:item.thumbImage options:kNilOptions progress:^(NSInteger receivedSize, NSInteger expectedSize) {
         @strongify(self)
         if (!self) return;
         CGFloat progress = receivedSize / (float)expectedSize;
@@ -220,7 +221,7 @@
 
 
 
-@interface YYPhotoGroupView() <UIScrollViewDelegate, UIGestureRecognizerDelegate>
+@interface MediaGroupView() <UIScrollViewDelegate, UIGestureRecognizerDelegate>
 @property (nonatomic, weak) UIView *fromView;
 @property (nonatomic, weak) UIView *toContainerView;
 
@@ -244,7 +245,7 @@
 @property (nonatomic, assign) CGPoint panGestureBeginPoint;
 @end
 
-@implementation YYPhotoGroupView
+@implementation MediaGroupView
 
 - (instancetype)initWithGroupItems:(NSArray *)groupItems {
     self = [super init];
@@ -370,7 +371,7 @@
     
     NSInteger page = -1;
     for (NSUInteger i = 0; i < self.groupItems.count; i++) {
-        if (fromView == ((YYPhotoGroupItem *)self.groupItems[i]).thumbView) {
+        if (fromView == ((MediaGroupItem *)self.groupItems[i]).thumbView) {
             page = (int)i;
             break;
         }
@@ -408,11 +409,11 @@
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:animated ? UIStatusBarAnimationFade : UIStatusBarAnimationNone];
     
     
-    YYPhotoGroupCell *cell = [self cellForPage:self.currentPage];
-    YYPhotoGroupItem *item = _groupItems[self.currentPage];
+    MediaGroupCell *cell = [self cellForPage:self.currentPage];
+    MediaGroupItem *item = _groupItems[self.currentPage];
     
     if (!item.thumbClippedToTop) {
-        NSString *imageKey = [[YYWebImageManager sharedManager] cacheKeyForURL:item.largeImageURL];
+        NSString *imageKey = [[YYWebImageManager sharedManager] cacheKeyForURL:item.largeMediaURL];
         if ([[YYWebImageManager sharedManager].cache getImageForKey:imageKey withType:YYImageCacheTypeMemory]) {
             cell.item = item;
         }
@@ -487,8 +488,8 @@
     
     [[UIApplication sharedApplication] setStatusBarHidden:_fromNavigationBarHidden withAnimation:animated ? UIStatusBarAnimationFade : UIStatusBarAnimationNone];
     NSInteger currentPage = self.currentPage;
-    YYPhotoGroupCell *cell = [self cellForPage:currentPage];
-    YYPhotoGroupItem *item = _groupItems[currentPage];
+    MediaGroupCell *cell = [self cellForPage:currentPage];
+    MediaGroupItem *item = _groupItems[currentPage];
     
     UIView *fromView = nil;
     if (_fromItemIndex == currentPage) {
@@ -582,7 +583,7 @@
 
 
 - (void)cancelAllImageLoad {
-    [_cells enumerateObjectsUsingBlock:^(YYPhotoGroupCell *cell, NSUInteger idx, BOOL *stop) {
+    [_cells enumerateObjectsUsingBlock:^(MediaGroupCell *cell, NSUInteger idx, BOOL *stop) {
         [cell.imageView cancelCurrentImageRequest];
     }];
 }
@@ -595,9 +596,9 @@
     
     for (NSInteger i = page - 1; i <= page + 1; i++) { // 预加载左边和右边的cell
         if (i >= 0 && i < self.groupItems.count) {
-            YYPhotoGroupCell *cell = [self cellForPage:i];
+            MediaGroupCell *cell = [self cellForPage:i];
             if (!cell) {
-                YYPhotoGroupCell *cell = [self dequeueReusableCell];
+                MediaGroupCell *cell = [self dequeueReusableCell];
                 cell.page = i;
                 cell.left = (self.width + kPadding) * i + kPadding / 2;
                 
@@ -642,7 +643,7 @@
 
 /// enqueue invisible cells for reuse
 - (void)updateCellsForReuse {
-    for (YYPhotoGroupCell *cell in _cells) {
+    for (MediaGroupCell *cell in _cells) {
         if (cell.superview) {
             if (cell.left > _scrollView.contentOffset.x + _scrollView.width * 2||
                 cell.right < _scrollView.contentOffset.x - _scrollView.width) {
@@ -655,15 +656,15 @@
 }
 
 /// dequeue a reusable cell
-- (YYPhotoGroupCell *)dequeueReusableCell {
-    YYPhotoGroupCell *cell = nil;
+- (MediaGroupCell *)dequeueReusableCell {
+    MediaGroupCell *cell = nil;
     for (cell in _cells) {
         if (!cell.superview) {
             return cell;
         }
     }
     
-    cell = [YYPhotoGroupCell new];
+    cell = [MediaGroupCell new];
     cell.frame = self.bounds;
     cell.imageContainerView.frame = self.bounds;
     cell.imageView.frame = cell.bounds;
@@ -674,8 +675,8 @@
 }
 
 /// get the cell for specified page, nil if the cell is invisible
-- (YYPhotoGroupCell *)cellForPage:(NSInteger)page {
-    for (YYPhotoGroupCell *cell in _cells) {
+- (MediaGroupCell *)cellForPage:(NSInteger)page {
+    for (MediaGroupCell *cell in _cells) {
         if (cell.page == page) {
             return cell;
         }
@@ -730,7 +731,7 @@
 
 - (void)doubleTap:(UITapGestureRecognizer *)g {
     if (!_isPresented) return;
-    YYPhotoGroupCell *tile = [self cellForPage:self.currentPage];
+    MediaGroupCell *tile = [self cellForPage:self.currentPage];
     if (tile) {
         if (tile.zoomScale > 1) {
             [tile setZoomScale:1 animated:YES];
@@ -747,7 +748,7 @@
 - (void)longPress {
     if (!_isPresented) return;
     
-    YYPhotoGroupCell *tile = [self cellForPage:self.currentPage];
+    MediaGroupCell *tile = [self cellForPage:self.currentPage];
     if (!tile.imageView.image) return;
     
     // try to save original image data if the image contains multi-frame (such as GIF/APNG)

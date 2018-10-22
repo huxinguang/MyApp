@@ -1,5 +1,6 @@
 //
-//  YYPhotoGroupView.h
+//  MediaGroupView.h
+//  MyApp
 //
 //  Created by ibireme on 14/3/9.
 //  Copyright (C) 2014 ibireme. All rights reserved.
@@ -7,22 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
-
-/// Single picture's info.
-@interface YYPhotoGroupItem : NSObject
-@property (nonatomic, strong) UIView *thumbView; ///< thumb image, used for animation position calculation
-@property (nonatomic, assign) CGSize largeImageSize;
-@property (nonatomic, strong) NSURL *largeImageURL;
+@interface MediaGroupItem : NSObject
+@property (nonatomic, strong) UIView *thumbView;  // 缩略图, 用于动画坐标计算
+@property (nonatomic, assign) CGSize largeMediaSize;
+@property (nonatomic, strong) NSURL *largeMediaURL;
 @end
 
-
-/// Used to show a group of images.
-/// One-shot.
-@interface YYPhotoGroupView : UIView
-@property (nonatomic, readonly) NSArray *groupItems; ///< Array<YYPhotoGroupItem>
+@interface MediaGroupView : UIView
+@property (nonatomic, readonly) NSArray<MediaGroupItem *> *groupItems;
 @property (nonatomic, readonly) NSInteger currentPage;
-@property (nonatomic, assign) BOOL blurEffectBackground; ///< Default is YES
-
+@property (nonatomic, assign) BOOL blurEffectBackground;
 
 - (instancetype)init UNAVAILABLE_ATTRIBUTE;
 - (instancetype)initWithFrame:(CGRect)frame UNAVAILABLE_ATTRIBUTE;

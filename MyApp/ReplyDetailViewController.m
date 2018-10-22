@@ -9,7 +9,7 @@
 #import "ReplyDetailViewController.h"
 #import "CommentCell.h"
 #import "ReplyCell.h"
-#import "YYPhotoGroupView.h"
+#import "MediaGroupView.h"
 
 @interface ReplyDetailViewController ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -202,16 +202,16 @@
     for (int i=0; i<medias.count; i++) {
         UIButton *btnItem = cell.picsContainer.picViews[i];
         Media *m = medias[i];
-        YYPhotoGroupItem *item = [YYPhotoGroupItem new];
+        MediaGroupItem *item = [MediaGroupItem new];
         item.thumbView = btnItem.imageView;
-        item.largeImageURL = [NSURL URLWithString:m.media_url];
-        item.largeImageSize = CGSizeMake(m.media_width, m.media_height);
+        item.largeMediaURL = [NSURL URLWithString:m.media_url];
+        item.largeMediaSize = CGSizeMake(m.media_width, m.media_height);
         [items addObject:item];
         if (i == index) {
             fromView = btnItem.imageView;
         }
     }
-    YYPhotoGroupView *v = [[YYPhotoGroupView alloc] initWithGroupItems:items];
+    MediaGroupView *v = [[MediaGroupView alloc] initWithGroupItems:items];
     [v presentFromImageView:fromView toContainer:self.navigationController.view animated:YES completion:nil];
 }
 
