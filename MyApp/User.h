@@ -23,7 +23,7 @@
 @property (nonatomic, assign) BOOL following;//我是否关注了
 @property (nonatomic, copy) NSString *province;//省
 @property (nonatomic, copy) NSString *city;//市
-@property (nonatomic, copy) NSString *profileImageURL; //头像 50x50 (FeedList)
+@property (nonatomic, copy) NSString *profileImageURL; //头像 50x50
 @property (nonatomic, copy) NSString *avatarLarge;// 头像 180*180
 @property (nonatomic, copy) NSString *avatarHD;  // 头像 原图
 @property (nonatomic, copy) NSString *coverImage; // 封面图 920x300
