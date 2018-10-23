@@ -7,6 +7,7 @@
 //
 
 #import "MediaGroupView.h"
+#import "VideoPlayer.h"
 
 #define kPadding 20
 #define kHiColor [UIColor colorWithRGBHex:0x2dd6b8]
@@ -48,10 +49,10 @@
 @end
 
 
-
 @interface MediaGroupCell : UIScrollView <UIScrollViewDelegate>
-@property (nonatomic, strong) UIView *imageContainerView;
+@property (nonatomic, strong) UIView *mediaContainerView;
 @property (nonatomic, strong) YYAnimatedImageView *imageView;
+@property (nonatomic, strong) VideoPlayer *videoPlayer;
 @property (nonatomic, assign) NSInteger page;
 
 @property (nonatomic, assign) BOOL showProgress;
@@ -76,15 +77,23 @@
     self.showsVerticalScrollIndicator = YES;
     self.showsHorizontalScrollIndicator = NO;
     self.frame = [UIScreen mainScreen].bounds;
+    self.backgroundColor = [UIColor blueColor];
     
-    _imageContainerView = [UIView new];
-    _imageContainerView.clipsToBounds = YES;
-    [self addSubview:_imageContainerView];
+    _mediaContainerView = [UIView new];
+    _mediaContainerView.clipsToBounds = YES;
+    [self addSubview:_mediaContainerView];
     
     _imageView = [YYAnimatedImageView new];
     _imageView.clipsToBounds = YES;
     _imageView.backgroundColor = [UIColor colorWithWhite:1.000 alpha:0.500];
-    [_imageContainerView addSubview:_imageView];
+    [_mediaContainerView addSubview:_imageView];
+    _imageView.hidden = YES;
+    
+    _videoPlayer = [[VideoPlayer alloc]initWithPlayerModel:nil];
+    _videoPlayer.clipsToBounds = YES;
+    _videoPlayer.backgroundColor = [UIColor colorWithWhite:1.000 alpha:0.500];
+    [_mediaContainerView addSubview:_videoPlayer];
+    _videoPlayer.hidden = YES;
     
     _progressLayer = [CAShapeLayer layer];
     _progressLayer.size = CGSizeMake(40, 40);
@@ -113,73 +122,79 @@
     _item = item;
     _itemDidLoad = NO;
     
-    
-    [self setZoomScale:1.0 animated:NO];
-    self.maximumZoomScale = 1;
-    
-    [_imageView cancelCurrentImageRequest];
-    [_imageView.layer removePreviousFadeAnimation];
-    
-    _progressLayer.hidden = NO;
-    [CATransaction begin];
-    [CATransaction setDisableActions:YES];
-    _progressLayer.strokeEnd = 0;
-    _progressLayer.hidden = YES;
-    [CATransaction commit];
-    
-    if (!_item) {
-        _imageView.image = nil;
-        return;
-    }
-    
-    @weakify(self)
-    [_imageView setImageWithURL:item.largeMediaURL placeholder:item.thumbImage options:kNilOptions progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-        @strongify(self)
-        if (!self) return;
-        CGFloat progress = receivedSize / (float)expectedSize;
-        progress = progress < 0.01 ? 0.01 : progress > 1 ? 1 : progress;
-        if (isnan(progress)) progress = 0;
-        self.progressLayer.hidden = NO;
-        self.progressLayer.strokeEnd = progress;
-    } transform:nil completion:^(UIImage *image, NSURL *url, YYWebImageFromType from, YYWebImageStage stage, NSError *error) {
-        @strongify(self);
-        if (!self) return;
-        self.progressLayer.hidden = YES;
-        if (stage == YYWebImageStageFinished) {
-            self.maximumZoomScale = 3;
-            if (image) {
-                self->_itemDidLoad = YES;
-                
-                [self resizeSubviewSize];
-                [self.imageView.layer addFadeAnimationWithDuration:0.1 curve:UIViewAnimationCurveLinear];
-            }
+    if (item.mediaType == MediaTypeImage) {
+        _imageView.hidden = NO;
+        
+        [self setZoomScale:1.0 animated:NO];
+        self.maximumZoomScale = 1;
+        
+        [_imageView cancelCurrentImageRequest];
+        [_imageView.layer removePreviousFadeAnimation];
+        
+        _progressLayer.hidden = NO;
+        [CATransaction begin];
+        [CATransaction setDisableActions:YES];
+        _progressLayer.strokeEnd = 0;
+        _progressLayer.hidden = YES;
+        [CATransaction commit];
+        
+        if (!_item) {
+            _imageView.image = nil;
+            return;
         }
         
-    }];
-    [self resizeSubviewSize];
+        @weakify(self)
+        [_imageView setImageWithURL:item.largeMediaURL placeholder:item.thumbImage options:kNilOptions progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+            @strongify(self)
+            if (!self) return;
+            CGFloat progress = receivedSize / (float)expectedSize;
+            progress = progress < 0.01 ? 0.01 : progress > 1 ? 1 : progress;
+            if (isnan(progress)) progress = 0;
+            self.progressLayer.hidden = NO;
+            self.progressLayer.strokeEnd = progress;
+        } transform:nil completion:^(UIImage *image, NSURL *url, YYWebImageFromType from, YYWebImageStage stage, NSError *error) {
+            @strongify(self);
+            if (!self) return;
+            self.progressLayer.hidden = YES;
+            if (stage == YYWebImageStageFinished) {
+                self.maximumZoomScale = 3;
+                if (image) {
+                    self->_itemDidLoad = YES;
+                    
+                    [self resizeSubviewSize];
+                    [self.imageView.layer addFadeAnimationWithDuration:0.1 curve:UIViewAnimationCurveLinear];
+                }
+            }
+            
+        }];
+        [self resizeSubviewSize];
+
+    }
+    
+    
 }
 
 - (void)resizeSubviewSize {
-    _imageContainerView.origin = CGPointZero;
-    _imageContainerView.width = self.width;
+    _mediaContainerView.origin = CGPointZero;
+    _mediaContainerView.width = self.width;
     
     UIImage *image = _imageView.image;
     if (image.size.height / image.size.width > self.height / self.width) {
-        _imageContainerView.height = floor(image.size.height / (image.size.width / self.width));
+        _mediaContainerView.height = floor(image.size.height / (image.size.width / self.width));
     } else {
         CGFloat height = image.size.height / image.size.width * self.width;
         if (height < 1 || isnan(height)) height = self.height;
         height = floor(height);
-        _imageContainerView.height = height;
-        _imageContainerView.centerY = self.height / 2;
+        _mediaContainerView.height = height;
+        _mediaContainerView.centerY = self.height / 2;
     }
-    if (_imageContainerView.height > self.height && _imageContainerView.height - self.height <= 1) {
-        _imageContainerView.height = self.height;
+    if (_mediaContainerView.height > self.height && _mediaContainerView.height - self.height <= 1) {
+        _mediaContainerView.height = self.height;
     }
-    self.contentSize = CGSizeMake(self.width, MAX(_imageContainerView.height, self.height));
+    self.contentSize = CGSizeMake(self.width, MAX(_mediaContainerView.height, self.height));
     [self scrollRectToVisible:self.bounds animated:NO];
     
-    if (_imageContainerView.height <= self.height) {
+    if (_mediaContainerView.height <= self.height) {
         self.alwaysBounceVertical = NO;
     } else {
         self.alwaysBounceVertical = YES;
@@ -187,16 +202,16 @@
     
     [CATransaction begin];
     [CATransaction setDisableActions:YES];
-    _imageView.frame = _imageContainerView.bounds;
+    _imageView.frame = _mediaContainerView.bounds;
     [CATransaction commit];
 }
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView{
-    return _imageContainerView;
+    return _mediaContainerView;
 }
 
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView {
-    UIView *subView = _imageContainerView;
+    UIView *subView = _mediaContainerView;
     
     CGFloat offsetX = (scrollView.bounds.size.width > scrollView.contentSize.width)?
     (scrollView.bounds.size.width - scrollView.contentSize.width) * 0.5 : 0.0;
@@ -425,13 +440,13 @@
     
     if (item.thumbClippedToTop) {
         CGRect fromFrame = [_fromView convertRect:_fromView.bounds toView:cell];
-        CGRect originFrame = cell.imageContainerView.frame;
-        CGFloat scale = fromFrame.size.width / cell.imageContainerView.width;
+        CGRect originFrame = cell.mediaContainerView.frame;
+        CGFloat scale = fromFrame.size.width / cell.mediaContainerView.width;
         
-        cell.imageContainerView.centerX = CGRectGetMidX(fromFrame);
-        cell.imageContainerView.height = fromFrame.size.height / scale;
-        cell.imageContainerView.layer.transformScale = scale;
-        cell.imageContainerView.centerY = CGRectGetMidY(fromFrame);
+        cell.mediaContainerView.centerX = CGRectGetMidX(fromFrame);
+        cell.mediaContainerView.height = fromFrame.size.height / scale;
+        cell.mediaContainerView.layer.transformScale = scale;
+        cell.mediaContainerView.centerY = CGRectGetMidY(fromFrame);
         
         float oneTime = animated ? 0.25 : 0;
         [UIView animateWithDuration:oneTime delay:0 options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionCurveEaseInOut animations:^{
@@ -440,8 +455,8 @@
         
         _scrollView.userInteractionEnabled = NO;
         [UIView animateWithDuration:oneTime delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-            cell.imageContainerView.layer.transformScale = 1;
-            cell.imageContainerView.frame = originFrame;
+            cell.mediaContainerView.layer.transformScale = 1;
+            cell.mediaContainerView.frame = originFrame;
             _pager.alpha = 1;
         }completion:^(BOOL finished) {
             _isPresented = YES;
@@ -452,9 +467,9 @@
         }];
         
     } else {
-        CGRect fromFrame = [_fromView convertRect:_fromView.bounds toView:cell.imageContainerView];
+        CGRect fromFrame = [_fromView convertRect:_fromView.bounds toView:cell.mediaContainerView];
         
-        cell.imageContainerView.clipsToBounds = NO;
+        cell.mediaContainerView.clipsToBounds = NO;
         cell.imageView.frame = fromFrame;
         cell.imageView.contentMode = UIViewContentModeScaleAspectFill;
         
@@ -465,14 +480,14 @@
         
         _scrollView.userInteractionEnabled = NO;
         [UIView animateWithDuration:oneTime delay:0 options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionCurveEaseInOut animations:^{
-            cell.imageView.frame = cell.imageContainerView.bounds;
+            cell.imageView.frame = cell.mediaContainerView.bounds;
             cell.imageView.layer.transformScale = 1.01;
         }completion:^(BOOL finished) {
             [UIView animateWithDuration:oneTime delay:0 options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionCurveEaseInOut animations:^{
                 cell.imageView.layer.transformScale = 1.0;
                 _pager.alpha = 1;
             }completion:^(BOOL finished) {
-                cell.imageContainerView.clipsToBounds = YES;
+                cell.mediaContainerView.clipsToBounds = YES;
                 _isPresented = YES;
                 [self scrollViewDidScroll:_scrollView];
                 _scrollView.userInteractionEnabled = YES;
@@ -505,9 +520,9 @@
     [CATransaction begin];
     [CATransaction setDisableActions:YES];
     if (isFromImageClipped) {
-        CGRect frame = cell.imageContainerView.frame;
-        cell.imageContainerView.layer.anchorPoint = CGPointMake(0.5, 0);
-        cell.imageContainerView.frame = frame;
+        CGRect frame = cell.mediaContainerView.frame;
+        cell.mediaContainerView.layer.anchorPoint = CGPointMake(0.5, 0);
+        cell.mediaContainerView.frame = frame;
     }
     cell.progressLayer.hidden = YES;
     [CATransaction commit];
@@ -550,17 +565,17 @@
         if (isFromImageClipped) {
             
             CGRect fromFrame = [fromView convertRect:fromView.bounds toView:cell];
-            CGFloat scale = fromFrame.size.width / cell.imageContainerView.width * cell.zoomScale;
-            CGFloat height = fromFrame.size.height / fromFrame.size.width * cell.imageContainerView.width;
-            if (isnan(height)) height = cell.imageContainerView.height;
+            CGFloat scale = fromFrame.size.width / cell.mediaContainerView.width * cell.zoomScale;
+            CGFloat height = fromFrame.size.height / fromFrame.size.width * cell.mediaContainerView.width;
+            if (isnan(height)) height = cell.mediaContainerView.height;
             
-            cell.imageContainerView.height = height;
-            cell.imageContainerView.center = CGPointMake(CGRectGetMidX(fromFrame), CGRectGetMinY(fromFrame));
-            cell.imageContainerView.layer.transformScale = scale;
+            cell.mediaContainerView.height = height;
+            cell.mediaContainerView.center = CGPointMake(CGRectGetMidX(fromFrame), CGRectGetMinY(fromFrame));
+            cell.mediaContainerView.layer.transformScale = scale;
             
         } else {
-            CGRect fromFrame = [fromView convertRect:fromView.bounds toView:cell.imageContainerView];
-            cell.imageContainerView.clipsToBounds = NO;
+            CGRect fromFrame = [fromView convertRect:fromView.bounds toView:cell.mediaContainerView];
+            cell.mediaContainerView.clipsToBounds = NO;
             cell.imageView.contentMode = fromView.contentMode;
             cell.imageView.frame = fromFrame;
         }
@@ -568,7 +583,7 @@
         [UIView animateWithDuration:animated ? 0.15 : 0 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
             self.alpha = 0;
         } completion:^(BOOL finished) {
-            cell.imageContainerView.layer.anchorPoint = CGPointMake(0.5, 0.5);
+            cell.mediaContainerView.layer.anchorPoint = CGPointMake(0.5, 0.5);
             [self removeFromSuperview];
             if (completion) completion();
         }];
@@ -666,7 +681,7 @@
     
     cell = [MediaGroupCell new];
     cell.frame = self.bounds;
-    cell.imageContainerView.frame = self.bounds;
+    cell.mediaContainerView.frame = self.bounds;
     cell.imageView.frame = cell.bounds;
     cell.page = -1;
     cell.item = nil;

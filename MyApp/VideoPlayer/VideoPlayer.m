@@ -98,7 +98,7 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
     }
     return self;
 }
--(instancetype)initPlayerModel:(PlayerModel *)playerModel{
+-(instancetype)initWithPlayerModel:(PlayerModel *)playerModel{
     self = [super init];
     if (self) {
         self.playerModel = playerModel;
@@ -106,7 +106,7 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
     return self;
 }
 +(instancetype)playerWithModel:(PlayerModel *)playerModel{
-    VideoPlayer *player = [[VideoPlayer alloc] initPlayerModel:playerModel];
+    VideoPlayer *player = [[VideoPlayer alloc]initWithPlayerModel:playerModel];
     return player;
 }
 - (NSDateFormatter *)dateFormatter {

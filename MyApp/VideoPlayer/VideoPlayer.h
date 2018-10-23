@@ -138,7 +138,7 @@ typedef NS_ENUM(NSInteger,GestureControlType) {
  @param playerModel 播放model
  @return 播放器实例
  */
--(instancetype)initPlayerModel:(PlayerModel *)playerModel;
+-(instancetype)initWithPlayerModel:(PlayerModel *)playerModel;
 
 /**
  自定义类方法+初始化方式（+方法）

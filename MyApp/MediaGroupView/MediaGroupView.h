@@ -8,10 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSInteger,MediaType) {
+    MediaTypeImage,
+    MediaTypeVideo
+};
+
 @interface MediaGroupItem : NSObject
 @property (nonatomic, strong) UIView *thumbView;  // 缩略图, 用于动画坐标计算
 @property (nonatomic, assign) CGSize largeMediaSize;
 @property (nonatomic, strong) NSURL *largeMediaURL;
+@property (nonatomic, assign) MediaType mediaType;
 @end
 
 @interface MediaGroupView : UIView
