@@ -135,7 +135,7 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
     [self addSubview:self.contentView];
     self.backgroundColor = [UIColor blackColor];
 
-    //创建fastForwardView，快进⏩和快退的view
+    //创建fastForwardView，快进和快退的view
     self.ffView = [[FastForwardView alloc] init];
     self.ffView.hidden = YES;
     [self.contentView addSubview:self.ffView];
@@ -283,13 +283,13 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
 
     // 双击的 Recognizer
     UITapGestureRecognizer* doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
-    doubleTap.numberOfTouchesRequired = 1; //手指数
-    doubleTap.numberOfTapsRequired = 2; // 双击
+    doubleTap.numberOfTouchesRequired = 1;
+    doubleTap.numberOfTapsRequired = 2;
     doubleTap.delegate = self;
     // 解决点击当前view时候响应其他控件事件
     [self.singleTap setDelaysTouchesBegan:YES];
     [doubleTap setDelaysTouchesBegan:YES];
-    [self.singleTap requireGestureRecognizerToFail:doubleTap];//如果双击成立，则取消单击手势（双击的时候不会走单击事件）
+    [self.singleTap requireGestureRecognizerToFail:doubleTap];//双击的时候不会走单击事件
     [self.contentView addGestureRecognizer:doubleTap];
 }
 #pragma mark - Gesture Delegate
