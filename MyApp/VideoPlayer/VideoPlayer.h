@@ -171,8 +171,13 @@ typedef NS_ENUM(NSInteger,GestureControlType) {
 /**
  * 获取当前的旋转状态
  */
-+(CGAffineTransform)getCurrentDeviceOrientation;
++ (CGAffineTransform)getCurrentDeviceOrientation;
 
+
+/**
+ * 获取视频某一帧的图片
+ */
++ (UIImage *)firstFrameImageForVideo:(NSURL *)videoURL;
 
 @end
 

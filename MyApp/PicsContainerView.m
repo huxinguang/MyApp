@@ -8,6 +8,7 @@
 
 #import "PicsContainerView.h"
 #import <SDWebImage/UIButton+WebCache.h>
+#import "VideoPlayer.h"
 
 @implementation PicsContainerView
 
@@ -94,18 +95,26 @@
                 
                 imageBtn.hidden = NO;
                 Media *m = self.pics[i];
-                int width = m.media_width;
-                int height = m.media_height;
+                CGFloat width = m.media_width;
+                CGFloat height = m.media_height;
                 CGFloat scale = (height / width) / (imageBtn.height / imageBtn.width);
-                if (scale < 0.99 || isnan(scale)) {
+
+                if (scale < 0.99 || isnan(scale) || m.media_type == 2) {
                     // 宽图把左右两边裁掉 (注意： 应该设置imageBtn.imageView.contentMode 而不是imageBtn.contentMode)
                     imageBtn.imageView.contentMode = UIViewContentModeScaleAspectFill;
+                    imageBtn.imageView.layer.contentsRect = CGRectMake(0, 0, 1, 1);
                 } else {
-                    // 高图只保留顶部 (注意： 应该设置imageBtn.imageView.contentMode 而不是imageBtn.contentMode)
+                    // 高图只保留顶部(视频例外)(注意：应该设置imageBtn.imageView.contentMode 而不是imageBtn.contentMode)
                     imageBtn.imageView.contentMode = UIViewContentModeScaleToFill;
+                    imageBtn.imageView.layer.contentsRect = CGRectMake(0, 0, 1, (float)width / height);
                 }
-                //这里后期需要改一下
-                [imageBtn sd_setImageWithURL:[NSURL URLWithString:m.media_url] forState:UIControlStateNormal];
+                if (m.media_type == 1) { //图片
+                    [imageBtn sd_setImageWithURL:[NSURL URLWithString:m.media_url] forState:UIControlStateNormal];
+                }else{
+                    UIImage *image = [VideoPlayer firstFrameImageForVideo:[NSURL URLWithString:m.media_url]];
+                    [imageBtn setImage:image forState:UIControlStateNormal];
+                }
+                
                 imageBtn.imageView.clipsToBounds = YES;
                 
             }

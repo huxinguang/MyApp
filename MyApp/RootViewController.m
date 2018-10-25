@@ -112,6 +112,7 @@
     return labelHeight;
 }
 
+
 -(InputToolBar *)inputToolbar{
     if (_inputToolbar == nil) {
         _inputToolbar = [[InputToolBar alloc]init];

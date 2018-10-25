@@ -283,6 +283,9 @@
         item.largeMediaURL = [NSURL URLWithString:m.media_url];
         item.largeMediaSize = CGSizeMake(m.media_width, m.media_height);
         item.mediaType = (m.media_type == 1 ? MediaTypeImage: MediaTypeVideo);
+        if (i == 1) {//测试代码
+            item.mediaType = MediaTypeVideo;
+        }
         [items addObject:item];
         if (i == index) {
             fromView = btnItem.imageView;

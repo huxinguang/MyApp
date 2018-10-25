@@ -465,7 +465,7 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
             }
         }
 }
-//视频进度条的点击事件
+// 视频进度条的点击事件
 - (void)actionTapGesture:(UITapGestureRecognizer *)sender {
     CGPoint touchLocation = [sender locationInView:self.progressSlider];
     CGFloat value = (self.progressSlider.maximumValue - self.progressSlider.minimumValue) * (touchLocation.x/self.progressSlider.frame.size.width);
@@ -502,7 +502,7 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
         [self.delegate videoPlayer:self clickedCloseButton:sender];
     }
 }
-//获取视频长度
+// 获取视频长度
 - (double)duration{
     AVPlayerItem *playerItem = self.player.currentItem;
     if (playerItem.status == AVPlayerItemStatusReadyToPlay){
@@ -511,13 +511,26 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
         return 0.f;
     }
 }
-//获取视频当前播放的时间
+// 获取视频当前播放的时间
 - (double)currentTime{
     if (self.player) {
         return CMTimeGetSeconds([self.player currentTime]);
     }else{
         return 0.0;
     }
+}
+// 获取视频第一帧的图片
++ (UIImage *)firstFrameImageForVideo:(NSURL *)videoURL{
+    NSDictionary *opts = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO] forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
+    AVURLAsset *urlAsset = [AVURLAsset URLAssetWithURL:videoURL options:opts];
+    AVAssetImageGenerator *generator = [AVAssetImageGenerator assetImageGeneratorWithAsset:urlAsset];
+    generator.appliesPreferredTrackTransform = YES;
+    NSError *error = nil;
+    CGImageRef img = [generator copyCGImageAtTime:CMTimeMake(0, 10) actualTime:NULL error:&error];
+    if (img) {
+        return [UIImage imageWithCGImage:img];
+    }
+    return nil;
 }
 
 #pragma mark - PlayOrPause
@@ -560,6 +573,9 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
     [self.player pause];
     self.playOrPauseBtn.selected = YES;
 }
+
+
+
 -(void)setPrefersStatusBarHidden:(BOOL)prefersStatusBarHidden{
     _prefersStatusBarHidden = prefersStatusBarHidden;
 }

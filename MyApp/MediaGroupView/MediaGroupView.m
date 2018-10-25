@@ -77,7 +77,6 @@
     self.showsVerticalScrollIndicator = YES;
     self.showsHorizontalScrollIndicator = NO;
     self.frame = [UIScreen mainScreen].bounds;
-    self.backgroundColor = [UIColor blueColor];
     
     _mediaContainerView = [UIView new];
     _mediaContainerView.clipsToBounds = YES;
@@ -87,13 +86,13 @@
     _imageView.clipsToBounds = YES;
     _imageView.backgroundColor = [UIColor colorWithWhite:1.000 alpha:0.500];
     [_mediaContainerView addSubview:_imageView];
-    _imageView.hidden = YES;
-    
-    _videoPlayer = [[VideoPlayer alloc]initWithPlayerModel:nil];
-    _videoPlayer.clipsToBounds = YES;
-    _videoPlayer.backgroundColor = [UIColor colorWithWhite:1.000 alpha:0.500];
-    [_mediaContainerView addSubview:_videoPlayer];
-    _videoPlayer.hidden = YES;
+
+//
+//    _videoPlayer = [[VideoPlayer alloc]initWithPlayerModel:nil];
+//    _videoPlayer.clipsToBounds = YES;
+//    _videoPlayer.backgroundColor = [UIColor colorWithWhite:1.000 alpha:0.500];
+//    [_mediaContainerView addSubview:_videoPlayer];
+//    _videoPlayer.hidden = YES;
     
     _progressLayer = [CAShapeLayer layer];
     _progressLayer.size = CGSizeMake(40, 40);
@@ -122,55 +121,50 @@
     _item = item;
     _itemDidLoad = NO;
     
-    if (item.mediaType == MediaTypeImage) {
-        _imageView.hidden = NO;
-        
-        [self setZoomScale:1.0 animated:NO];
-        self.maximumZoomScale = 1;
-        
-        [_imageView cancelCurrentImageRequest];
-        [_imageView.layer removePreviousFadeAnimation];
-        
-        _progressLayer.hidden = NO;
-        [CATransaction begin];
-        [CATransaction setDisableActions:YES];
-        _progressLayer.strokeEnd = 0;
-        _progressLayer.hidden = YES;
-        [CATransaction commit];
-        
-        if (!_item) {
-            _imageView.image = nil;
-            return;
-        }
-        
-        @weakify(self)
-        [_imageView setImageWithURL:item.largeMediaURL placeholder:item.thumbImage options:kNilOptions progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-            @strongify(self)
-            if (!self) return;
-            CGFloat progress = receivedSize / (float)expectedSize;
-            progress = progress < 0.01 ? 0.01 : progress > 1 ? 1 : progress;
-            if (isnan(progress)) progress = 0;
-            self.progressLayer.hidden = NO;
-            self.progressLayer.strokeEnd = progress;
-        } transform:nil completion:^(UIImage *image, NSURL *url, YYWebImageFromType from, YYWebImageStage stage, NSError *error) {
-            @strongify(self);
-            if (!self) return;
-            self.progressLayer.hidden = YES;
-            if (stage == YYWebImageStageFinished) {
-                self.maximumZoomScale = 3;
-                if (image) {
-                    self->_itemDidLoad = YES;
-                    
-                    [self resizeSubviewSize];
-                    [self.imageView.layer addFadeAnimationWithDuration:0.1 curve:UIViewAnimationCurveLinear];
-                }
-            }
-            
-        }];
-        [self resizeSubviewSize];
-
+    [self setZoomScale:1.0 animated:NO];
+    self.maximumZoomScale = 1;
+    
+    [_imageView cancelCurrentImageRequest];
+    [_imageView.layer removePreviousFadeAnimation];
+    
+    _progressLayer.hidden = NO;
+    [CATransaction begin];
+    [CATransaction setDisableActions:YES];
+    _progressLayer.strokeEnd = 0;
+    _progressLayer.hidden = YES;
+    [CATransaction commit];
+    
+    if (!_item) {
+        _imageView.image = nil;
+        return;
     }
     
+    @weakify(self)
+    [_imageView setImageWithURL:item.largeMediaURL placeholder:item.thumbImage options:kNilOptions progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+        @strongify(self)
+        if (!self) return;
+        CGFloat progress = receivedSize / (float)expectedSize;
+        progress = progress < 0.01 ? 0.01 : progress > 1 ? 1 : progress;
+        if (isnan(progress)) progress = 0;
+        self.progressLayer.hidden = NO;
+        self.progressLayer.strokeEnd = progress;
+    } transform:nil completion:^(UIImage *image, NSURL *url, YYWebImageFromType from, YYWebImageStage stage, NSError *error) {
+        @strongify(self);
+        if (!self) return;
+        self.progressLayer.hidden = YES;
+        if (stage == YYWebImageStageFinished) {
+            self.maximumZoomScale = 3;
+            if (image) {
+                self->_itemDidLoad = YES;
+                
+                [self resizeSubviewSize];
+                [self.imageView.layer addFadeAnimationWithDuration:0.1 curve:UIViewAnimationCurveLinear];
+            }
+        }
+        
+    }];
+    [self resizeSubviewSize];
+
     
 }
 
