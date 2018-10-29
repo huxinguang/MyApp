@@ -27,35 +27,36 @@
     self.contentLabel.preferredMaxLayoutWidth = kAppScreenWidth - 2*kCommentCellPaddingLeftRight - kCommentAvatarViewSize.width - kCommentNameMarginLeft;
     
     self.picsContainer.type = PicsContainerTypeCommentOrReply;
+    self.picsContainer.cell = self;
     
-    _timeLabel = [UILabel new];
-    _timeLabel.font = [UIFont systemFontOfSize:kCommentTimeLabelFont];
-    _timeLabel.textColor = [UIColor colorWithRGB:0xB5B5B5];
+    self.timeLabel = [UILabel new];
+    self.timeLabel.font = [UIFont systemFontOfSize:kCommentTimeLabelFont];
+    self.timeLabel.textColor = [UIColor colorWithRGB:0xB5B5B5];
     [self.contentView addSubview:_timeLabel];
     
-    _replyBgView = [UIView new];
-    _replyBgView.backgroundColor = [UIColor colorWithRGB:0xF5F5F7];
-    _replyBgView.layer.cornerRadius = 5;
-    _replyBgView.layer.masksToBounds = YES;
-    [self.contentView addSubview:_replyBgView];
+    self.replyBgView = [UIView new];
+    self.replyBgView.backgroundColor = [UIColor colorWithRGB:0xF5F5F7];
+    self.replyBgView.layer.cornerRadius = 5;
+    self.replyBgView.layer.masksToBounds = YES;
+    [self.contentView addSubview:self.replyBgView];
     
-    _replyLabel1 = [YYLabel new];
-    _replyLabel1.font = [UIFont systemFontOfSize:kReplyLabelFont];
-    _replyLabel1.numberOfLines = 0;
-    _replyLabel1.preferredMaxLayoutWidth = kAppScreenWidth - 2*kCommentCellPaddingLeftRight - kCommentAvatarViewSize.width - kCommentNameMarginLeft - 2*kStatusCommentBackgroundPadding;
-    _replyLabel1.lineBreakMode = NSLineBreakByCharWrapping;
-    [self.contentView addSubview:_replyLabel1];
+    self.replyLabel1 = [YYLabel new];
+    self.replyLabel1.font = [UIFont systemFontOfSize:kReplyLabelFont];
+    self.replyLabel1.numberOfLines = 0;
+    self.replyLabel1.preferredMaxLayoutWidth = kAppScreenWidth - 2*kCommentCellPaddingLeftRight - kCommentAvatarViewSize.width - kCommentNameMarginLeft - 2*kStatusCommentBackgroundPadding;
+    self.replyLabel1.lineBreakMode = NSLineBreakByCharWrapping;
+    [self.contentView addSubview:self.replyLabel1];
 
-    _replyLabel2 = [YYLabel new];
-    _replyLabel2.font = [UIFont systemFontOfSize:kReplyLabelFont];
-    _replyLabel2.numberOfLines = 0;
-    _replyLabel2.preferredMaxLayoutWidth = kAppScreenWidth - 2*kCommentCellPaddingLeftRight - kCommentAvatarViewSize.width - kCommentNameMarginLeft - 2*kStatusCommentBackgroundPadding;
-    _replyLabel2.lineBreakMode = NSLineBreakByCharWrapping;
-    [self.contentView addSubview:_replyLabel2];
+    self.replyLabel2 = [YYLabel new];
+    self.replyLabel2.font = [UIFont systemFontOfSize:kReplyLabelFont];
+    self.replyLabel2.numberOfLines = 0;
+    self.replyLabel2.preferredMaxLayoutWidth = kAppScreenWidth - 2*kCommentCellPaddingLeftRight - kCommentAvatarViewSize.width - kCommentNameMarginLeft - 2*kStatusCommentBackgroundPadding;
+    self.replyLabel2.lineBreakMode = NSLineBreakByCharWrapping;
+    [self.contentView addSubview:self.replyLabel2];
 
-    _replyLabel3 = [YYLabel new];
-    _replyLabel3.font = [UIFont systemFontOfSize:kReplyLabelFont];
-    [self.contentView addSubview:_replyLabel3];
+    self.replyLabel3 = [YYLabel new];
+    self.replyLabel3.font = [UIFont systemFontOfSize:kReplyLabelFont];
+    [self.contentView addSubview:self.replyLabel3];
     
 //    [self.likeBtn setImage:[UIImage imageNamed:@"dislike"] forState:UIControlStateNormal];
 //    self.likeBtn.transform = CGAffineTransformMakeRotation(-M_PI);

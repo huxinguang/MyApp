@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Media.h"
+#import "YYControl.h"
 
 #define kStatusCellBottomLineHeight 8                                                                           // cell 底部部灰色留白
 #define kStatusCellPaddingLeftRight 15                                                                          // cell 左右内边距
@@ -64,12 +65,14 @@ typedef NS_ENUM(NSUInteger, PicsContainerType) {
     PicsContainerTypeCommentOrReply
 };
 
+@class BaseCell;
 
 @interface PicsContainerView : UIView
 
 @property (nonatomic, assign) PicsContainerType type;
 @property (nonatomic, strong) NSArray <Media *> *pics;
-@property (nonatomic, strong) NSArray <UIButton *> *picViews;
+@property (nonatomic, strong) NSArray <YYControl *> *picViews;
+@property (nonatomic, weak) BaseCell *cell;
 
 
 @end

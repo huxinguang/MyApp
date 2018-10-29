@@ -8,6 +8,7 @@
 
 #import "BaseCell.h"
 #import "UIImageView+CornerRadius.h"
+#import "PicsContainerView.h"
 
 @implementation BaseCell
 

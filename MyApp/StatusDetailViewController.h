@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "RootViewController.h"
+#import "BaseStatusController.h"
 #import "Status.h"
-@interface StatusDetailViewController : RootViewController
+@interface StatusDetailViewController : BaseStatusController
 @property (nonatomic,strong) Status *sts;
 
 @end

@@ -29,11 +29,12 @@
     self.contentLabel.preferredMaxLayoutWidth = kAppScreenWidth - 2*kCommentCellPaddingLeftRight - kCommentAvatarViewSize.width - kCommentNameMarginLeft;
     
     self.picsContainer.type = PicsContainerTypeCommentOrReply;
+    self.picsContainer.cell = self;
     
-    _timeLabel = [UILabel new];
-    _timeLabel.font = [UIFont systemFontOfSize:kCommentTimeLabelFont];
-    _timeLabel.textColor = [UIColor colorWithRGB:0xB5B5B5];
-    [self.contentView addSubview:_timeLabel];
+    self.timeLabel = [UILabel new];
+    self.timeLabel.font = [UIFont systemFontOfSize:kCommentTimeLabelFont];
+    self.timeLabel.textColor = [UIColor colorWithRGB:0xB5B5B5];
+    [self.contentView addSubview:self.timeLabel];
     
     //    [self.likeBtn setImage:[UIImage imageNamed:@"dislike"] forState:UIControlStateNormal];
     //    self.likeBtn.transform = CGAffineTransformMakeRotation(-M_PI);

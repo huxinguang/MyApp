@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "RootViewController.h"
+#import "BaseStatusController.h"
 
-@interface StatusViewController : RootViewController
+@interface StatusViewController : BaseStatusController
 
 @end

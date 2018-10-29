@@ -34,75 +34,77 @@
     self.contentLabel.font = [UIFont systemFontOfSize:kStatusTextFont];
     self.contentLabel.preferredMaxLayoutWidth = kAppScreenWidth - 2*kStatusCellPaddingLeftRight;
 
-    _topicLabel = [UILabel new];
-    _topicLabel.font = [UIFont systemFontOfSize:kStatusTopicFont];
-    _topicLabel.textColor = kAppThemeColor;
-    [self.contentView addSubview:_topicLabel];
+    self.topicLabel = [UILabel new];
+    self.topicLabel.font = [UIFont systemFontOfSize:kStatusTopicFont];
+    self.topicLabel.textColor = kAppThemeColor;
+    [self.contentView addSubview:self.topicLabel];
 
     self.picsContainer.type = PicsContainerTypeStatus;
+    self.picsContainer.cell = self;
     
-    _commentBgView = [UIView new];
-    _commentBgView.backgroundColor = [UIColor colorWithRGB:0xF5F5F7];
-    _commentBgView.layer.cornerRadius = 5;
-    _commentBgView.layer.masksToBounds = YES;
-    [self.contentView addSubview:_commentBgView];
+    self.commentBgView = [UIView new];
+    self.commentBgView.backgroundColor = [UIColor colorWithRGB:0xF5F5F7];
+    self.commentBgView.layer.cornerRadius = 5;
+    self.commentBgView.layer.masksToBounds = YES;
+    [self.contentView addSubview:self.commentBgView];
     
-    _commentTagIcon = [HotCommentIcon buttonWithType:UIButtonTypeCustom];
-    _commentTagIcon.backgroundColor = [UIColor colorWithRGB:0xFC5D7F];
-    [_commentTagIcon setImage:[UIImage imageNamed:@"hot_comment"] forState:UIControlStateNormal];
-    [_commentTagIcon setTitle:@"神评" forState:UIControlStateNormal];
-    [_commentTagIcon setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    _commentTagIcon.titleLabel.font = [UIFont systemFontOfSize:11];
-    _commentTagIcon.layer.cornerRadius = 9;
-    _commentTagIcon.layer.masksToBounds = YES;
-    [self.contentView addSubview:_commentTagIcon];
+    self.commentTagIcon = [HotCommentIcon buttonWithType:UIButtonTypeCustom];
+    self.commentTagIcon.backgroundColor = [UIColor colorWithRGB:0xFC5D7F];
+    [self.commentTagIcon setImage:[UIImage imageNamed:@"hot_comment"] forState:UIControlStateNormal];
+    [self.commentTagIcon setTitle:@"神评" forState:UIControlStateNormal];
+    [self.commentTagIcon setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    self.commentTagIcon.titleLabel.font = [UIFont systemFontOfSize:11];
+    self.commentTagIcon.layer.cornerRadius = 9;
+    self.commentTagIcon.layer.masksToBounds = YES;
+    [self.contentView addSubview:self.commentTagIcon];
     
-    _commentLikeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_commentLikeBtn setImage:[UIImage imageNamed:@"comment_dislike"] forState:UIControlStateNormal];
-    _commentLikeBtn.transform = CGAffineTransformMakeRotation(-M_PI_2);
-    [self.contentView addSubview:_commentLikeBtn];
+    self.commentLikeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.commentLikeBtn setImage:[UIImage imageNamed:@"comment_dislike"] forState:UIControlStateNormal];
+    self.commentLikeBtn.transform = CGAffineTransformMakeRotation(-M_PI_2);
+    [self.contentView addSubview:self.commentLikeBtn];
     
-    _commentPopularityLabel = [UILabel new];
-    _commentPopularityLabel.font = [UIFont systemFontOfSize:13];
-    _commentPopularityLabel.textColor = kAppThemeColor;
-    _commentPopularityLabel.textAlignment = NSTextAlignmentCenter;
-    [self.contentView addSubview:_commentPopularityLabel];
+    self.commentPopularityLabel = [UILabel new];
+    self.commentPopularityLabel.font = [UIFont systemFontOfSize:13];
+    self.commentPopularityLabel.textColor = kAppThemeColor;
+    self.commentPopularityLabel.textAlignment = NSTextAlignmentCenter;
+    [self.contentView addSubview:self.commentPopularityLabel];
     
-    _commentDislikeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_commentDislikeBtn setImage:[UIImage imageNamed:@"comment_dislike"] forState:UIControlStateNormal];
+    self.commentDislikeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.commentDislikeBtn setImage:[UIImage imageNamed:@"comment_dislike"] forState:UIControlStateNormal];
     [self.contentView addSubview:_commentDislikeBtn];
     
-    _commentTextLabel = [UILabel new];
-    _commentTextLabel.font = [UIFont systemFontOfSize:kStatusHotCommentTextFont];
-    _commentTextLabel.numberOfLines = 0;
-    [self.contentView addSubview:_commentTextLabel];
+    self.commentTextLabel = [UILabel new];
+    self.commentTextLabel.font = [UIFont systemFontOfSize:kStatusHotCommentTextFont];
+    self.commentTextLabel.numberOfLines = 0;
+    [self.contentView addSubview:self.commentTextLabel];
     
-    _commentPicsContainer = [[PicsContainerView alloc]init];
-    _commentPicsContainer.type = PicsContainerTypeStatusHotComment;
-    [self.contentView addSubview:_commentPicsContainer];
+    self.commentPicsContainer = [[PicsContainerView alloc]init];
+    self.commentPicsContainer.type = PicsContainerTypeStatusHotComment;
+    self.commentPicsContainer.cell = self;
+    [self.contentView addSubview:self.commentPicsContainer];
     
-    _shareBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_shareBtn setImage:[UIImage imageNamed:@"repost"] forState:UIControlStateNormal];
-    [self.contentView addSubview:_shareBtn];
+    self.shareBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.shareBtn setImage:[UIImage imageNamed:@"repost"] forState:UIControlStateNormal];
+    [self.contentView addSubview:self.shareBtn];
 
-    _commentBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_commentBtn setImage:[UIImage imageNamed:@"comment"] forState:UIControlStateNormal];
-    [self.contentView addSubview:_commentBtn];
+    self.commentBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.commentBtn setImage:[UIImage imageNamed:@"comment"] forState:UIControlStateNormal];
+    [self.contentView addSubview:self.commentBtn];
 
     [self.likeBtn setImage:[UIImage imageNamed:@"dislike"] forState:UIControlStateNormal];
     self.likeBtn.transform = CGAffineTransformMakeRotation(-M_PI);
     
     [self.dislikeBtn setImage:[UIImage imageNamed:@"dislike"] forState:UIControlStateNormal];
     
-    _shareLabel = [UILabel new];
-    _shareLabel.font = [UIFont systemFontOfSize:13];
-    _shareLabel.textColor = [UIColor lightGrayColor];
-    [self.contentView addSubview:_shareLabel];
+    self.shareLabel = [UILabel new];
+    self.shareLabel.font = [UIFont systemFontOfSize:13];
+    self.shareLabel.textColor = [UIColor lightGrayColor];
+    [self.contentView addSubview:self.shareLabel];
     
-    _commentLabel = [UILabel new];
-    _commentLabel.font = [UIFont systemFontOfSize:13];
-    _commentLabel.textColor = [UIColor lightGrayColor];
-    [self.contentView addSubview:_commentLabel];
+    self.commentLabel = [UILabel new];
+    self.commentLabel.font = [UIFont systemFontOfSize:13];
+    self.commentLabel.textColor = [UIColor lightGrayColor];
+    [self.contentView addSubview:self.commentLabel];
 
     self.popularityLabel.font = [UIFont systemFontOfSize:13];
     self.popularityLabel.textColor = [UIColor lightGrayColor];
@@ -111,13 +113,11 @@
 
 }
 
-- (void)clickImage:(UITapGestureRecognizer *)gesture{
-    NSInteger tag = gesture.view.tag;
-    Media *m = self.sts.medias[tag - 100];
-    
-}
-
 - (void)fillCellData:(Status *)status{
+    self.picsContainer.type = PicsContainerTypeStatus;
+    if (status.comment_medias.count > 0) {
+        self.commentPicsContainer.type = PicsContainerTypeStatusHotComment;
+    }
     self.sts = status;
     [self.avatarView sd_setImageWithURL:[NSURL URLWithString:status.head_url]];
     self.nameLabel.text = status.user_name;

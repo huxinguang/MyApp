@@ -10,8 +10,9 @@
 
 @interface Media : NSObject
 @property (nonatomic, assign) NSInteger media_id;
-@property (nonatomic, assign) CGFloat media_width;
-@property (nonatomic, assign) CGFloat media_height;
+@property (nonatomic, assign) int media_width;
+@property (nonatomic, assign) int media_height;
 @property (nonatomic, copy) NSString *media_url;
+@property (nonatomic, copy) NSString *cover_url;
 @property (nonatomic, assign) short media_type;
 @end

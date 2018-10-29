@@ -7,13 +7,10 @@
 //
 
 #import "StatusDetailViewController.h"
-#import "CommentCell.h"
 #import "ReplyDetailViewController.h"
-#import "StatusCell.h"
-#import "MediaGroupView.h"
 #import "MyApp-Swift.h"//OC 引用Swift类需要导入 "工程名-Swift.h"
 
-@interface StatusDetailViewController ()<UITableViewDelegate,UITableViewDataSource,CommentCellDelegate>
+@interface StatusDetailViewController ()<UITableViewDelegate,UITableViewDataSource,CellDelegate>
 
 @property (nonatomic, strong) UIActivityIndicatorView *indicatorView;
 @property (nonatomic, strong) NSArray *dataArray;
@@ -78,11 +75,11 @@
     sts.comment_medias = @[];
     [cell fillCellData:sts];
     [cell setNeedsUpdateConstraints];
-    for (int i=0; i<cell.picsContainer.picViews.count; i++) {
-        UIButton *btn = cell.picsContainer.picViews[i];
-        btn.paramDic = @{@"cell":cell,@"pic_index":[NSNumber numberWithInt:i]};
-        [btn addTarget:self action:@selector(clickImage:) forControlEvents:UIControlEventTouchUpInside];
-    }
+//    for (int i=0; i<cell.picsContainer.picViews.count; i++) {
+//        UIButton *btn = cell.picsContainer.picViews[i];
+//        btn.paramDic = @{@"cell":cell,@"pic_index":[NSNumber numberWithInt:i]};
+//        [btn addTarget:self action:@selector(clickImage:) forControlEvents:UIControlEventTouchUpInside];
+//    }
     return cell;
 }
 
@@ -261,12 +258,6 @@
     [cell fillCellData:status];
     [cell setNeedsUpdateConstraints];
     
-    for (int i=0; i<cell.picsContainer.picViews.count; i++) {
-        UIButton *btn = cell.picsContainer.picViews[i];
-        btn.paramDic = @{@"cell":cell,@"pic_index":[NSNumber numberWithInt:i]};
-        [btn addTarget:self action:@selector(clickImage:) forControlEvents:UIControlEventTouchUpInside];
-    }
-
     return cell;
 
 }
@@ -296,32 +287,7 @@
     
 }
 
-- (void)clickImage:(UIButton *)btn{
-    CommentCell *cell = btn.paramDic[@"cell"];
-    int index = [btn.paramDic[@"pic_index"] intValue];
-    NSMutableArray *items = [NSMutableArray new];
-    NSArray<Media *> *medias = cell.picsContainer.pics;
-    UIView *fromView = nil;
-    for (int i=0; i<medias.count; i++) {
-        UIButton *btnItem = cell.picsContainer.picViews[i];
-        Media *m = medias[i];
-        MediaGroupItem *item = [MediaGroupItem new];
-        item.thumbView = btnItem.imageView;
-        item.largeMediaURL = [NSURL URLWithString:m.media_url];
-        item.largeMediaSize = CGSizeMake(m.media_width, m.media_height);
-        item.mediaType = (m.media_type == 1 ? MediaTypeImage: MediaTypeVideo);
-        [items addObject:item];
-        if (i == index) {
-            fromView = btnItem.imageView;
-        }
-    }
-    MediaGroupView *v = [[MediaGroupView alloc] initWithGroupItems:items];
-    [v presentFromImageView:fromView toContainer:self.navigationController.view animated:YES completion:nil];
-}
-
-
-
-#pragma mark - CommentCellDelegate
+#pragma mark - CellDelegate
 
 - (void)clickMoreReplyBtnAction:(Status *)status{
     ReplyDetailViewController *vc = [[ReplyDetailViewController alloc]init];

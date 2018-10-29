@@ -8,10 +8,8 @@
 
 #import "StatusViewController.h"
 #import "Status.h"
-#import "StatusCell.h"
 #import "StatusDetailViewController.h"
 #import "YYFPSLabel.h"
-#import "MediaGroupView.h"
 
 @interface StatusViewController ()<UITableViewDelegate,UITableViewDataSource>{
     
@@ -217,21 +215,10 @@
     if (!cell) {
         cell = [[StatusCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     }
+    cell.delegate = self;
     Status *status = self.dataArray[indexPath.row];
     [cell fillCellData:status];
     [cell setNeedsUpdateConstraints];
-    
-    for (int i=0; i<cell.picsContainer.picViews.count; i++) {
-        UIButton *btn = cell.picsContainer.picViews[i];
-        btn.paramDic = @{@"cell":cell,@"pic_index":[NSNumber numberWithInt:i],@"container_type":@"pics"};
-        [btn addTarget:self action:@selector(clickImage:) forControlEvents:UIControlEventTouchUpInside];
-    }
-    
-    for (int i=0; i<cell.commentPicsContainer.picViews.count; i++) {
-        UIButton *btn = cell.commentPicsContainer.picViews[i];
-        btn.paramDic = @{@"cell":cell,@"pic_index":[NSNumber numberWithInt:i],@"container_type":@"commentPics"};
-        [btn addTarget:self action:@selector(clickImage:) forControlEvents:UIControlEventTouchUpInside];
-    }
     
     cell.shareBtn.tag = indexPath.row;
     cell.commentBtn.tag = indexPath.row;
@@ -256,45 +243,6 @@
     vc.sts = self.dataArray[indexPath.row];
     [self.navigationController pushViewController:vc animated:YES];
 }
-
-
-- (void)clickImage:(UIButton *)btn{
-    StatusCell *cell = btn.paramDic[@"cell"];
-    int index = [btn.paramDic[@"pic_index"] intValue];
-    NSMutableArray *items = @[].mutableCopy;
-    NSArray<Media *> *medias = nil;
-    if ([btn.paramDic[@"container_type"] isEqualToString:@"pics"]) {
-        medias = cell.picsContainer.pics;
-    }else{
-        medias = cell.commentPicsContainer.pics;
-    }
-    
-    UIView *fromView = nil;
-    for (int i=0; i<medias.count; i++) {
-        UIButton *btnItem = nil;
-        if ([btn.paramDic[@"container_type"] isEqualToString:@"pics"]) {
-            btnItem = cell.picsContainer.picViews[i];
-        }else{
-            btnItem = cell.commentPicsContainer.picViews[i];
-        }
-        Media *m = medias[i];
-        MediaGroupItem *item = [MediaGroupItem new];
-        item.thumbView = btnItem.imageView;
-        item.largeMediaURL = [NSURL URLWithString:m.media_url];
-        item.largeMediaSize = CGSizeMake(m.media_width, m.media_height);
-        item.mediaType = (m.media_type == 1 ? MediaTypeImage: MediaTypeVideo);
-        if (i == 1) {//测试代码
-            item.mediaType = MediaTypeVideo;
-        }
-        [items addObject:item];
-        if (i == index) {
-            fromView = btnItem.imageView;
-        }
-    }
-    MediaGroupView *v = [[MediaGroupView alloc] initWithGroupItems:items];
-    [v presentFromImageView:fromView toContainer:[UIApplication sharedApplication].keyWindow animated:YES completion:nil];
-}
-
 
 - (void)share:(UIButton *)btn{
     

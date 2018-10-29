@@ -115,6 +115,7 @@
 		C9AA1177214FAB7200050385 /* comment@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9AA1175214FAB7200050385 /* comment@3x.png */; };
 		C9AA117D2150AAA800050385 /* BaseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C9AA117C2150AAA800050385 /* BaseCell.m */; };
 		C9AA11802151FAF400050385 /* ResumeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9AA117F2151FAF400050385 /* ResumeViewController.m */; };
+		C9D769452186EA5700C8A561 /* BaseStatusController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D769442186EA5700C8A561 /* BaseStatusController.m */; };
 		C9DFDF1921797A090032326B /* PlayerModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C9DFDF0E21797A080032326B /* PlayerModel.m */; };
 		C9DFDF1A21797A090032326B /* UIViewController+ShouldAutorotate.m in Sources */ = {isa = PBXBuildFile; fileRef = C9DFDF1121797A080032326B /* UIViewController+ShouldAutorotate.m */; };
 		C9DFDF1C21797A090032326B /* LightView.m in Sources */ = {isa = PBXBuildFile; fileRef = C9DFDF1621797A080032326B /* LightView.m */; };
@@ -154,6 +155,7 @@
 		C9DFDF612179AEA30032326B /* dot@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9DFDF3F2179AEA30032326B /* dot@3x.png */; };
 		C9DFDF622179AEA30032326B /* player_icon_nav_back@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9DFDF402179AEA30032326B /* player_icon_nav_back@2x.png */; };
 		C9DFDF632179AEA30032326B /* nonfullscreen@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C9DFDF412179AEA30032326B /* nonfullscreen@2x.png */; };
+		C9DFDF672182C6840032326B /* YYControl.m in Sources */ = {isa = PBXBuildFile; fileRef = C9DFDF652182C6840032326B /* YYControl.m */; };
 		C9E5FE8A2147B8BC00B6AC3D /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9E5FE892147B8BC00B6AC3D /* RootViewController.m */; };
 		C9E5FE8D2147BE0100B6AC3D /* CBTitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = C9E5FE8C2147BE0100B6AC3D /* CBTitleView.m */; };
 		C9E5FE902147D83A00B6AC3D /* CBBarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = C9E5FE8F2147D83A00B6AC3D /* CBBarButton.m */; };
@@ -352,6 +354,8 @@
 		C9AA117C2150AAA800050385 /* BaseCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseCell.m; sourceTree = "<group>"; };
 		C9AA117E2151FAF400050385 /* ResumeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ResumeViewController.h; sourceTree = "<group>"; };
 		C9AA117F2151FAF400050385 /* ResumeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ResumeViewController.m; sourceTree = "<group>"; };
+		C9D769432186EA5700C8A561 /* BaseStatusController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseStatusController.h; sourceTree = "<group>"; };
+		C9D769442186EA5700C8A561 /* BaseStatusController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseStatusController.m; sourceTree = "<group>"; };
 		C9DFDF0D21797A080032326B /* LightView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LightView.h; sourceTree = "<group>"; };
 		C9DFDF0E21797A080032326B /* PlayerModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayerModel.m; sourceTree = "<group>"; };
 		C9DFDF0F21797A080032326B /* FastForwardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FastForwardView.h; sourceTree = "<group>"; };
@@ -396,6 +400,8 @@
 		C9DFDF3F2179AEA30032326B /* dot@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "dot@3x.png"; sourceTree = "<group>"; };
 		C9DFDF402179AEA30032326B /* player_icon_nav_back@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "player_icon_nav_back@2x.png"; sourceTree = "<group>"; };
 		C9DFDF412179AEA30032326B /* nonfullscreen@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nonfullscreen@2x.png"; sourceTree = "<group>"; };
+		C9DFDF652182C6840032326B /* YYControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YYControl.m; sourceTree = "<group>"; };
+		C9DFDF662182C6840032326B /* YYControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YYControl.h; sourceTree = "<group>"; };
 		C9E5FE882147B8BC00B6AC3D /* RootViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
 		C9E5FE892147B8BC00B6AC3D /* RootViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
 		C9E5FE8B2147BE0100B6AC3D /* CBTitleView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CBTitleView.h; sourceTree = "<group>"; };
@@ -482,6 +488,7 @@
 		C944F25F2146072600159984 /* MyApp */ = {
 			isa = PBXGroup;
 			children = (
+				C9DFDF642182C65C0032326B /* YYControl */,
 				C9DFDF0C21797A080032326B /* VideoPlayer */,
 				C91B9A1C216889B8006B50A5 /* UIViewController+Helper */,
 				C98B268D2154B54400845F73 /* UITextView+XGPlaceholder */,
@@ -498,8 +505,6 @@
 				C9999D782147A098002B1503 /* CBDataGlobal.swift */,
 				C9999D762147A047002B1503 /* CBNavigationController.swift */,
 				C9999D892147ACA7002B1503 /* UIColor+Ext.swift */,
-				C9E5FE882147B8BC00B6AC3D /* RootViewController.h */,
-				C9E5FE892147B8BC00B6AC3D /* RootViewController.m */,
 				C9E5FE8B2147BE0100B6AC3D /* CBTitleView.h */,
 				C9E5FE8C2147BE0100B6AC3D /* CBTitleView.m */,
 				C9E5FE8E2147D83A00B6AC3D /* CBBarButton.h */,
@@ -509,12 +514,16 @@
 				C9999D852147AC25002B1503 /* CBDefaultPageView.m */,
 				C944F30321464D5B00159984 /* TabBarController.h */,
 				C944F30421464D5B00159984 /* TabBarController.m */,
+				C9E5FE882147B8BC00B6AC3D /* RootViewController.h */,
+				C9E5FE892147B8BC00B6AC3D /* RootViewController.m */,
 				C944F2C82146201200159984 /* HomeViewController.h */,
 				C944F2C92146201200159984 /* HomeViewController.m */,
 				C944F2CB2146202D00159984 /* PersonalViewController.h */,
 				C944F2CC2146202D00159984 /* PersonalViewController.m */,
 				C9AA117E2151FAF400050385 /* ResumeViewController.h */,
 				C9AA117F2151FAF400050385 /* ResumeViewController.m */,
+				C9D769432186EA5700C8A561 /* BaseStatusController.h */,
+				C9D769442186EA5700C8A561 /* BaseStatusController.m */,
 				C944F294214615F300159984 /* StatusViewController.h */,
 				C944F29A214615F400159984 /* StatusViewController.m */,
 				C944F2A4214615F500159984 /* StatusDetailViewController.h */,
@@ -837,6 +846,15 @@
 			path = PlayerImage;
 			sourceTree = "<group>";
 		};
+		C9DFDF642182C65C0032326B /* YYControl */ = {
+			isa = PBXGroup;
+			children = (
+				C9DFDF662182C6840032326B /* YYControl.h */,
+				C9DFDF652182C6840032326B /* YYControl.m */,
+			);
+			path = YYControl;
+			sourceTree = "<group>";
+		};
 		F0614419228C7F0794735C98 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -1139,11 +1157,13 @@
 				C9AA1151214B9E9200050385 /* HotCommentIcon.m in Sources */,
 				C9E5FE8D2147BE0100B6AC3D /* CBTitleView.m in Sources */,
 				C944F2FD21464C4900159984 /* UINavigationController+hidesBottomBarWhenPushed.m in Sources */,
+				C9DFDF672182C6840032326B /* YYControl.m in Sources */,
 				C9999D772147A047002B1503 /* CBNavigationController.swift in Sources */,
 				C98B268321548FD000845F73 /* AssetModel.m in Sources */,
 				C944F2FB21464C4900159984 /* CYButton.m in Sources */,
 				C944F31C214753DA00159984 /* MyCell.m in Sources */,
 				C98B264C2153504800845F73 /* UIButton+PassValue.m in Sources */,
+				C9D769452186EA5700C8A561 /* BaseStatusController.m in Sources */,
 				C9E5FE902147D83A00B6AC3D /* CBBarButton.m in Sources */,
 				C944F2AA214615F500159984 /* StatusDetailViewController.m in Sources */,
 				C9999D792147A098002B1503 /* CBDataGlobal.swift in Sources */,

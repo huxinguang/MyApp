@@ -9,14 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "BaseCell.h"
 
-
-@protocol CommentCellDelegate <NSObject>
-
-- (void)clickMoreReplyBtnAction:(Status *)status;
-- (void)clickReplyNameAction:(NSInteger)user_id;
-
-@end
-
 @interface CommentCell : BaseCell
 
 @property (nonatomic,strong) UILabel *timeLabel;    //时间
@@ -24,12 +16,5 @@
 @property (nonatomic,strong) YYLabel *replyLabel1;  //回复1
 @property (nonatomic,strong) YYLabel *replyLabel2;  //回复2
 @property (nonatomic,strong) YYLabel *replyLabel3;  //查看xx条回复
-
-@property (nonatomic, weak) id<CommentCellDelegate> delegate;
-
-
-
-
-
 
 @end
