@@ -19,7 +19,6 @@
 }
 
 - (void)buildSubViews{
-    
     self.nameLabel.font = [UIFont systemFontOfSize:kCommentNameFont];
     self.nameLabel.textColor = [UIColor orangeColor];
     
@@ -67,10 +66,6 @@
 //    self.popularityLabel.textColor = [UIColor lightGrayColor];
     
     self.bottomLine.backgroundColor = [UIColor colorWithRGB:0xEEEEEE];
-
-
-    
-
 }
 
 - (void)fillCellData:(Status *)status{

@@ -229,7 +229,6 @@
     [cell.likeBtn addTarget:self action:@selector(praise:) forControlEvents:UIControlEventTouchUpInside];
     
     return cell;
-    
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -245,8 +244,7 @@
 }
 
 - (void)share:(UIButton *)btn{
-    
-    
+
 }
 
 - (void)comment:(UIButton *)btn{

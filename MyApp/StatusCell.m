@@ -271,8 +271,6 @@
     [super layoutSubviews];
 }
 
-
-
 -(void)prepareForReuse{
     //注意一定要调用父类方法[super prepareForReuse]
     [super prepareForReuse];

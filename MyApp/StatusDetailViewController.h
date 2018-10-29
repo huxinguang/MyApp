@@ -10,6 +10,7 @@
 #import "BaseStatusController.h"
 #import "Status.h"
 @interface StatusDetailViewController : BaseStatusController
+
 @property (nonatomic,strong) Status *sts;
 
 @end

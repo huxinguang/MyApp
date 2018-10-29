@@ -89,8 +89,7 @@
         make.bottom.equalTo(self.mas_bottom).with.offset(-kTextViewMaginTopBottom);
         make.left.equalTo(self.voiceEntryBtn.mas_right).with.offset(kVoiceImageEntryIconMaginLeftRight);
         make.right.equalTo(self.imgEntryBtn.mas_left).with.offset(-kVoiceImageEntryIconMaginLeftRight);
-    }];
-    
+    }];  
 }
 
 // tell UIKit that you are using AutoLayout

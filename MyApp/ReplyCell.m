@@ -17,7 +17,6 @@
         self.contentView.backgroundColor = [UIColor colorWithRGB:0xF5F5F7];
         [self buildSubViews];
     }
-    
     return self;
 }
 
@@ -129,7 +128,6 @@
 - (void)prepareForReuse{
     [super prepareForReuse];
 }
-
 
 - (void)awakeFromNib {
     [super awakeFromNib];

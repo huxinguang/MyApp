@@ -62,15 +62,9 @@
      这里改了sts，也会改变上级页面model,解决办法是让Status遵循NSCopying协议，使其具备拷贝功能*/
     sts.replies_count = 0;
     sts.replies = @[];
+    cell.delegate = self;
     [cell fillCellData:sts];
     [cell setNeedsUpdateConstraints];
-    
-//    for (int i=0; i<cell.picsContainer.picViews.count; i++) {
-//        UIButton *btn = cell.picsContainer.picViews[i];
-//        btn.paramDic = @{@"cell":cell,@"pic_index":[NSNumber numberWithInt:i]};
-//        [btn addTarget:self action:@selector(clickImage:) forControlEvents:UIControlEventTouchUpInside];
-//    }
-    
     return cell;
 }
 
