@@ -8,7 +8,7 @@
 
 #import "VideoPlayer.h"
 
-//整个屏幕代表的时间
+// 整个屏幕代表的时间
 #define TotalScreenTime 90
 #define LeastDistance 15
 
@@ -16,74 +16,88 @@ static void *PlayViewCMTimeValue = &PlayViewCMTimeValue;
 static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContext;
 
 @interface VideoPlayer () <UIGestureRecognizerDelegate>
-//顶部&底部操作工具栏
+// 顶部&底部操作工具栏
 @property (nonatomic, retain) UIImageView *topView,*bottomView;
-//是否初始化了播放器
+// 是否初始化了播放器
 @property (nonatomic, assign) BOOL isInitPlayer;
-//用来判断手势是否移动过
+// 用来判断手势是否移动过
 @property (nonatomic, assign) BOOL hasMoved;
-//总时间
+// 总时间
 @property (nonatomic, assign) CGFloat totalTime;
-//记录触摸开始时的视频播放的时间
+// 记录触摸开始时的视频播放的时间
 @property (nonatomic, assign) CGFloat touchBeginValue;
-//记录触摸开始亮度
+// 记录触摸开始亮度
 @property (nonatomic, assign) CGFloat touchBeginLightValue;
-//记录触摸开始的音量
+// 记录触摸开始的音量
 @property (nonatomic, assign) CGFloat touchBeginVoiceValue;
-//记录touch开始的点
+// 记录touch开始的点
 @property (nonatomic, assign) CGPoint touchBeginPoint;
-//手势控制的类型,用来判断当前手势是在控制进度?声音?亮度?
+// 手势控制的类型,用来判断当前手势是在控制进度?声音?亮度?
 @property (nonatomic, assign) GestureControlType controlType;
-//格式化时间（懒加载防止多次重复初始化）
+// 格式化时间（懒加载防止多次重复初始化）
 @property (nonatomic, strong) NSDateFormatter *dateFormatter;
-//监听播放起状态的监听者
+// 监听播放起状态的监听者
 @property (nonatomic, strong) id playbackTimeObserver;
-//视频进度条的单击手势&播放器的单击手势
+// 视频进度条的单击手势&播放器的单击手势
 @property (nonatomic, strong) UITapGestureRecognizer *progressTap,*singleTap;
-//是否正在拖曳进度条
+// 是否正在拖曳进度条
 @property (nonatomic, assign) BOOL isDragingSlider;
-//BOOL值判断操作栏是否隐藏
+// BOOL值判断操作栏是否隐藏
 @property (nonatomic, assign) BOOL isHiddenTopAndBottomView;
-//BOOL值判断操作栏是否隐藏
+// BOOL值判断操作栏是否隐藏
 @property (nonatomic, assign) BOOL hiddenStatusBar;
-//是否被系统暂停
+// 是否被系统暂停
 @property (nonatomic, assign) BOOL isPauseBySystem;
-//播放器状态
+// 播放器状态
 @property (nonatomic, assign) VideoPlayerState state;
-//VideoPlayer内部一个UIView，所有的控件统一管理在此view中
+// VideoPlayer内部一个UIView，所有的控件统一管理在此view中
 @property (nonatomic, strong) UIView *contentView;
-//亮度调节的view
+// 亮度调节的view
 @property (nonatomic, strong) LightView *lightView;
-//这个用来显示滑动屏幕时的时间
+// 这个用来显示滑动屏幕时的时间
 @property (nonatomic, strong) FastForwardView *ffView;
-//显示播放时间的UILabel+加载失败的UILabel+播放视频的title
+// 显示播放时间的UILabel+加载失败的UILabel+播放视频的title
 @property (nonatomic, strong) UILabel *leftTimeLabel,*rightTimeLabel,*titleLabel,*loadFailedLabel;
-//控制全屏和播放暂停按钮
+// 控制全屏和播放暂停按钮
 @property (nonatomic, strong) UIButton *fullScreenBtn,*playOrPauseBtn,*lockBtn,*backBtn,*rateBtn;
-//进度滑块&声音滑块
+// 进度滑块&声音滑块
 @property (nonatomic, strong) UISlider *progressSlider,*volumeSlider;
-//显示缓冲进度和底部的播放进度
+// 显示缓冲进度和底部的播放进度
 @property (nonatomic, strong) UIProgressView *loadingProgress,*bottomProgress;
-//菊花（加载框）
+// 菊花（加载框）
 @property (nonatomic, strong) UIActivityIndicatorView *loadingView;
-//当前播放的item
+// 当前播放的item
 @property (nonatomic, retain) AVPlayerItem *currentItem;
-//playerLayer,可以修改frame
+// playerLayer,可以修改frame
 @property (nonatomic, retain) AVPlayerLayer *playerLayer;
-//播放器player
+// 播放器player
 @property (nonatomic, retain) AVPlayer *player;
-//播放资源路径URL
+// 播放资源路径URL
 @property (nonatomic, strong) NSURL *videoURL;
-//播放资源
+// 播放资源
 @property (nonatomic, strong) AVURLAsset *urlAsset;
-//跳到time处播放
+// 跳到time处播放
 @property (nonatomic, assign) double seekTime;
-//视频填充模式
+// 视频填充模式
 @property (nonatomic, copy) NSString *videoGravity;
 @end
 
 
 @implementation VideoPlayer
+/*
+ VideoPlayer *player = [[VideoPlayer alloc] init];
+ 代码调用过程如下：
+ 
+ 1. 动态查找到 VideoPlayer 的 init 方法
+ 2. 调用 super init 方法
+ 3. super init 方法内部执行的是 [super initWithFrame:CGRectZero]
+ 4. 然后 super 会发现 VideoPlayer 实现了 initWithFrame 方法
+ 5. 转而执行 [VideoPlayer initWithFrame:CGRectZero]
+ 6. 最后再执行 init 其余部分
+ 关键点：OC 里面的 super 实际上是让某个类自己去调用父类的方法, 而不是父类去调用某方法。方法动态调用过程中的顺序是按照继承关系从下到上。
+ 
+ */
+
 - (instancetype)initWithCoder:(NSCoder *)coder{
     self = [super initWithCoder:coder];
     if (self) {

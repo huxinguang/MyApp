@@ -87,11 +87,11 @@
     _imageView.backgroundColor = [UIColor colorWithWhite:1.000 alpha:0.500];
     [_mediaContainerView addSubview:_imageView];
 
-//    _videoPlayer = [[VideoPlayer alloc]initWithPlayerModel:nil];
-//    _videoPlayer.clipsToBounds = YES;
-//    _videoPlayer.backgroundColor = [UIColor colorWithWhite:1.000 alpha:0.500];
-//    [_mediaContainerView addSubview:_videoPlayer];
-//    _videoPlayer.hidden = YES;
+    _videoPlayer = [[VideoPlayer alloc]initWithPlayerModel:nil];
+    _videoPlayer.clipsToBounds = YES;
+    _videoPlayer.backgroundColor = [UIColor colorWithWhite:1.000 alpha:0.500];
+    [_mediaContainerView addSubview:_videoPlayer];
+    _videoPlayer.hidden = YES;
     
     _progressLayer = [CAShapeLayer layer];
     _progressLayer.size = CGSizeMake(40, 40);
