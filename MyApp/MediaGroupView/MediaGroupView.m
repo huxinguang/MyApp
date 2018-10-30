@@ -87,7 +87,6 @@
     _imageView.backgroundColor = [UIColor colorWithWhite:1.000 alpha:0.500];
     [_mediaContainerView addSubview:_imageView];
 
-//
 //    _videoPlayer = [[VideoPlayer alloc]initWithPlayerModel:nil];
 //    _videoPlayer.clipsToBounds = YES;
 //    _videoPlayer.backgroundColor = [UIColor colorWithWhite:1.000 alpha:0.500];
@@ -605,6 +604,7 @@
     
     for (NSInteger i = page - 1; i <= page + 1; i++) { // 预加载左边和右边的cell
         if (i >= 0 && i < self.groupItems.count) {
+            MediaGroupItem *mgi = self.groupItems[i];
             MediaGroupCell *cell = [self cellForPage:i];
             if (!cell) {
                 MediaGroupCell *cell = [self dequeueReusableCell];

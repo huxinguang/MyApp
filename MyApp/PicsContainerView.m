@@ -106,7 +106,6 @@
                         }
                         imageView.frame = CGRectMake(0, 0, width, height);
                     }
-                        
                         break;
                     case 4:
                     {
@@ -148,8 +147,6 @@
                       int height = m.media_height;
                       CGFloat scale = (height / width) / (imageView.height / imageView.width);
                       if (scale < 0.99 || isnan(scale)) { // 宽图把左右两边裁掉
-//                          imageBtn.imageView.contentMode = UIViewContentModeScaleAspectFill;
-//                          imageBtn.imageView.layer.contentsRect = CGRectMake(0, 0, 1, 1);
                           imageView.contentMode = UIViewContentModeScaleAspectFill;
                           imageView.layer.contentsRect = CGRectMake(0, 0, 1, 1);
                       } else { // 高图只保留顶部

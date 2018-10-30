@@ -40,7 +40,7 @@
 
 - (void)configTitleView{
     self.titleView = [[CBTitleView alloc]initWithFrame:CGRectMake(0, 0, kAppNavigationTitleViewMaxWidth, kAppNavigationTitleViewHeight) style:CBTitleViewStyleNormal];
-//    self.titleView.delegate = self;
+    //self.titleView.delegate = self;
     self.navigationItem.titleView = self.titleView;
 }
 

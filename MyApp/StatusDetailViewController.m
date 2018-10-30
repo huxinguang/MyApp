@@ -76,8 +76,6 @@
     return cell;
 }
 
-
-
 - (void)loadData{
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
     manager.requestSerializer.timeoutInterval = 20;
@@ -265,16 +263,11 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 
-
-
 - (void)reply:(UIButton *)btn{
-    
     
 }
 
-
 - (void)praise:(UIButton *)btn{
-    
     
 }
 
