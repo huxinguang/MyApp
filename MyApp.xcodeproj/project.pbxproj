@@ -116,6 +116,9 @@
 		C9AA117D2150AAA800050385 /* BaseCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C9AA117C2150AAA800050385 /* BaseCell.m */; };
 		C9AA11802151FAF400050385 /* ResumeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9AA117F2151FAF400050385 /* ResumeViewController.m */; };
 		C9D769452186EA5700C8A561 /* BaseStatusController.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D769442186EA5700C8A561 /* BaseStatusController.m */; };
+		C9D76948218835ED00C8A561 /* MediaBrowseView.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D76947218835ED00C8A561 /* MediaBrowseView.m */; };
+		C9D7694B2188534100C8A561 /* MediaItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D7694A2188534100C8A561 /* MediaItem.m */; };
+		C9D7694E2188558900C8A561 /* MediaCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C9D7694D2188558900C8A561 /* MediaCell.m */; };
 		C9DFDF1921797A090032326B /* PlayerModel.m in Sources */ = {isa = PBXBuildFile; fileRef = C9DFDF0E21797A080032326B /* PlayerModel.m */; };
 		C9DFDF1A21797A090032326B /* UIViewController+ShouldAutorotate.m in Sources */ = {isa = PBXBuildFile; fileRef = C9DFDF1121797A080032326B /* UIViewController+ShouldAutorotate.m */; };
 		C9DFDF1C21797A090032326B /* LightView.m in Sources */ = {isa = PBXBuildFile; fileRef = C9DFDF1621797A080032326B /* LightView.m */; };
@@ -356,6 +359,12 @@
 		C9AA117F2151FAF400050385 /* ResumeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ResumeViewController.m; sourceTree = "<group>"; };
 		C9D769432186EA5700C8A561 /* BaseStatusController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseStatusController.h; sourceTree = "<group>"; };
 		C9D769442186EA5700C8A561 /* BaseStatusController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaseStatusController.m; sourceTree = "<group>"; };
+		C9D76946218835ED00C8A561 /* MediaBrowseView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MediaBrowseView.h; sourceTree = "<group>"; };
+		C9D76947218835ED00C8A561 /* MediaBrowseView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MediaBrowseView.m; sourceTree = "<group>"; };
+		C9D769492188534100C8A561 /* MediaItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MediaItem.h; sourceTree = "<group>"; };
+		C9D7694A2188534100C8A561 /* MediaItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MediaItem.m; sourceTree = "<group>"; };
+		C9D7694C2188558900C8A561 /* MediaCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MediaCell.h; sourceTree = "<group>"; };
+		C9D7694D2188558900C8A561 /* MediaCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MediaCell.m; sourceTree = "<group>"; };
 		C9DFDF0D21797A080032326B /* LightView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LightView.h; sourceTree = "<group>"; };
 		C9DFDF0E21797A080032326B /* PlayerModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayerModel.m; sourceTree = "<group>"; };
 		C9DFDF0F21797A080032326B /* FastForwardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FastForwardView.h; sourceTree = "<group>"; };
@@ -494,7 +503,7 @@
 				C98B268D2154B54400845F73 /* UITextView+XGPlaceholder */,
 				C98B264D21548FD000845F73 /* ImagePickerController */,
 				C98B264921534FDB00845F73 /* UIButton+PassValue */,
-				C98B26452153358500845F73 /* MediaGroupView */,
+				C98B26452153358500845F73 /* MediaBrowseView */,
 				C9AA11812153326400050385 /* Images */,
 				C9AA115D214F9D2600050385 /* YYFPSLabel */,
 				C944F3062146592700159984 /* FSScrollContentViewLib */,
@@ -650,13 +659,19 @@
 			name = "Recovered References";
 			sourceTree = "<group>";
 		};
-		C98B26452153358500845F73 /* MediaGroupView */ = {
+		C98B26452153358500845F73 /* MediaBrowseView */ = {
 			isa = PBXGroup;
 			children = (
 				C98B26462153359200845F73 /* MediaGroupView.h */,
 				C98B26472153359200845F73 /* MediaGroupView.m */,
+				C9D76946218835ED00C8A561 /* MediaBrowseView.h */,
+				C9D76947218835ED00C8A561 /* MediaBrowseView.m */,
+				C9D769492188534100C8A561 /* MediaItem.h */,
+				C9D7694A2188534100C8A561 /* MediaItem.m */,
+				C9D7694C2188558900C8A561 /* MediaCell.h */,
+				C9D7694D2188558900C8A561 /* MediaCell.m */,
 			);
-			path = MediaGroupView;
+			path = MediaBrowseView;
 			sourceTree = "<group>";
 		};
 		C98B264921534FDB00845F73 /* UIButton+PassValue */ = {
@@ -1134,6 +1149,7 @@
 				C98B268621548FD000845F73 /* AssetPickerManager.m in Sources */,
 				C944F30521464D5C00159984 /* TabBarController.m in Sources */,
 				C9DFDF1A21797A090032326B /* UIViewController+ShouldAutorotate.m in Sources */,
+				C9D7694E2188558900C8A561 /* MediaCell.m in Sources */,
 				C9DFDF1921797A090032326B /* PlayerModel.m in Sources */,
 				C944F2CA2146201200159984 /* HomeViewController.m in Sources */,
 				C944F2A7214615F500159984 /* StatusViewController.m in Sources */,
@@ -1169,6 +1185,7 @@
 				C9999D792147A098002B1503 /* CBDataGlobal.swift in Sources */,
 				C944F2F921464C4900159984 /* CYTabBarConfig.m in Sources */,
 				C944F2CD2146202D00159984 /* PersonalViewController.m in Sources */,
+				C9D7694B2188534100C8A561 /* MediaItem.m in Sources */,
 				C944F2FF21464C4900159984 /* CYBadgeView.m in Sources */,
 				C944F30D2146592700159984 /* FSPageContentView.m in Sources */,
 				C9DFDF1D21797A090032326B /* FastForwardView.m in Sources */,
@@ -1177,6 +1194,7 @@
 				C944F2A9214615F500159984 /* Status.m in Sources */,
 				C944F30C2146592700159984 /* FSSegmentTitleView.m in Sources */,
 				C98B26A12159C30800845F73 /* InputTextView.m in Sources */,
+				C9D76948218835ED00C8A561 /* MediaBrowseView.m in Sources */,
 				C944F2AB214615F500159984 /* ReplyCell.m in Sources */,
 				C944F2A6214615F500159984 /* ReplyDetailViewController.m in Sources */,
 				C9658C14215DF94300D25E4F /* NetworkUtil.m in Sources */,

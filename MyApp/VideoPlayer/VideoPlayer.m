@@ -85,15 +85,16 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
 
 @implementation VideoPlayer
 /*
- VideoPlayer *player = [[VideoPlayer alloc] init];
+ SomeObject *obj = [[SomeObject alloc] init];
  代码调用过程如下：
  
- 1. 动态查找到 VideoPlayer 的 init 方法
+ 1. 动态查找到 SomeObject 的 init 方法
  2. 调用 super init 方法
  3. super init 方法内部执行的是 [super initWithFrame:CGRectZero]
- 4. 然后 super 会发现 VideoPlayer 实现了 initWithFrame 方法
- 5. 转而执行 [VideoPlayer initWithFrame:CGRectZero]
+ 4. 然后 super 会发现 SomeObject 实现了 initWithFrame 方法
+ 5. 转而执行 [SomeObject initWithFrame:CGRectZero]
  6. 最后再执行 init 其余部分
+ 
  关键点：OC 里面的 super 实际上是让某个类自己去调用父类的方法, 而不是父类去调用某方法。方法动态调用过程中的顺序是按照继承关系从下到上。
  
  */
@@ -286,7 +287,7 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
     [self.contentView addSubview:self.loadFailedLabel];
     
     //添加子控件的默认约束
-    [self addUIControlConstraints];
+//    [self addUIControlConstraints];
     
     // 单击的 Recognizer
     self.singleTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(handleSingleTap:)];
@@ -313,7 +314,7 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
         }
     return YES;
 }
-//添加控件的约束
+// 添加控件的约束
 -(void)addUIControlConstraints{
     [self.contentView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0, 0, 0));
@@ -388,6 +389,91 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
         make.center.equalTo(self.contentView);
     }];
 }
+
+// tell UIKit that you are using AutoLayout
++ (BOOL)requiresConstraintBasedLayout {
+    return YES;
+}
+
+// this is Apple's recommended place for adding/updating constraints
+- (void)updateConstraints{
+    [self.contentView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0, 0, 0));
+    }];
+    [self.ffView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.center.equalTo(self.contentView);
+        make.size.mas_equalTo(CGSizeMake(120, 70));
+    }];
+    [self.loadingView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.center.equalTo(self.contentView);
+    }];
+    [self.topView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.top.equalTo(self.contentView);
+        make.height.mas_equalTo(IS_iPhoneX?90:70);
+    }];
+    [self.bottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.equalTo(self.contentView);
+        make.height.mas_equalTo(50);
+    }];
+    [self.lockBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.contentView).offset(15);
+        make.centerY.mas_equalTo(self.contentView);
+    }];
+    [self.playOrPauseBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.bottomView);
+        make.left.equalTo(self.bottomView).offset(10);
+    }];
+    [self.leftTimeLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.bottomView).offset(50);
+        make.top.equalTo(self.bottomView.mas_centerY).with.offset(8);
+    }];
+    [self.rightTimeLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(self.bottomView).offset(-50);
+        make.top.equalTo(self.bottomView.mas_centerY).with.offset(8);
+    }];
+    [self.loadingProgress mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.leftTimeLabel.mas_left).offset(4);
+        make.right.equalTo(self.rightTimeLabel.mas_right).offset(-4);
+        make.centerY.equalTo(self.bottomView);
+    }];
+    [self.progressSlider mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.leftTimeLabel.mas_left).offset(4);
+        make.right.equalTo(self.rightTimeLabel.mas_right).offset(-4);
+        make.centerY.equalTo(self.bottomView).offset(-1);
+        make.height.mas_equalTo(30);
+    }];
+    [self.bottomProgress mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_offset(0);
+        make.bottom.mas_offset(0);
+    }];
+    [self.fullScreenBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.bottomView);
+        make.right.equalTo(self.bottomView).offset(-10);
+    }];
+    [self.rateBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.topView);
+        make.right.equalTo(self.topView).offset(-10);
+        make.size.mas_equalTo(CGSizeMake(60, 30));
+    }];
+    [self.backBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.topView).offset(8);
+        make.size.mas_equalTo(CGSizeMake(self.backBtn.currentImage.size.width+6, self.backBtn.currentImage.size.height+4));
+        make.centerY.equalTo(self.titleLabel);
+    }];
+    [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.backBtn.mas_right).offset(50);
+        make.right.equalTo(self.topView).offset(-50);
+        make.center.equalTo(self.topView);
+        make.top.equalTo(self.topView);
+    }];
+    [self.loadFailedLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.center.equalTo(self.contentView);
+    }];
+    //according to apple super should be called at end of method
+    [super updateConstraints];
+}
+
+
 -(void)setRate:(CGFloat)rate{
     _rate = rate;
     self.player.rate = rate;

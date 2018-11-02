@@ -61,6 +61,7 @@
 
 @property (nonatomic, strong) MediaGroupItem *item;
 @property (nonatomic, readonly) BOOL itemDidLoad;
+
 - (void)resizeSubviewSize;
 @end
 
@@ -259,8 +260,6 @@
     self = [super init];
     if (groupItems.count == 0) return nil;
     _groupItems = groupItems.copy;
-    //如果为YES,会在当前界面截图，并在截图前隐藏当前选中的图片，然后对截图进行高斯模糊处理
-    //如果是NO,则会创建一个黑色的image
     _blurEffectBackground = NO;
     
     NSString *model = [UIDevice currentDevice].machineModel;

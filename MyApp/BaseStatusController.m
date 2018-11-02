@@ -11,6 +11,7 @@
 #import "AssetPickerManager.h"
 #import "AssetModel.h"
 #import "MediaGroupView.h"
+#import "MediaBrowseView.h"
 
 @interface BaseStatusController ()<UITextViewDelegate,UIAlertViewDelegate,AssetPickerControllerDelegate>
 
@@ -225,6 +226,42 @@
 
 #pragma mark - CellDelegate
 
+//- (void)didClickImageAtIndex:(NSInteger)index inCell:(id)cell isInSubPicContainer:(BOOL)isInSubPicContainer{
+//    NSMutableArray *items = @[].mutableCopy;
+//    NSArray<Media *> *medias = nil;
+//    if (isInSubPicContainer) {
+//        StatusCell *sc = (StatusCell *)cell;
+//        medias = sc.commentPicsContainer.pics;
+//    }else{
+//        BaseCell *bc = (BaseCell *)cell;
+//        medias = bc.picsContainer.pics;
+//    }
+//    UIView *fromView = nil;
+//    for (int i=0; i<medias.count; i++) {
+//        YYControl *imageView = nil;
+//        if (isInSubPicContainer) {
+//            StatusCell *sc = (StatusCell *)cell;
+//            imageView = sc.commentPicsContainer.picViews[i];
+//        }else{
+//            BaseCell *bc = (BaseCell *)cell;
+//            imageView = bc.picsContainer.picViews[i];
+//        }
+//        Media *m = medias[i];
+//        MediaGroupItem *item = [MediaGroupItem new];
+//        item.thumbView = imageView;
+//        item.largeMediaURL = [NSURL URLWithString:m.media_url];
+//        item.largeMediaSize = CGSizeMake(m.media_width, m.media_height);
+//        item.mediaType = (m.media_type == 1 ? MediaTypeImage: MediaTypeVideo);
+//        [items addObject:item];
+//        if (i == index) {
+//            fromView = imageView;
+//        }
+//    }
+//    MediaGroupView *v = [[MediaGroupView alloc] initWithGroupItems:items];
+//    [v presentFromImageView:fromView toContainer:[UIApplication sharedApplication].keyWindow animated:YES completion:nil];
+//}
+
+
 - (void)didClickImageAtIndex:(NSInteger)index inCell:(id)cell isInSubPicContainer:(BOOL)isInSubPicContainer{
     NSMutableArray *items = @[].mutableCopy;
     NSArray<Media *> *medias = nil;
@@ -246,23 +283,20 @@
             imageView = bc.picsContainer.picViews[i];
         }
         Media *m = medias[i];
-        MediaGroupItem *item = [MediaGroupItem new];
+        MediaItem *item = [MediaItem new];
         item.thumbView = imageView;
         item.largeMediaURL = [NSURL URLWithString:m.media_url];
         item.largeMediaSize = CGSizeMake(m.media_width, m.media_height);
-        item.mediaType = (m.media_type == 1 ? MediaTypeImage: MediaTypeVideo);
-        if (i == 1) {//测试代码
-            item.mediaType = MediaTypeVideo;
-        }
+        item.mediaType = (m.media_type == 1 ? MediaItemTypeImage: MediaItemTypeVideo);
         [items addObject:item];
         if (i == index) {
             fromView = imageView;
         }
     }
-    MediaGroupView *v = [[MediaGroupView alloc] initWithGroupItems:items];
+    MediaBrowseView *v = [[MediaBrowseView alloc] initWithItems:items];
     [v presentFromImageView:fromView toContainer:[UIApplication sharedApplication].keyWindow animated:YES completion:nil];
-
 }
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
