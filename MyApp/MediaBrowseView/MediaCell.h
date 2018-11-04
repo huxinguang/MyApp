@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "VideoPlayer.h"
 
 @class MediaItem;
 
@@ -15,6 +16,7 @@
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UIView *mediaContainerView;//用于动画
 @property (nonatomic, strong) YYAnimatedImageView *imageView;
+@property (nonatomic, strong) VideoPlayer *player;
 @property (nonatomic, assign) CGFloat progress;
 @property (nonatomic, strong) CAShapeLayer *progressLayer;
 

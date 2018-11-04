@@ -9,15 +9,10 @@
 #import "MediaBrowseView.h"
 #import "MediaCell.h"
 
-@interface MediaBrowseView()<UICollectionViewDelegate,UICollectionViewDataSource,UIGestureRecognizerDelegate,UIScrollViewDelegate>
+@interface MediaBrowseView()<UICollectionViewDelegate,UICollectionViewDataSource,UIGestureRecognizerDelegate,UIScrollViewDelegate,VideoPlayerDelegate>
 @property (nonatomic, weak) UIView *fromView;
 @property (nonatomic, weak) UIView *toContainerView;
-
-@property (nonatomic, strong) UIImage *snapshotImage;
-@property (nonatomic, strong) UIImage *snapshotImageHideFromView;
-
-@property (nonatomic, strong) UIImageView *background;
-@property (nonatomic, strong) UIImageView *blurBackground;
+@property (nonatomic, strong) UIImageView *blackBackground;
 
 @property (nonatomic, strong) UIView *contentView;
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -32,8 +27,6 @@
 @end
 
 @implementation MediaBrowseView
-
-static CGFloat const kSpacing = 8.0;
 
 - (instancetype)initWithItems:(NSArray<MediaItem *> *)items{
     self = [super init];
@@ -51,22 +44,21 @@ static CGFloat const kSpacing = 8.0;
 }
 
 - (void)setupSubViews{
-    _background = UIImageView.new;
-    _background.frame = self.bounds;
-    _background.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    [self addSubview:_background];
-    
-    _blurBackground = UIImageView.new;
-    _blurBackground.frame = self.bounds;
-    _blurBackground.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    [self addSubview:_blurBackground];
-    
+    [self addSubview:self.blackBackground];
     [self addSubview:self.collectionView];
     [self addSubview:self.pager];
-    
 }
 
 #pragma mark - Getter & Setter
+
+- (UIImageView *)blackBackground{
+    if (!_blackBackground) {
+        _blackBackground = UIImageView.new;
+        _blackBackground.frame = self.bounds;
+        _blackBackground.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    }
+    return _blackBackground;
+}
 
 -(UICollectionView *)collectionView{
     if (!_collectionView) {
@@ -76,6 +68,7 @@ static CGFloat const kSpacing = 8.0;
         layout.itemSize = [UIScreen mainScreen].bounds.size;
         layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         _collectionView = [[UICollectionView alloc]initWithFrame:self.bounds collectionViewLayout:layout];
+        _collectionView.backgroundColor = [UIColor clearColor];
         _collectionView.delegate = self;
         _collectionView.dataSource = self;
         _collectionView.pagingEnabled = YES;
@@ -135,6 +128,9 @@ static CGFloat const kSpacing = 8.0;
 - (void)onDoubleTap:(UITapGestureRecognizer *)gesture{
     if (!_isPresented) return;
     MediaCell *cell = (MediaCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:self.currentPage inSection:0]];
+    if (cell.item.mediaType == MediaItemTypeVideo) {
+        return;
+    }
     if (cell.scrollView.zoomScale > 1) {
         [cell.scrollView setZoomScale:1 animated:YES];
     } else {
@@ -169,7 +165,7 @@ static CGFloat const kSpacing = 8.0;
             CGFloat alpha = (alphaDelta - fabs(deltaY) + 50) / alphaDelta;
             alpha = YY_CLAMP(alpha, 0, 1);
             [UIView animateWithDuration:0.1 delay:0 options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionCurveLinear animations:^{
-                self.blurBackground.alpha = alpha;
+                self.blackBackground.alpha = alpha;
                 self.pager.alpha = alpha;
             } completion:nil];
 
@@ -193,7 +189,7 @@ static CGFloat const kSpacing = 8.0;
                 duration = YY_CLAMP(duration, 0.05, 0.3);
 
                 [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveLinear | UIViewAnimationOptionBeginFromCurrentState animations:^{
-                    self.blurBackground.alpha = 0;
+                    self.blackBackground.alpha = 0;
                     self.pager.alpha = 0;
                     if (moveToTop) {
                         self.collectionView.bottom = 0;
@@ -204,13 +200,10 @@ static CGFloat const kSpacing = 8.0;
                     [self removeFromSuperview];
                 }];
 
-                _background.image = _snapshotImage;
-                [_background.layer addFadeAnimationWithDuration:0.3 curve:UIViewAnimationCurveEaseInOut];
-
             } else {
                 [UIView animateWithDuration:0.4 delay:0 usingSpringWithDamping:0.9 initialSpringVelocity:v.y / 1000 options:UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState animations:^{
                     self.collectionView.top = 0;
-                    self.blurBackground.alpha = 1;
+                    self.blackBackground.alpha = 1;
                     self.pager.alpha = 1;
                 } completion:^(BOOL finished) {
 
@@ -220,7 +213,7 @@ static CGFloat const kSpacing = 8.0;
         } break;
         case UIGestureRecognizerStateCancelled : {
             self.collectionView.top = 0;
-            self.blurBackground.alpha = 1;
+            self.blackBackground.alpha = 1;
         }
         default:break;
     }
@@ -245,17 +238,14 @@ static CGFloat const kSpacing = 8.0;
     if (page == -1) page = 0;
     _fromItemIndex = page;
     
-    _snapshotImage = [_toContainerView snapshotImageAfterScreenUpdates:NO];
     BOOL fromViewHidden = fromView.hidden;
     fromView.hidden = YES;
-    _snapshotImageHideFromView = [_toContainerView snapshotImage];
     fromView.hidden = fromViewHidden;
     
-    _background.image = _snapshotImageHideFromView;
-    _blurBackground.image = [UIImage imageWithColor:[UIColor blackColor]];
+    self.blackBackground.image = [UIImage imageWithColor:[UIColor blackColor]];
 
     self.size = _toContainerView.size;
-    self.blurBackground.alpha = 0;
+    self.blackBackground.alpha = 0;
     self.pager.alpha = 0;
     self.pager.numberOfPages = self.items.count;
     self.pager.currentPage = page;
@@ -294,10 +284,10 @@ static CGFloat const kSpacing = 8.0;
         
         float oneTime = animated ? 0.25 : 0;
         [UIView animateWithDuration:oneTime delay:0 options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionCurveEaseInOut animations:^{
-            self.blurBackground.alpha = 1;
+            self.blackBackground.alpha = 1;
         }completion:NULL];
         
-        self.contentView.userInteractionEnabled = NO;
+//        self.contentView.userInteractionEnabled = NO;
         [UIView animateWithDuration:oneTime delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             cell.mediaContainerView.layer.transformScale = 1;
             cell.mediaContainerView.frame = originFrame;
@@ -306,6 +296,13 @@ static CGFloat const kSpacing = 8.0;
             self.isPresented = YES;
             self.collectionView.userInteractionEnabled = YES;
             [self hidePager];
+            //如果打开的是视频，则创建播放器并播放
+            if (item.mediaType == MediaItemTypeVideo) {
+                cell.player.frame = cell.imageView.bounds;
+                cell.player.delegate = self;
+                [cell.mediaContainerView addSubview:cell.player];
+                [cell.player play];
+            }
             if (completion) completion();
         }];
         
@@ -318,7 +315,7 @@ static CGFloat const kSpacing = 8.0;
         
         float oneTime = animated ? 0.18 : 0;
         [UIView animateWithDuration:oneTime*2 delay:0 options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionCurveEaseInOut animations:^{
-            self.blurBackground.alpha = 1;
+            self.blackBackground.alpha = 1;
         }completion:NULL];
         
         self.collectionView.userInteractionEnabled = NO;
@@ -334,6 +331,14 @@ static CGFloat const kSpacing = 8.0;
                 self.isPresented = YES;
                 self.collectionView.userInteractionEnabled = YES;
                 [self hidePager];
+                //如果打开的是视频，则创建播放器并播放
+                if (item.mediaType == MediaItemTypeVideo) {
+                    cell.player.frame = cell.imageView.bounds;
+                    cell.player.delegate = self;
+                    [cell.mediaContainerView addSubview:cell.player];
+                    [cell.player layoutIfNeeded];
+                    [cell.player play];
+                }
                 if (completion) completion();
             }];
         }];
@@ -372,13 +377,12 @@ static CGFloat const kSpacing = 8.0;
     
     
     if (fromView == nil) {
-        self.background.image = self.snapshotImage;
         [UIView animateWithDuration:animated ? 0.25 : 0 delay:0 options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionCurveEaseOut animations:^{
             self.alpha = 0.0;
             self.collectionView.layer.transformScale = 0.95;
             self.collectionView.alpha = 0;
             self.pager.alpha = 0;
-            self.blurBackground.alpha = 0;
+            self.blackBackground.alpha = 0;
         }completion:^(BOOL finished) {
             self.collectionView.layer.transformScale = 1;
             [self removeFromSuperview];
@@ -388,21 +392,13 @@ static CGFloat const kSpacing = 8.0;
         return;
     }
     
-    if (self.fromItemIndex != currentPage) {
-        self.background.image = self.snapshotImage;
-        [self.background.layer addFadeAnimationWithDuration:0.25 curve:UIViewAnimationCurveEaseOut];
-    } else {
-        self.background.image = self.snapshotImageHideFromView;
-    }
-    
-    
     if (isFromImageClipped) {
         [cell.scrollView scrollToTopAnimated:NO];
     }
     
     [UIView animateWithDuration:animated ? 0.2 : 0 delay:0 options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionCurveEaseOut animations:^{
         self.pager.alpha = 0.0;
-        self.blurBackground.alpha = 0.0;
+        self.blackBackground.alpha = 0.0;
         if (isFromImageClipped) {
             
             CGRect fromFrame = [fromView convertRect:fromView.bounds toView:cell];
@@ -490,6 +486,52 @@ static CGFloat const kSpacing = 8.0;
     }];
 }
 
+#pragma mark - VideoPlayerDelegate
+
+// 点击播放暂停按钮代理方法
+-(void)videoPlayer:(VideoPlayer *)player clickedPlayOrPauseButton:(UIButton *)playOrPauseBtn{
+    
+}
+// 点击关闭按钮代理方法
+-(void)videoPlayer:(VideoPlayer *)player clickedCloseButton:(UIButton *)backBtn{
+    
+}
+// 点击全屏按钮代理方法
+-(void)videoPlayer:(VideoPlayer *)player clickedFullScreenButton:(UIButton *)fullScreenBtn{
+    
+}
+// 点击锁定按钮的方法
+-(void)videoPlayer:(VideoPlayer *)player clickedLockButton:(UIButton *)lockBtn{
+    
+}
+// 单击VideoPlayer的代理方法
+-(void)videoPlayer:(VideoPlayer *)player singleTaped:(UITapGestureRecognizer *)singleTap{
+    
+}
+// 双击VideoPlayer的代理方法
+-(void)videoPlayer:(VideoPlayer *)player doubleTaped:(UITapGestureRecognizer *)doubleTap{
+    
+}
+// VideoPlayer的的操作栏隐藏和显示
+-(void)videoPlayer:(VideoPlayer *)player isHiddenTopAndBottomView:(BOOL )isHidden{
+    
+}
+// 播放失败的代理方法
+-(void)videoPlayerFailedPlay:(VideoPlayer *)player playerStatus:(VideoPlayerState)state{
+    
+}
+// 准备播放的代理方法
+-(void)videoPlayerReadyToPlay:(VideoPlayer *)player playerStatus:(VideoPlayerState)state{
+    
+}
+// 播放器已经拿到视频的尺寸大小
+-(void)videoPlayerGotVideoSize:(VideoPlayer *)player videoSize:(CGSize )presentationSize{
+    
+}
+// 播放完毕的代理方法
+-(void)videoPlayerFinishedPlay:(VideoPlayer *)player{
+    
+}
 
 /*
 // Only override drawRect: if you perform custom drawing.

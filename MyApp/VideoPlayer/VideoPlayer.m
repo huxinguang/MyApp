@@ -177,10 +177,9 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
     
     //playOrPauseBtn
     self.playOrPauseBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.playOrPauseBtn.showsTouchWhenHighlighted = YES;
     [self.playOrPauseBtn addTarget:self action:@selector(PlayOrPause:) forControlEvents:UIControlEventTouchUpInside];
-    [self.playOrPauseBtn setImage:[UIImage imageNamed:@"player_ctrl_icon_pause"] forState:UIControlStateNormal];
-    [self.playOrPauseBtn setImage:[UIImage imageNamed:@"player_ctrl_icon_play"] forState:UIControlStateSelected];
+    [self.playOrPauseBtn setImage:[UIImage imageNamed:@"player_pause"] forState:UIControlStateNormal];
+    [self.playOrPauseBtn setImage:[UIImage imageNamed:@"player_play"] forState:UIControlStateSelected];
     [self.bottomView addSubview:self.playOrPauseBtn];
     self.playOrPauseBtn.selected = YES;//默认状态，即默认是不自动播放
     
@@ -224,7 +223,6 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
     
     //fullScreenBtn
     self.fullScreenBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.fullScreenBtn.showsTouchWhenHighlighted = YES;
     [self.fullScreenBtn addTarget:self action:@selector(fullScreenAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.fullScreenBtn setImage:[UIImage imageNamed:@"player_icon_fullscreen"] forState:UIControlStateNormal];
     [self.fullScreenBtn setImage:[UIImage imageNamed:@"player_icon_fullscreen"] forState:UIControlStateSelected];
@@ -232,7 +230,6 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
     
     //lockBtn
     self.lockBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.lockBtn.showsTouchWhenHighlighted = YES;
     [self.lockBtn addTarget:self action:@selector(lockAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.lockBtn setImage:[UIImage imageNamed:@"player_icon_unlock"] forState:UIControlStateNormal];
     [self.lockBtn setImage:[UIImage imageNamed:@"player_icon_lock"] forState:UIControlStateSelected];
@@ -257,7 +254,6 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
 
     //backBtn
     self.backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.backBtn.showsTouchWhenHighlighted = YES;
     [self.backBtn setImage:[UIImage imageNamed:@"close"] forState:UIControlStateNormal];
     [self.backBtn setImage:[UIImage imageNamed:@"close"] forState:UIControlStateSelected];
     [self.backBtn addTarget:self action:@selector(colseTheVideo:) forControlEvents:UIControlEventTouchUpInside];
@@ -287,7 +283,7 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
     [self.contentView addSubview:self.loadFailedLabel];
     
     //添加子控件的默认约束
-//    [self addUIControlConstraints];
+    [self addUIControlConstraints];
     
     // 单击的 Recognizer
     self.singleTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(handleSingleTap:)];
@@ -323,9 +319,9 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
         make.center.equalTo(self.contentView);
         make.size.mas_equalTo(CGSizeMake(120, 70));
     }];
-    [self.loadingView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.center.equalTo(self.contentView);
-    }];
+//    [self.loadingView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.center.equalTo(self.contentView);
+//    }];
     [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.top.equalTo(self.contentView);
         make.height.mas_equalTo(IS_iPhoneX?90:70);
@@ -375,8 +371,8 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
         make.size.mas_equalTo(CGSizeMake(60, 30));
     }];
     [self.backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.topView).offset(8);
-        make.size.mas_equalTo(CGSizeMake(self.backBtn.currentImage.size.width+6, self.backBtn.currentImage.size.height+4));
+        make.left.equalTo(self.topView).offset(10);
+        make.size.mas_equalTo(CGSizeMake(self.backBtn.currentImage.size.width, self.backBtn.currentImage.size.height));
         make.centerY.equalTo(self.titleLabel);
     }];
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {

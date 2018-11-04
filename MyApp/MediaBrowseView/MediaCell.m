@@ -58,10 +58,19 @@
 - (UIImageView *)imageView {
     if (!_imageView) {
         _imageView = [YYAnimatedImageView new];
-        _imageView.backgroundColor = [UIColor colorWithWhite:1.000 alpha:0.500];
+//        _imageView.backgroundColor = [UIColor colorWithWhite:1.000 alpha:0.500];
         _imageView.clipsToBounds = YES;
     }
     return _imageView;
+}
+
+-(VideoPlayer *)player{
+    if (!_player) {
+        PlayerModel *pm = [PlayerModel new];
+        pm.videoURL = self.item.largeMediaURL;
+        _player = [[VideoPlayer alloc]initWithPlayerModel:pm];
+    }
+    return _player;
 }
 
 - (CAShapeLayer *)progressLayer{
@@ -101,11 +110,6 @@
     self.progressLayer.strokeEnd = 0;
     self.progressLayer.hidden = YES;
     [CATransaction commit];
-    
-    if (!_item) {
-        self.imageView.image = nil;
-        return;
-    }
     
     @weakify(self)
     [self.imageView setImageWithURL:item.largeMediaURL placeholder:item.thumbImage options:kNilOptions progress:^(NSInteger receivedSize, NSInteger expectedSize) {
