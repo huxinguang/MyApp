@@ -74,7 +74,6 @@
 		C97F6753216DA47B00D8C46D /* picker_album_placeholder@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C97F6751216DA47A00D8C46D /* picker_album_placeholder@3x.png */; };
 		C97F6754216DA47B00D8C46D /* picker_album_placeholder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C97F6752216DA47A00D8C46D /* picker_album_placeholder@2x.png */; };
 		C98B26442153332200845F73 /* comment@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C98B26432153332200845F73 /* comment@2x.png */; };
-		C98B26482153359200845F73 /* MediaGroupView.m in Sources */ = {isa = PBXBuildFile; fileRef = C98B26472153359200845F73 /* MediaGroupView.m */; };
 		C98B264C2153504800845F73 /* UIButton+PassValue.m in Sources */ = {isa = PBXBuildFile; fileRef = C98B264B2153504800845F73 /* UIButton+PassValue.m */; };
 		C98B267221548FD000845F73 /* AssetCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C98B265221548FD000845F73 /* AssetCell.m */; };
 		C98B267321548FD000845F73 /* AssetCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C98B265321548FD000845F73 /* AssetCell.xib */; };
@@ -298,8 +297,6 @@
 		C97F67552174D17800D8C46D /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
 		C97F67562174D17800D8C46D /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		C98B26432153332200845F73 /* comment@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "comment@2x.png"; sourceTree = "<group>"; };
-		C98B26462153359200845F73 /* MediaGroupView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MediaGroupView.h; sourceTree = "<group>"; };
-		C98B26472153359200845F73 /* MediaGroupView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MediaGroupView.m; sourceTree = "<group>"; };
 		C98B264A2153504800845F73 /* UIButton+PassValue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIButton+PassValue.h"; sourceTree = "<group>"; };
 		C98B264B2153504800845F73 /* UIButton+PassValue.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIButton+PassValue.m"; sourceTree = "<group>"; };
 		C98B265021548FD000845F73 /* AssetPickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssetPickerController.h; sourceTree = "<group>"; };
@@ -662,8 +659,6 @@
 		C98B26452153358500845F73 /* MediaBrowseView */ = {
 			isa = PBXGroup;
 			children = (
-				C98B26462153359200845F73 /* MediaGroupView.h */,
-				C98B26472153359200845F73 /* MediaGroupView.m */,
 				C9D76946218835ED00C8A561 /* MediaBrowseView.h */,
 				C9D76947218835ED00C8A561 /* MediaBrowseView.m */,
 				C9D769492188534100C8A561 /* MediaItem.h */,
@@ -1200,7 +1195,6 @@
 				C9658C14215DF94300D25E4F /* NetworkUtil.m in Sources */,
 				C98B267221548FD000845F73 /* AssetCell.m in Sources */,
 				C9658BF9215B633400D25E4F /* AlbumCell.m in Sources */,
-				C98B26482153359200845F73 /* MediaGroupView.m in Sources */,
 				C9999D8A2147ACA7002B1503 /* UIColor+Ext.swift in Sources */,
 				C98B268C215494C000845F73 /* InputToolBar.m in Sources */,
 				C9999D7B2147A438002B1503 /* CBUtil.swift in Sources */,
