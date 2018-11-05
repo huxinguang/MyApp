@@ -583,8 +583,13 @@
         [self addSubview:self.titleBtn];
         
         self.arrowView = [UIImageView new];
-        NSString *path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"picker_arrow.png"];
-        self.arrowView.image = [UIImage imageWithContentsOfFile:path];
+        self.arrowView.image = [UIImage imageNamed:@"picker_arrow"];
+        /*
+         存放在Images.xcassets/Assets.xcassets中的图片只能通过[UIImage imageNamed:@"xxx"]的方式来创建
+         只有存放在普通文件夹里的图片才能使用 [UIImage imageWithContentsOfFile:path]来创建
+         */
+//        NSString *path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"picker_arrow"];
+//        self.arrowView.image = [UIImage imageWithContentsOfFile:path];
         [self addSubview:self.arrowView];
         
     }
