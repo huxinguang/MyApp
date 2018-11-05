@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "MediaItem.h"
 
-
 @interface MediaBrowseView : UIView
 
 @property (nonatomic, readonly) NSArray<MediaItem *> *items;

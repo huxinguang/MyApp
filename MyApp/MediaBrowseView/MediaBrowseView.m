@@ -13,11 +13,8 @@
 @property (nonatomic, weak) UIView *fromView;
 @property (nonatomic, weak) UIView *toContainerView;
 @property (nonatomic, strong) UIImageView *blackBackground;
-
-@property (nonatomic, strong) UIView *contentView;
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) UIPageControl *pager;
-
 @property (nonatomic, assign) NSInteger fromItemIndex;
 @property (nonatomic, assign) BOOL isPresented;
 @property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
@@ -122,12 +119,15 @@
 
 
 - (void)onSingleTap{
+    if ([self currentCell].item.mediaType == MediaItemTypeVideo) {
+        return;
+    }
     [self dismissAnimated:YES completion:nil];
 }
 
 - (void)onDoubleTap:(UITapGestureRecognizer *)gesture{
     if (!_isPresented) return;
-    MediaCell *cell = (MediaCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:self.currentPage inSection:0]];
+    MediaCell *cell = [self currentCell];
     if (cell.item.mediaType == MediaItemTypeVideo) {
         return;
     }
@@ -258,7 +258,7 @@
     _fromNavigationBarHidden = [UIApplication sharedApplication].statusBarHidden;
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:animated ? UIStatusBarAnimationFade : UIStatusBarAnimationNone];
     
-    MediaCell *cell = (MediaCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:self.currentPage inSection:0]];
+    MediaCell *cell = [self currentCell];
     MediaItem *item = self.items[self.currentPage];
     
     if (!item.thumbClippedToTop) {
@@ -267,10 +267,10 @@
             cell.item = item;
         }
     }
-    if (!cell.item) {
-        cell.imageView.image = item.thumbImage;
-        [cell resizeSubviewSize];
-    }
+//    if (!cell.item) {
+//        cell.imageView.image = item.thumbImage;
+//        [cell resizeSubviewSize];
+//    }
     
     if (item.thumbClippedToTop) {
         CGRect fromFrame = [_fromView convertRect:_fromView.bounds toView:cell];
@@ -287,7 +287,6 @@
             self.blackBackground.alpha = 1;
         }completion:NULL];
         
-//        self.contentView.userInteractionEnabled = NO;
         [UIView animateWithDuration:oneTime delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
             cell.mediaContainerView.layer.transformScale = 1;
             cell.mediaContainerView.frame = originFrame;
@@ -351,7 +350,7 @@
     
     [[UIApplication sharedApplication] setStatusBarHidden:self.fromNavigationBarHidden withAnimation:animated ? UIStatusBarAnimationFade : UIStatusBarAnimationNone];
     NSInteger currentPage = self.currentPage;
-    MediaCell *cell = (MediaCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:currentPage inSection:0]];
+    MediaCell *cell = [self currentCell];
     MediaItem *item = self.items[currentPage];
     
     UIView *fromView = nil;
@@ -435,6 +434,10 @@
     }];
 }
 
+- (MediaCell *)currentCell{
+    return (MediaCell *)[self.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:self.currentPage inSection:0]];
+}
+
 #pragma mark - UICollectionViewDataSource
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
@@ -494,7 +497,11 @@
 }
 // 点击关闭按钮代理方法
 -(void)videoPlayer:(VideoPlayer *)player clickedCloseButton:(UIButton *)backBtn{
-    
+    MediaCell *cell = [self currentCell];
+    [cell.player pause];
+    [cell.player removeFromSuperview];
+    cell.player = nil;
+    [self dismissAnimated:YES completion:nil];
 }
 // 点击全屏按钮代理方法
 -(void)videoPlayer:(VideoPlayer *)player clickedFullScreenButton:(UIButton *)fullScreenBtn{

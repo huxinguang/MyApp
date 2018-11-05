@@ -256,7 +256,7 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
     self.backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.backBtn setImage:[UIImage imageNamed:@"close"] forState:UIControlStateNormal];
     [self.backBtn setImage:[UIImage imageNamed:@"close"] forState:UIControlStateSelected];
-    [self.backBtn addTarget:self action:@selector(colseTheVideo:) forControlEvents:UIControlEventTouchUpInside];
+    [self.backBtn addTarget:self action:@selector(closeTheVideo:) forControlEvents:UIControlEventTouchUpInside];
     [self.topView addSubview:self.backBtn];
     
     //rateBtn
@@ -319,9 +319,9 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
         make.center.equalTo(self.contentView);
         make.size.mas_equalTo(CGSizeMake(120, 70));
     }];
-//    [self.loadingView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.center.equalTo(self.contentView);
-//    }];
+    [self.loadingView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.equalTo(self.contentView);
+    }];
     [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.top.equalTo(self.contentView);
         make.height.mas_equalTo(IS_iPhoneX?90:70);
@@ -483,7 +483,7 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
         [self.rateBtn setTitle:[NSString stringWithFormat:@"%.1fX",rate] forState:UIControlStateSelected];
     }
 }
-//切换速度
+// 切换速度
 -(void)switchRate:(UIButton *)rateBtn{
     CGFloat rate = [rateBtn.currentTitle floatValue];
     if(rate==0.5){
@@ -575,7 +575,7 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
     }
 }
 
-#pragma mark - 点击锁定🔒屏幕旋转
+#pragma mark - 点击锁定屏幕旋转
 -(void)lockAction:(UIButton *)sender{
     sender.selected = !sender.selected;
     self.isLockScreen = sender.selected;
@@ -591,9 +591,9 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
         [self.delegate videoPlayer:self clickedFullScreenButton:sender];
     }
 }
-#pragma mark
+
 #pragma mark - 关闭按钮点击func
--(void)colseTheVideo:(UIButton *)sender{
+-(void)closeTheVideo:(UIButton *)sender{
     if (self.delegate&&[self.delegate respondsToSelector:@selector(videoPlayer:clickedCloseButton:)]) {
         [self.delegate videoPlayer:self clickedCloseButton:sender];
     }
