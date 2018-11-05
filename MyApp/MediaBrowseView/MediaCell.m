@@ -58,7 +58,7 @@
 - (UIImageView *)imageView {
     if (!_imageView) {
         _imageView = [YYAnimatedImageView new];
-//        _imageView.backgroundColor = [UIColor colorWithWhite:1.000 alpha:0.500];
+        _imageView.backgroundColor = [UIColor colorWithWhite:1.000 alpha:0.500];
         _imageView.clipsToBounds = YES;
     }
     return _imageView;

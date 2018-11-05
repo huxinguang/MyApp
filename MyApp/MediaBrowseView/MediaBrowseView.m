@@ -239,10 +239,6 @@
     if (page == -1) page = 0;
     _fromItemIndex = page;
     
-//    BOOL fromViewHidden = fromView.hidden;
-//    fromView.hidden = YES;
-//    fromView.hidden = fromViewHidden;
-    
     self.blackBackground.image = [UIImage imageWithColor:[UIColor blackColor]];
 
     self.size = _toContainerView.size;
@@ -268,10 +264,6 @@
             cell.item = item;
         }
     }
-//    if (!cell.item) {
-//        cell.imageView.image = item.thumbImage;
-//        [cell resizeSubviewSize];
-//    }
     
     if (item.thumbClippedToTop) {
         CGRect fromFrame = [_fromView convertRect:_fromView.bounds toView:cell];
@@ -376,7 +368,6 @@
     }
     cell.progressLayer.hidden = YES;
     [CATransaction commit];
-    
     
     if (fromView == nil) {
         [UIView animateWithDuration:animated ? 0.25 : 0 delay:0 options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionCurveEaseOut animations:^{
