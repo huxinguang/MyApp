@@ -226,6 +226,7 @@
     if (!toContainer) return;
     
     _fromView = fromView;
+    _fromView.alpha = 0;
     _toContainerView = toContainer;
     
     NSInteger page = -1;
@@ -238,9 +239,9 @@
     if (page == -1) page = 0;
     _fromItemIndex = page;
     
-    BOOL fromViewHidden = fromView.hidden;
-    fromView.hidden = YES;
-    fromView.hidden = fromViewHidden;
+//    BOOL fromViewHidden = fromView.hidden;
+//    fromView.hidden = YES;
+//    fromView.hidden = fromViewHidden;
     
     self.blackBackground.image = [UIImage imageWithColor:[UIColor blackColor]];
 
@@ -358,6 +359,8 @@
         fromView = self.fromView;
     } else {
         fromView = item.thumbView;
+        fromView.alpha = 0;
+        self.fromView.alpha = 1.0;
     }
     
     [self cancelAllImageLoad];
@@ -398,6 +401,7 @@
     [UIView animateWithDuration:animated ? 0.2 : 0 delay:0 options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionCurveEaseOut animations:^{
         self.pager.alpha = 0.0;
         self.blackBackground.alpha = 0.0;
+        
         if (isFromImageClipped) {
             
             CGRect fromFrame = [fromView convertRect:fromView.bounds toView:cell];
@@ -418,9 +422,11 @@
     }completion:^(BOOL finished) {
         [UIView animateWithDuration:animated ? 0.15 : 0 delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
             self.alpha = 0;
+            fromView.alpha = 1.0;
         } completion:^(BOOL finished) {
             cell.mediaContainerView.layer.anchorPoint = CGPointMake(0.5, 0.5);
             [self removeFromSuperview];
+            
             if (completion) completion();
         }];
     }];
