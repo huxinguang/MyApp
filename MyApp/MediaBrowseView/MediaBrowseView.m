@@ -187,10 +187,21 @@
                 CGFloat duration = (moveToTop ? self.collectionView.bottom : self.height - self.collectionView.top) / vy;
                 duration *= 0.8;
                 duration = YY_CLAMP(duration, 0.05, 0.3);
+                
+                NSInteger currentPage = self.currentPage;
+                MediaItem *item = self.items[currentPage];
+                UIView *fromView = nil;
+                if (self.fromItemIndex == currentPage) {
+                    fromView = self.fromView;
+                } else {
+                    fromView = item.thumbView;
+                    self.fromView.alpha = 1.0;
+                }
 
                 [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveLinear | UIViewAnimationOptionBeginFromCurrentState animations:^{
                     self.blackBackground.alpha = 0;
                     self.pager.alpha = 0;
+                    fromView.alpha = 1.0;
                     if (moveToTop) {
                         self.collectionView.bottom = 0;
                     } else {

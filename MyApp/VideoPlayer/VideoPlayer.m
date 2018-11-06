@@ -191,7 +191,7 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
     }
     self.loadingProgress = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
     self.loadingProgress.progressTintColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.5];
-    self.loadingProgress.trackTintColor    = [UIColor clearColor];
+    self.loadingProgress.trackTintColor = [UIColor clearColor];
     [self.bottomView addSubview:self.loadingProgress];
     [self.loadingProgress setProgress:0.0 animated:NO];
     [self.bottomView sendSubviewToBack:self.loadingProgress];
@@ -201,7 +201,7 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
     self.progressSlider.minimumValue = 0.0;
     self.progressSlider.maximumValue = 1.0;
     [self.progressSlider setThumbImage:[UIImage imageNamed:@"dot"] forState:UIControlStateNormal];
-    self.progressSlider.minimumTrackTintColor = self.tintColor?self.tintColor:[UIColor greenColor];
+    self.progressSlider.minimumTrackTintColor = self.tintColor?self.tintColor:[UIColor blueColor];
     self.progressSlider.maximumTrackTintColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:0.5];
     self.progressSlider.backgroundColor = [UIColor clearColor];
     self.progressSlider.value = 0.0;//指定初始值
@@ -217,7 +217,7 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
     
     self.bottomProgress = [[UIProgressView alloc] initWithProgressViewStyle:UIProgressViewStyleDefault];
     self.bottomProgress.trackTintColor    = [UIColor clearColor];
-    self.bottomProgress.progressTintColor = self.tintColor?self.tintColor:[UIColor greenColor];
+    self.bottomProgress.progressTintColor = self.tintColor?self.tintColor:[UIColor blueColor];
     self.bottomProgress.alpha = 0;
     [self.contentView addSubview:self.bottomProgress];
     
@@ -1069,7 +1069,6 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
                     if (error) {
                         self.loadFailedLabel.hidden = NO;
                         [self bringSubviewToFront:self.loadFailedLabel];
-                        //here
                         [self.loadingView stopAnimating];
                     }
                     NSLog(@"视频加载失败===%@",error.description);
@@ -1101,7 +1100,7 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
             NSTimeInterval timeInterval = [self availableDuration];
             CMTime duration             = self.currentItem.duration;
             CGFloat totalDuration       = CMTimeGetSeconds(duration);
-            //缓冲颜色
+            // 缓冲颜色
             self.loadingProgress.progressTintColor = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.7];
             [self.loadingProgress setProgress:timeInterval / totalDuration animated:NO];
         } else if ([keyPath isEqualToString:@"playbackBufferEmpty"]) {
@@ -1112,7 +1111,7 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
                 [self loadedTimeRanges];
             }
         }else if ([keyPath isEqualToString:@"playbackLikelyToKeepUp"]) {
-            //here
+            
             [self.loadingView stopAnimating];
             // 当缓冲好的时候
             if (self.currentItem.playbackLikelyToKeepUp && self.state == VideoPlayerStateBuffering){
@@ -1126,7 +1125,7 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
         }
     }
 }
-//缓冲回调
+// 缓冲回调
 - (void)loadedTimeRanges{
     if (self.state==VideoPlayerStatePause) {
         

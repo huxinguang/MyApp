@@ -69,6 +69,7 @@
         PlayerModel *pm = [PlayerModel new];
         pm.videoURL = self.item.largeMediaURL;
         _player = [[VideoPlayer alloc]initWithPlayerModel:pm];
+        _player.tintColor = kAppThemeColor;
     }
     return _player;
 }
