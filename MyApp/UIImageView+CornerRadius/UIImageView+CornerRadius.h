@@ -11,7 +11,6 @@
 
 @interface UIImageView (CornerRadius)
 
-
 - (instancetype)initWithCornerRadiusAdvance:(CGFloat)cornerRadius rectCornerType:(UIRectCorner)rectCornerType;
 
 - (void)xg_cornerRadiusAdvance:(CGFloat)cornerRadius rectCornerType:(UIRectCorner)rectCornerType;

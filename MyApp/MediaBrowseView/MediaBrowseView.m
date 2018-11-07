@@ -82,7 +82,7 @@
         _pager.userInteractionEnabled = NO;
         _pager.width = self.width - 36;
         _pager.height = 10;
-        _pager.center = CGPointMake(self.width / 2, self.height - (IS_iPhoneX ? kAppTabbarSafeBottomMargin : 18));
+        _pager.center = CGPointMake(self.width / 2, self.height - (IS_X_Series ? kAppTabbarSafeBottomMargin : 18));
         _pager.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     }
     return _pager;
@@ -456,14 +456,6 @@
     MediaCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([MediaCell class]) forIndexPath:indexPath];
     cell.item = self.items[indexPath.row];
     return cell;
-}
-
-#pragma mark - UICollectionViewDelegate
-
-- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(8_0){
-}
-
-- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath{
 }
 
 #pragma mark - UIScrollViewDelegate

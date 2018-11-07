@@ -324,7 +324,7 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
     }];
     [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.top.equalTo(self.contentView);
-        make.height.mas_equalTo(IS_iPhoneX?90:70);
+        make.height.mas_equalTo(IS_X_Series?90:70);
     }];
     [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.bottom.equalTo(self.contentView);
@@ -405,7 +405,7 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
     }];
     [self.topView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.right.top.equalTo(self.contentView);
-        make.height.mas_equalTo(IS_iPhoneX?90:70);
+        make.height.mas_equalTo(IS_X_Series?90:70);
     }];
     [self.bottomView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.right.bottom.equalTo(self.contentView);
@@ -864,7 +864,7 @@ static void *PlayViewStatusObservationContext = &PlayViewStatusObservationContex
     if (!isFullscreen) {
         self.bottomProgress.alpha = 0.0;
     }
-    if (IS_iPhoneX) {
+    if (IS_X_Series) {
         if (self.isFullscreen) {
             [self.contentView mas_remakeConstraints:^(MASConstraintMaker *make) {
                 if (self.playerModel.verticalVideo) {

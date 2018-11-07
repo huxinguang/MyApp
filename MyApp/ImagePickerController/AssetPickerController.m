@@ -147,7 +147,7 @@
 
 - (void)configMask{
     self.mask = [UIControl new];
-    self.mask.frame = CGRectMake(0, 0, self.view.width, self.view.height);
+    self.mask.frame = self.view.bounds;
     self.mask.backgroundColor = [UIColor clearColor];
     self.mask.userInteractionEnabled = NO;
     [self.view addSubview:self.mask];
@@ -584,6 +584,7 @@
         
         self.arrowView = [UIImageView new];
         self.arrowView.image = [UIImage imageNamed:@"picker_arrow"];
+        
         /*
          存放在Images.xcassets/Assets.xcassets中的图片只能通过[UIImage imageNamed:@"xxx"]的方式来创建
          只有存放在普通文件夹里的图片才能使用 [UIImage imageWithContentsOfFile:path]来创建
@@ -595,6 +596,8 @@
     }
     return self;
 }
+
+
 
 + (BOOL)requiresConstraintBasedLayout{
     return YES;
@@ -609,13 +612,14 @@
         make.centerX.equalTo(self.mas_centerX).with.offset(-(kTitleViewTextImageDistance + kTitleViewArrowSize.width)/2);
         make.size.mas_equalTo(CGSizeMake(self.titleBtnWidth, kAppNavigationBarHeight));
     }];
-    
+
     [self.arrowView mas_remakeConstraints:^(MASConstraintMaker *make) {
         @strongify(self);
         make.centerY.equalTo(self.mas_centerY);
         make.left.mas_equalTo(self.titleBtn.mas_right).with.offset(kTitleViewTextImageDistance);
         make.size.mas_equalTo(kTitleViewArrowSize);
     }];
+
     [super updateConstraints];
 }
 
