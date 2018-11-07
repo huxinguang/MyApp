@@ -20,9 +20,9 @@
 
 #define kAppStatusBarHeight ((IS_iPhoneX_Or_Xs || IS_iPhoneXr || IS_iPhoneXs_Max) ? 44.f : 20.f) //状态栏高度
 #define kAppNavigationBarHeight 44.f //Navigation bar height.
-#define kAppTabbarHeight        ((IS_iPhoneX_Or_Xs || IS_iPhoneXr || IS_iPhoneXs_Max) ? (49.f+34.f) : 49.f)// Tabbar 高度.
-#define kAppTabbarSafeBottomMargin        ((IS_iPhoneX_Or_Xs || IS_iPhoneXr || IS_iPhoneXs_Max) ? 34.f : 0.f)// Tabbar 底部安全高度.
-#define kAppStatusBarAndNavigationBarHeight  ((IS_iPhoneX_Or_Xs || IS_iPhoneXr || IS_iPhoneXs_Max) ? 88.f : 64.f)// 状态栏和导航栏总高度.
+#define kAppTabbarHeight ((IS_iPhoneX_Or_Xs || IS_iPhoneXr || IS_iPhoneXs_Max) ? (49.f+34.f) : 49.f)// Tabbar 高度.
+#define kAppTabbarSafeBottomMargin ((IS_iPhoneX_Or_Xs || IS_iPhoneXr || IS_iPhoneXs_Max) ? 34.f : 0.f)// Tabbar 底部安全高度.
+#define kAppStatusBarAndNavigationBarHeight ((IS_iPhoneX_Or_Xs || IS_iPhoneXr || IS_iPhoneXs_Max) ? 88.f : 64.f)// 状态栏和导航栏总高度.
 
 //=========================================导航栏(自定义部分)=====================================
 #define kAppNavigationTitleViewTitleFontSize 16
