@@ -48,7 +48,7 @@ DEPENDENCIES:
   - YYKit
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  https://github.com/cocoapods/specs.git:
     - AFNetworking
     - FLAnimatedImage
     - FLEX
@@ -76,4 +76,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 65b2e2898c0f2067aff09587c922615c2cf76ca1
 
-COCOAPODS: 1.5.0
+COCOAPODS: 1.5.3

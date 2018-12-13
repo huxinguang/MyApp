@@ -101,6 +101,7 @@
 /* Begin PBXFileReference section */
 		419DFB2518B76193BA6B6B06 /* Pods-MyApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-MyApp/Pods-MyApp.release.xcconfig"; sourceTree = "<group>"; };
 		62B1A4B6E2B3850CCA4E15F5 /* libPods-MyApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MyApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		964AFB4D21B9603200FD37E4 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		C91B9A1D216889CE006B50A5 /* UIViewController+Helper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Helper.h"; sourceTree = "<group>"; };
 		C91B9A1E216889CE006B50A5 /* UIViewController+Helper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+Helper.m"; sourceTree = "<group>"; };
 		C944F25D2146072600159984 /* MyApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -117,7 +118,6 @@
 		C944F2802146072800159984 /* MyAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C944F2842146072800159984 /* MyAppUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyAppUITests.m; sourceTree = "<group>"; };
 		C944F2862146072800159984 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C944F292214613FA00159984 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		C944F294214615F300159984 /* StatusViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatusViewController.h; sourceTree = "<group>"; };
 		C944F295214615F300159984 /* StatusCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatusCell.h; sourceTree = "<group>"; };
 		C944F296214615F300159984 /* StatusCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatusCell.m; sourceTree = "<group>"; };
@@ -281,6 +281,108 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		966F487921C1F6180050D045 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				C9658C12215DF94300D25E4F /* NetworkUtil.h */,
+				C9658C13215DF94300D25E4F /* NetworkUtil.m */,
+				C9999D7A2147A438002B1503 /* CBUtil.swift */,
+				C9999D782147A098002B1503 /* CBDataGlobal.swift */,
+				C9999D892147ACA7002B1503 /* UIColor+Ext.swift */,
+				C9DFDF642182C65C0032326B /* YYControl */,
+				C9AA115D214F9D2600050385 /* YYFPSLabel */,
+				C944F2AE2146168500159984 /* UIImageView+CornerRadius */,
+				C91B9A1C216889B8006B50A5 /* UIViewController+Helper */,
+				C98B268D2154B54400845F73 /* UITextView+XGPlaceholder */,
+				C98B264921534FDB00845F73 /* UIButton+PassValue */,
+				C98B264D21548FD000845F73 /* ImagePickerController */,
+				C9DFDF0C21797A080032326B /* VideoPlayer */,
+				C98B26452153358500845F73 /* MediaBrowseView */,
+				C944F3062146592700159984 /* FSScrollContentViewLib */,
+				C944F2E521464C4900159984 /* CYTabBar */,
+				C944F2E221464C4900159984 /* PublishAnimate */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		966F487A21C1F65D0050D045 /* Navi */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Navi;
+			sourceTree = "<group>";
+		};
+		966F487B21C1F6AC0050D045 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				C9E5FEA8214A56B300B6AC3D /* User.h */,
+				C9E5FEA9214A56B300B6AC3D /* User.m */,
+				C944F29D214615F400159984 /* Status.h */,
+				C944F29F214615F400159984 /* Status.m */,
+				C9E5FE9C21492FE900B6AC3D /* Media.h */,
+				C9E5FE9D21492FE900B6AC3D /* Media.m */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		966F487C21C1F6D90050D045 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				C9E5FE8B2147BE0100B6AC3D /* CBTitleView.h */,
+				C9E5FE8C2147BE0100B6AC3D /* CBTitleView.m */,
+				C9E5FE8E2147D83A00B6AC3D /* CBBarButton.h */,
+				C9E5FE8F2147D83A00B6AC3D /* CBBarButton.m */,
+				C9999D8D2147AECA002B1503 /* CBOCDataGlobal.h */,
+				C9999D842147AC25002B1503 /* CBDefaultPageView.h */,
+				C9999D852147AC25002B1503 /* CBDefaultPageView.m */,
+				C9AA1152214C98E500050385 /* PicsContainerView.h */,
+				C9AA1153214C98E500050385 /* PicsContainerView.m */,
+				C9AA114F214B9E9200050385 /* HotCommentIcon.h */,
+				C9AA1150214B9E9200050385 /* HotCommentIcon.m */,
+				C944F31A214753DA00159984 /* MyCell.h */,
+				C944F31B214753DA00159984 /* MyCell.m */,
+				C9AA117B2150AAA800050385 /* BaseCell.h */,
+				C9AA117C2150AAA800050385 /* BaseCell.m */,
+				C944F295214615F300159984 /* StatusCell.h */,
+				C944F296214615F300159984 /* StatusCell.m */,
+				C944F29E214615F400159984 /* CommentCell.h */,
+				C944F2A2214615F500159984 /* CommentCell.m */,
+				C944F298214615F400159984 /* ReplyCell.h */,
+				C944F2A1214615F400159984 /* ReplyCell.m */,
+				C98B268A215494C000845F73 /* InputToolBar.h */,
+				C98B268B215494C000845F73 /* InputToolBar.m */,
+				C98B269F2159C30800845F73 /* InputTextView.h */,
+				C98B26A02159C30800845F73 /* InputTextView.m */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		966F487D21C1F70B0050D045 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				C9999D762147A047002B1503 /* CBNavigationController.swift */,
+				C944F30321464D5B00159984 /* TabBarController.h */,
+				C944F30421464D5B00159984 /* TabBarController.m */,
+				C9E5FE882147B8BC00B6AC3D /* RootViewController.h */,
+				C9E5FE892147B8BC00B6AC3D /* RootViewController.m */,
+				C944F2C82146201200159984 /* HomeViewController.h */,
+				C944F2C92146201200159984 /* HomeViewController.m */,
+				C944F2CB2146202D00159984 /* PersonalViewController.h */,
+				C944F2CC2146202D00159984 /* PersonalViewController.m */,
+				C9AA117E2151FAF400050385 /* ResumeViewController.h */,
+				C9AA117F2151FAF400050385 /* ResumeViewController.m */,
+				C9D769432186EA5700C8A561 /* BaseStatusController.h */,
+				C9D769442186EA5700C8A561 /* BaseStatusController.m */,
+				C944F294214615F300159984 /* StatusViewController.h */,
+				C944F29A214615F400159984 /* StatusViewController.m */,
+				C944F2A4214615F500159984 /* StatusDetailViewController.h */,
+				C944F2A0214615F400159984 /* StatusDetailViewController.m */,
+				C944F29C214615F400159984 /* ReplyDetailViewController.h */,
+				C944F299214615F400159984 /* ReplyDetailViewController.m */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
 		C91B9A1C216889B8006B50A5 /* UIViewController+Helper */ = {
 			isa = PBXGroup;
 			children = (
@@ -316,81 +418,19 @@
 		C944F25F2146072600159984 /* MyApp */ = {
 			isa = PBXGroup;
 			children = (
-				C9DFDF642182C65C0032326B /* YYControl */,
-				C9AA115D214F9D2600050385 /* YYFPSLabel */,
-				C944F2AE2146168500159984 /* UIImageView+CornerRadius */,
-				C91B9A1C216889B8006B50A5 /* UIViewController+Helper */,
-				C98B268D2154B54400845F73 /* UITextView+XGPlaceholder */,
-				C98B264921534FDB00845F73 /* UIButton+PassValue */,
-				C98B264D21548FD000845F73 /* ImagePickerController */,
-				C9DFDF0C21797A080032326B /* VideoPlayer */,
-				C98B26452153358500845F73 /* MediaBrowseView */,
-				C944F3062146592700159984 /* FSScrollContentViewLib */,
-				C944F2E521464C4900159984 /* CYTabBar */,
-				C944F2E221464C4900159984 /* PublishAnimate */,
-				C9999D7A2147A438002B1503 /* CBUtil.swift */,
-				C9999D782147A098002B1503 /* CBDataGlobal.swift */,
-				C9999D762147A047002B1503 /* CBNavigationController.swift */,
-				C9999D892147ACA7002B1503 /* UIColor+Ext.swift */,
-				C9E5FE8B2147BE0100B6AC3D /* CBTitleView.h */,
-				C9E5FE8C2147BE0100B6AC3D /* CBTitleView.m */,
-				C9E5FE8E2147D83A00B6AC3D /* CBBarButton.h */,
-				C9E5FE8F2147D83A00B6AC3D /* CBBarButton.m */,
-				C9999D8D2147AECA002B1503 /* CBOCDataGlobal.h */,
-				C9999D842147AC25002B1503 /* CBDefaultPageView.h */,
-				C9999D852147AC25002B1503 /* CBDefaultPageView.m */,
-				C944F30321464D5B00159984 /* TabBarController.h */,
-				C944F30421464D5B00159984 /* TabBarController.m */,
-				C9E5FE882147B8BC00B6AC3D /* RootViewController.h */,
-				C9E5FE892147B8BC00B6AC3D /* RootViewController.m */,
-				C944F2C82146201200159984 /* HomeViewController.h */,
-				C944F2C92146201200159984 /* HomeViewController.m */,
-				C944F2CB2146202D00159984 /* PersonalViewController.h */,
-				C944F2CC2146202D00159984 /* PersonalViewController.m */,
-				C9AA117E2151FAF400050385 /* ResumeViewController.h */,
-				C9AA117F2151FAF400050385 /* ResumeViewController.m */,
-				C9D769432186EA5700C8A561 /* BaseStatusController.h */,
-				C9D769442186EA5700C8A561 /* BaseStatusController.m */,
-				C944F294214615F300159984 /* StatusViewController.h */,
-				C944F29A214615F400159984 /* StatusViewController.m */,
-				C944F2A4214615F500159984 /* StatusDetailViewController.h */,
-				C944F2A0214615F400159984 /* StatusDetailViewController.m */,
-				C944F29C214615F400159984 /* ReplyDetailViewController.h */,
-				C944F299214615F400159984 /* ReplyDetailViewController.m */,
-				C9E5FEA8214A56B300B6AC3D /* User.h */,
-				C9E5FEA9214A56B300B6AC3D /* User.m */,
-				C944F29D214615F400159984 /* Status.h */,
-				C944F29F214615F400159984 /* Status.m */,
-				C9E5FE9C21492FE900B6AC3D /* Media.h */,
-				C9E5FE9D21492FE900B6AC3D /* Media.m */,
-				C9AA1152214C98E500050385 /* PicsContainerView.h */,
-				C9AA1153214C98E500050385 /* PicsContainerView.m */,
-				C9AA114F214B9E9200050385 /* HotCommentIcon.h */,
-				C9AA1150214B9E9200050385 /* HotCommentIcon.m */,
-				C944F31A214753DA00159984 /* MyCell.h */,
-				C944F31B214753DA00159984 /* MyCell.m */,
-				C9AA117B2150AAA800050385 /* BaseCell.h */,
-				C9AA117C2150AAA800050385 /* BaseCell.m */,
-				C944F295214615F300159984 /* StatusCell.h */,
-				C944F296214615F300159984 /* StatusCell.m */,
-				C944F29E214615F400159984 /* CommentCell.h */,
-				C944F2A2214615F500159984 /* CommentCell.m */,
-				C944F298214615F400159984 /* ReplyCell.h */,
-				C944F2A1214615F400159984 /* ReplyCell.m */,
-				C98B268A215494C000845F73 /* InputToolBar.h */,
-				C98B268B215494C000845F73 /* InputToolBar.m */,
-				C98B269F2159C30800845F73 /* InputTextView.h */,
-				C98B26A02159C30800845F73 /* InputTextView.m */,
+				966F487D21C1F70B0050D045 /* Controllers */,
+				966F487C21C1F6D90050D045 /* Views */,
+				966F487B21C1F6AC0050D045 /* Models */,
+				966F487A21C1F65D0050D045 /* Navi */,
+				966F487921C1F6180050D045 /* Utils */,
 				C944F2602146072600159984 /* AppDelegate.h */,
 				C944F2612146072600159984 /* AppDelegate.m */,
-				C9658C12215DF94300D25E4F /* NetworkUtil.h */,
-				C9658C13215DF94300D25E4F /* NetworkUtil.m */,
 				C944F2662146072600159984 /* Main.storyboard */,
 				C944F2692146072700159984 /* Assets.xcassets */,
 				C944F26B2146072700159984 /* LaunchScreen.storyboard */,
 				C944F26E2146072700159984 /* Info.plist */,
 				C944F26F2146072700159984 /* main.m */,
-				C944F292214613FA00159984 /* PrefixHeader.pch */,
+				964AFB4D21B9603200FD37E4 /* PrefixHeader.pch */,
 				C944F3192146813600159984 /* Macro.h */,
 				C9999D752147A046002B1503 /* MyApp-Bridging-Header.h */,
 			);
@@ -917,8 +957,11 @@
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -975,7 +1018,10 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -998,8 +1044,9 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = U7JKYT7J7K;
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = /Users/huxinguang/Desktop/youme/MyApp/MyApp/PrefixHeader.pch;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/MyApp/PrefixHeader.pch";
 				INFOPLIST_FILE = MyApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1024,8 +1071,9 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = U7JKYT7J7K;
+				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = /Users/huxinguang/Desktop/youme/MyApp/MyApp/PrefixHeader.pch;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/MyApp/PrefixHeader.pch";
 				INFOPLIST_FILE = MyApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = (
